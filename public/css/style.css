@@ -1,0 +1,210 @@
+.header {
+    background-color: #343a40; /* Dark background for a professional look */
+    padding: 15px 0; /* Adjusted padding */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* More pronounced shadow for depth */
+  }
+  
+  .header .container {
+    display: flex;
+    align-items: center; /* Ensure content is vertically centered */
+    justify-content: space-between; /* Space between logo and menu */
+  }
+  
+  .inner-logo img {
+    height: 60px; /* Adjust logo size */
+    width: auto; /* Maintain aspect ratio */
+  }
+  
+  .inner-menu ul {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Horizontal layout for menu items */
+  }
+  
+  .inner-menu ul li {
+    margin-left: 25px; /* Space between menu items */
+  }
+  
+  .inner-menu ul li a {
+    color: #f8f9fa; /* Light text color for contrast */
+    text-decoration: none; /* Remove underline */
+    font-weight: 600; /* Bolder font for readability */
+    transition: color 0.2s ease-in-out; /* Smooth transition for hover effect */
+  }
+  
+  .inner-menu ul li a:hover {
+    color: #ffc107; /* Highlight color on hover for interactivity */
+  }
+  
+  @media (max-width: 768px) {
+    .header .container {
+      flex-direction: column; /* Stack logo and menu vertically on smaller screens */
+    }
+  
+    .inner-menu ul {
+      margin-top: 10px; /* Add space between logo and menu */
+      justify-content: center; /* Center menu items */
+    }
+  
+    .inner-menu ul li {
+      margin: 5px 10px; /* Adjust spacing for compact layout */
+    }
+  }
+
+
+.footer {
+background-color: #343a40; /* Darker shade for a professional look */
+color: #f8f9fa; /* Off-white text color for contrast */
+padding: 50px 0; /* Increased padding for a more spacious layout */
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, professional font */
+}
+
+.footer a {
+color: #ffc107; /* Use the highlight color for links */
+text-decoration: none; /* No underline */
+transition: color 0.3s ease; /* Smooth color transition for hover */
+font-weight: 500; /* Slightly bolder links for emphasis */
+}
+
+.footer a:hover {
+color: #ffffff; /* Bright white on hover for more contrast */
+text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Subtle glow effect */
+}
+
+.footer p {
+margin: 0; /* Remove default margin */
+padding: 15px 0; /* Increased padding for better spacing */
+font-size: 16px; /* Slightly larger font size for readability */
+line-height: 1.5; /* Improved line height for readability */
+}
+
+@media (max-width: 768px) {
+.footer .container {
+flex-direction: column; /* Stack elements vertically on smaller screens */
+text-align: center; /* Center-align text for a cleaner look */
+padding-top: 20px; /* Added top padding for visual separation */
+}
+}
+
+
+
+/* product */
+/* Styling for the main product list title */
+h2.inner-title {
+    font-size: 32px; /* Large font size for prominence */
+    color: #333; /* Dark color for readability */
+    font-weight: 700; /* Bold font weight for emphasis */
+    text-align: center; /* Center alignment to draw attention */
+    margin-bottom: 20px; /* Spacing below the title for visual separation */
+    padding-bottom: 10px; /* Padding for aesthetic spacing */
+    border-bottom: 2px solid #007bff; /* A colored line to add a touch of design */
+    display: inline-block; /* Allows the border to fit the content */
+    margin-top: 20px; /* Spacing above the title */
+  }
+
+/* General container and row setup */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
+  }
+  
+  .col-12, .col-4 {
+    padding: 15px;
+  }
+  
+  /* Styling for the product list header */
+  .box-head {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  
+  /* Product item styling */
+  .product-item {
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  
+  .inner-image img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .inner-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .inner-content h3 {
+    font-size: 22px;
+    margin: 10px 0;
+    color: #007bff;
+  }
+  
+  .inner-price-new, .inner-price-old {
+    display: block;
+    font-size: 20px;
+    margin: 5px 0;
+  }
+  
+  .inner-price-new {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .inner-price-old {
+    color: #6c757d;
+    text-decoration: line-through;
+  }
+  
+  .inner-discount {
+   
+    font-size: 18px;
+    color: #dc3545;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .col-4 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  
+    .inner-content h3 {
+      font-size: 18px;
+    }
+  }
+  .product-item .inner-image {
+    padding-top: 5px;
+    display: flex; /* Hoặc sử dụng `display: grid;` */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+  }
+  
+  .product-item .inner-image img {
+    width: 335px; /* Chiều rộng mong muốn */
+    height: 260px; /* Chiều cao mong muốn */
+    border-radius: 3%;
+    object-fit: cover; /* Giữ nguyên tỉ lệ ảnh */
+  }
+

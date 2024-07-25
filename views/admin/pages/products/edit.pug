@@ -1,0 +1,133 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+block content
+  +alert-error(5000)
+
+  h1.mb-4 Edit New Product
+  form(
+    action=`${prefixAdmin}/products/edit/${product.id}?_method=PATCH`
+    method="POST"
+    class="needs-validation"
+    enctype ="multipart/form-data"
+    novalidate
+  )
+    .form-group.mb-3
+      div
+        label(for="title").form-label Title:
+      div
+        input(
+          type="text"
+          id="title"
+          name="title"
+          required
+          class="form-control"
+          value= product.title 
+        )
+    .form-group.mb-3
+      div
+        label(for="description").form-label Description:
+      div
+        textarea(
+          id="description"
+          name="description"
+          rows="5"
+          required
+          class="form-control"
+        )= product.description
+    .form-group.mb-3
+      div
+        label(for="price").form-label Price:
+      div
+        input(
+          type="number"
+          id="price"
+          name="price"
+          step="0.01"
+          required
+          class="form-control"
+          value= product.price
+        )
+    .form-group.mb-3
+      div
+        label(for="discountPercentage").form-label Discount Percentage:
+      div
+        input(
+          type="number"
+          id="discountPercentage"
+          name="discountPercentage"
+          step="0.01"
+          min="0"
+          max="100"
+          class="form-control"
+          value= product.discountPercentage
+        )
+    .form-group.mb-3
+      div
+        label(for="stock").form-label Stock:
+      div
+        input(
+          type="number"
+          id="stock"
+          name="stock"
+          required
+          class="form-control"
+          value= product.stock
+        )
+    .form-group.mb-3(form-upload)
+      div
+        label(for="thumbnail" ).form-label Product Thumbnail:
+      div()
+        input(
+          type="file"
+          id="thumbnail"
+          name="thumbnail"
+          class="form-control-file"
+          accept="image/*"
+          input-upload 
+        )
+        img(
+          preview-upload
+          src= product.thumbnail 
+          alt="Thumbnail Preview" 
+          style= "max-width: 200px; margin-top: 10px;"
+
+        )
+    .form-group.mb-3
+      div
+        label(for="status").form-label Status:
+      div
+        .form-check
+          input(
+            type="radio"
+            id="status-active"
+            name="status"
+            value="active"
+            checked= product.status == "active" ? true : false
+            class="form-check-input"
+          )
+          label(for="status-active").form-check-label Active
+        .form-check
+          input(
+            type="radio"
+            id="status-inactive"
+            name="status"
+            value="inactive"
+            class="form-check-input"
+            checked= product.status == "inactive" ? true : false
+          )
+          label(for="status-inactive").form-check-label Inactive
+    .form-group.mb-3
+      div
+        label(for="position").form-label Position:
+      div
+        input(
+          type="number"
+          id="position"
+          name="position"
+          class="form-control"
+          value= product.position
+        )
+
+    button(type="submit").btn.btn-primary Update Product
+
+  script(src="/admin/js/script.js") 

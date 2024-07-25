@@ -1,0 +1,200 @@
+/* Reset CSS */
+
+body {
+    margin-bottom: 100px; /* Adjust this value to match your footer's height */
+}
+
+/* Or if you have a specific main content container */
+.main-content {
+    padding-bottom: 100px; /* Adjust this value to match your footer's height */
+}
+
+/* Footer CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7fa;
+}
+
+/* Header */
+header.header {
+    background-color: #0d1117;
+    color: #fff;
+    padding: 20px 30px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(90deg, #0d1117 0%, #21262d 100%);
+}
+
+/* Sider */
+.sider {
+    background-color: #21262d;
+    color: #fff;
+    padding: 20px;
+    height: 100vh;
+    width: 220px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 500;
+    padding-top: 80px; /* Thêm khoảng trống dưới header */
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.sider ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sider ul li a {
+    display: block;
+    padding: 12px 20px;
+    border-radius: 4px;
+    color: #b1bac4;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sider ul li a:hover {
+    background-color: #30363d;
+    color: #fff;
+}
+
+/* Main content */
+.body {
+    margin-left: 240px; /* Độ rộng của sider */
+    padding-top: 100px; /* Độ cao của header cộng với khoảng trống */
+    padding: 20px;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Footer */
+.footer {
+    background-color: #e9ecef;
+    color: #343a40;
+    text-align: center;
+    padding: 15px 30px;
+    position: fixed;
+    bottom: 0;
+
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    height: 5%;
+}
+
+/* Cải thiện cho các thành phần khác */
+.inner-logo a, .sider a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 500;
+
+}
+.inner-logo a{
+    font-size: 24px;
+}
+
+/* Thêm hiệu ứng khi hover */
+.inner-logo a:hover, .sider a:hover {
+    color: #09ceff;
+}
+
+/* Thêm một số cải tiến khác */
+header.header, .footer {
+    background: linear-gradient(90deg, #0d1117 0%, #21262d 100%);
+}
+
+/* Hiệu ứng cho phần nội dung */
+.body {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.body h1, .body h2, .body h3 {
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.body p {
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Thêm animation */
+.sider ul li a {
+    transition: all 0.3s ease;
+}
+
+.sider ul li a:hover {
+    transform: translateX(10px);
+    background-color: #30363d;
+}
+
+.footer {
+    background: linear-gradient(90deg, #e9ecef 0%, #f8f9fa 100%);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-message {
+    position: fixed;
+    right: -100%; /* Bắt đầu từ bên ngoài màn hình */
+    top: 20px;
+    color: #FFFFFF; /* Màu chữ mới */
+    padding: 15px;
+    margin: 0 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.982);
+    transition: all 0.5s ease-in-out;
+    animation: slideIn 0.5s forwards; /* Animation xuất hiện */
+    z-index: 1050; /* Giá trị z-index cao hơn header */
+    text-shadow: 1px 1px #000000; /* Hiệu ứng chữ nổi */
+}
+
+@keyframes slideIn {
+    to {
+        right: 20px; /* Kết thúc animation tại vị trí này */
+    }
+}
+
+.alert-hidden {
+    animation: fadeOut 0.5s forwards; /* Animation mất đi */
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        right: -100%; /* Di chuyển ra khỏi màn hình */
+    }
+}
+
+.close-alert {
+    cursor: pointer;
+    padding: 0 5px;
+    border: none;
+    background: none;
+    font-size: 20px;
+    color: #FF5722; /* Màu mới cho nút đóng */
+    text-shadow: 1px 1px 3px #000; /* Hiệu ứng chữ nổi */
+}

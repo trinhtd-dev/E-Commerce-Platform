@@ -1,0 +1,12 @@
+mixin pagination (pagination) 
+    nav(aria-label='Page navigation example')
+        ul.pagination
+            if(pagination.currentPage > 1)
+                li.page-item
+                    a.page-link(href='#' page= `${pagination.currentPage - 1}`) Previous
+            -for(var  page = 1; page <= pagination.totalPages; page++)
+                li.page-item(class=page === pagination.currentPage ? 'active' : '')
+                    a.page-link(href='#' , page= `${page}`) #{page} 
+            if(pagination.currentPage < pagination.totalPages)
+                li.page-item
+                    a.page-link(href='#' page=`${pagination.currentPage + 1}`) Next 

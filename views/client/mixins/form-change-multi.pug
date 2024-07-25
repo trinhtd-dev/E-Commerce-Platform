@@ -1,0 +1,20 @@
+mixin form-change-multi(path)
+    form(action=path 
+        method= "POST"
+        form-change-multi
+    ) 
+        div(class= "d-flex align-items-start")
+
+            .form-group
+                select(name="type", class="form-control form-control-sm mr-2", select-status)
+                    option(value="active") Active
+                    option(value="inactive") Inactive
+                    option(value="delete") Delete
+                    option(value="change-position") Change Position
+            .form-group
+                input(type="text"
+                    name="ids"
+                    value=""
+                    class="form-control form-control-sm mr-2 d-none"
+                )
+            button(type="submit", class =  "btn btn-primary btn-sm") Apply Changes

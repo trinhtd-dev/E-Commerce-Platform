@@ -1,0 +1,22 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  
+  .container.my-3
+    .row
+      .col-12
+        .box-head
+          h2.inner-title Product List
+    .row
+      each product in products
+        .col-4.mb-3
+          .product-item
+            a(href=`/products/detail/${product.slug}`)
+              .inner-image
+                img(src=product.thumbnail alt=product.title)
+              .inner-content
+                h3.inner-title= product.title
+                .inner-price-old #{product.price}$
+                .inner-discount -#{product.discountPercentage}%
+                .inner-price-new  #{product.newPrice}$
