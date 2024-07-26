@@ -3,6 +3,7 @@ const { request } = require("../../routes/admin/products.route");
 const filterStatusHelpers = require("../../helpers/filterStatus");
 const paginationHelpers = require("../../helpers/pagination");
 const systemConfig = require("../../config/system")
+
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
 // Filter data
@@ -139,16 +140,14 @@ module.exports.create = async (req, res) => {
 // [POST] /admin/products/create
 module.exports.createPost = async (req, res) => {
 // change to correct data type   
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-    req.body.price = parseFloat(req.body.price);
-    req.body.stock = parseInt(req.body.stock);
-    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
-    req.body.position = parseInt(req.body.position);
+    if(req.body.price) req.body.price = parseFloat(req.body.price);
+    if(req.body.stock) req.body.stock = parseInt(req.body.stock);
+    if(req.body.discountPercentage) req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    if(req.body.position) req.body.position = parseInt(req.body.position);
     if(!req.body.position){
         req.body.position = await Product.countDocuments({}) + 1;
     }
     else req.body.position = parseInt(req.body.position);
-
 
     const product = new Product(req.body);
 
@@ -156,6 +155,7 @@ module.exports.createPost = async (req, res) => {
         await product.save();
         req.flash('success', 'Create product successfully');
     } catch (error) {
+        console.log(error);
         req.flash('error', "Create product failed");
     }
     res.redirect(`${systemConfig.prefixAdmin}/products`);
@@ -181,13 +181,13 @@ module.exports.edit = async (req, res) => {
 
 //[PATCH] /admin/products/fix/:id
 module.exports.editPost = async (req, res) => {
-    if(req.file)
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-
-    req.body.price = parseFloat(req.body.price);
-    req.body.stock = parseInt(req.body.stock);
-    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
-    req.body.position = parseInt(req.body.position);
+    if(req.body.price) req.body.price = parseFloat(req.body.price);
+    if(req.body.stock) req.body.stock = parseInt(req.body.stock);
+    if(req.body.discountPercentage) req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    if(!req.body.position){
+        req.body.position = await Product.countDocuments({}) + 1;
+    }
+    else req.body.position = parseInt(req.body.position);
 
     const id = req.params.id;
     try {
@@ -197,7 +197,6 @@ module.exports.editPost = async (req, res) => {
     } catch (error) {
         req.flash('error', 'Update product failed');
     }
-   
     res.redirect(`${systemConfig.prefixAdmin}/products`);
 
 };
