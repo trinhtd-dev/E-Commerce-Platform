@@ -1,5 +1,6 @@
 //reuire
 const express = require("express");
+const path = require('path');
 require("dotenv").config();
 const clientRoutes = require("./routes/client/index.route");
 const adminRoutes = require("./routes/admin/index.route");
@@ -48,6 +49,11 @@ database.connect();
 
 //static file
 app.use(express.static(`${__dirname}/public`));
+
+
+//tinyClound
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+
 
 //routes
 clientRoutes(app);
