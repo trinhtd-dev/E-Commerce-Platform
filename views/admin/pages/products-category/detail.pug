@@ -1,0 +1,41 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  
+  h1.text-center.mb-4 Product Category Details
+  .container
+      .card.mb-4
+        .row.gutters
+          .col-md-4
+            img(src=record.thumbnail, alt=`${record.title} Thumbnail`, class="card-img img-fluid")
+          .col-md-8
+            .card-body
+              h2.card-title= record.title
+              ul.list-group.list-group-flush
+                
+                if(record.parent) 
+                  li.list-group-item
+                    strong Parent: 
+                    | !{record.parent}
+                
+                if(record.description) 
+                  li.list-group-item
+                    strong Description: 
+                    | !{record.description}
+              
+                if(record.status)
+                  li.list-group-item
+                    strong Status: 
+                    | #{record.status}
+
+                if(record.position)
+                  li.list-group-item
+                    strong Position: 
+                    | #{record.position}
+      .text-center
+        a.btn.btn-primary(href=`${prefixAdmin}/products-category/edit/${record.id}`) Edit
+  
+  script(src="/admin/js/script.js")

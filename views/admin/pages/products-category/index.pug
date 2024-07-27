@@ -20,21 +20,17 @@ block content
                     +form-search(keyword)
     +sort(sortOptions) 
                             
-    
-    
     .card.mb-3
-        .card-header.text-muted Products List 
+        .card-header.text-muted Product Category List 
         .card-body
             .row 
                 .col-6
-                    +form-change-multi(`${prefixAdmin}/products/change-multi?_method=PATCH`)
+                    +form-change-multi(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
                 .col-3 
-                    a(href=`${prefixAdmin}/products/create` 
+                    a(href=`${prefixAdmin}/products-category/create` 
                         class="btn btn-primary float-right"
-                        ) + Create Product
-    
+                        ) + Create New
                         
-
             table(class= "table table-hover table-sm"
                 checkbox-multi
             ) 
@@ -45,12 +41,11 @@ block content
                         th STT 
                         th Images
                         th Title
-                        th Price
                         th Position 
                         th Status 
                         th Action
                 tbody 
-                    each item, index in products
+                    each item, index in records
                         tr 
                             td 
                                 input(type="checkbox", name="id"
@@ -60,7 +55,6 @@ block content
                             td 
                                 img(src=item.thumbnail, alt=item.title, width="80px", height="50px")
                             td #{item.title}
-                            td #{item.price}$
                             td
                                 input(type="number"
                                     name="position"
@@ -87,11 +81,11 @@ block content
                                         ) #{item.status}
                                    
                             td
-                                a(href=`${prefixAdmin}/products/edit/${item.id}` 
+                                a(href=`${prefixAdmin}/products-category/edit/${item.id}` 
                                     class="btn btn-warning btn-sm" 
                                     button-edit-product
                                 ) Edit 
-                                a(href=`${prefixAdmin}/products/detail/${item.id}` 
+                                a(href=`${prefixAdmin}/products-category/detail/${item.id}` 
                                     class="btn btn-secondary btn-sm"
                                     style="margin-left: 5px" 
                                 ) Detail
@@ -100,12 +94,12 @@ block content
     form(action=""
         method="POST"
         form-change-status
-        data-path= `${prefixAdmin}/products/change-status`
+        data-path= `${prefixAdmin}/products-category/change-status`
     ) 
     form(action=""
         method="POST"
         form-delete-product 
-        data-path= `${prefixAdmin}/products/delete-product`
+        data-path= `${prefixAdmin}/products-category/delete-product-category`
     )
     script(src=`/admin/js/product.js`) 
     script(src="/admin/js/script.js") 
