@@ -1,0 +1,23 @@
+mixin sort()
+    .card.mb-3
+        .card-header.text-muted Sorting
+        .card-body
+            div(sort) 
+                .row 
+                    .col-3  
+                        select(
+                            name="sort"
+                            class = "form-control "
+                            select-sort
+                            )
+                                option(value="position-asc" )  Increasing position
+                                option(value="position-desc")  Decreasing position
+                                option(value="title-asc" )  A-Z
+                                option(value="title-desc")  Z-A
+                                option(value="price-asc")  Increasing price
+                                option(value="price-desc")  Decreasing price
+                    .col-1  
+                        button( 
+                            class="btn btn-danger"
+                            button-reset
+                        ) Reset 

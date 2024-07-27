@@ -134,3 +134,27 @@ if(formUpload){
 
     });
 }
+
+// Sorting --------------------------------------------------------------------------------------------------------------------
+const sort = document.querySelector("[sort]");
+if(sort){
+    let url = new URL(window.location.href);
+    const selectSort = sort.querySelector("[select-sort]");
+        selectSort.addEventListener("change", () => {
+            const sorting = selectSort.value;
+            if (sorting)
+                url.searchParams.set('sorting', sorting);
+            else
+                url.searchParams.delete('sorting');
+        
+            window.location.href = url.href;
+        });
+    const buttonReset = sort.querySelector("[button-reset]");
+    buttonReset.addEventListener("click", () => {
+        url.searchParams.delete('sorting');
+        window.location.href = url.href;
+    });
+    const optionSort = selectSort.querySelector(`option[value=${url.searchParams.get('sorting')}]`);
+    if(optionSort)
+        optionSort.selected = true;
+}

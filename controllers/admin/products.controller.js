@@ -24,17 +24,24 @@ module.exports.index = async (req, res) => {
     }
 
 // Pagination
-
     const totalProducts = await Product.countDocuments(find);
     const objectPagination = paginationHelpers({
         currentPage: 1,
         limit: 5,
     }, req.query, totalProducts);
 
-
-    //Render to view
+//
+    // Sorting
+    let sorting = {};
+    if(req.query.sorting){
+        [criterial, direction] = req.query.sorting.split('-');
+        sorting[criterial] = direction;  
+    }
+    else sorting.positon = "asc";
+    
+    //Render to view 
     const products = await Product.find(find)
-        .sort("position ASC")
+        .sort(sorting)
         .limit(objectPagination.limit)
         .skip(objectPagination.skip);
 
@@ -44,6 +51,7 @@ module.exports.index = async (req, res) => {
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPagination,
+        sorting: sorting,
     });
 };
 

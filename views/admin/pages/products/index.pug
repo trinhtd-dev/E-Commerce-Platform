@@ -4,7 +4,7 @@ include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
-
+include ../../mixins/sort.pug
 
 block content 
     
@@ -18,8 +18,10 @@ block content
                     +filter-status(filterStatus) 
                 .col-6 
                     +form-search(keyword)
-    
+    +sort()
                             
+    
+    
     .card.mb-3
         .card-header.text-muted Products List 
         .card-body
@@ -30,6 +32,8 @@ block content
                     a(href=`${prefixAdmin}/products/create` 
                         class="btn btn-primary float-right"
                         ) + Create Product
+    
+                        
 
             table(class= "table table-hover table-sm"
                 checkbox-multi

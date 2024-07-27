@@ -3,10 +3,10 @@ mixin form-change-multi(path)
         method= "POST"
         form-change-multi
     ) 
-        div(class= "d-flex align-items-start")
+        div(class= "d-flex align-items-start ")
 
-            .form-group
-                select(name="type", class="form-control form-control-sm mr-2", select-status)
+            .form-group.mr-1
+                select(name="type", class="form-control form-control ", select-status)
                     option(value="active") Active
                     option(value="inactive") Inactive
                     option(value="delete") Delete
@@ -17,4 +17,4 @@ mixin form-change-multi(path)
                     value=""
                     class="form-control form-control-sm mr-2 d-none"
                 )
-            button(type="submit", class =  "btn btn-primary btn-sm") Apply Changes
+            button(type="submit", class =  "btn btn-primary ") Apply Changes
