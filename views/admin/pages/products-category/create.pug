@@ -1,5 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/parent-level.pug
+
+
 block content
   +alert-error(5000)
   +alert-success(5000)
@@ -26,12 +29,13 @@ block content
         div
           label(for="parent").form-label Parent:
         div
-          input(
-            type="text"
+          select(
             id="parent"
             name="parent"
             class="form-control"
-          )      
+          )
+            option(value="") -- Choose Parent --
+            +parent-level(records)
     .form-group.mb-3
       div
         label(for="description" ).form-label Description:
@@ -97,5 +101,3 @@ block content
         )
 
     button(type="submit").btn.btn-primary Create Product Category
-
-  script(src="/admin/js/script.js") 

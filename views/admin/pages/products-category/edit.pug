@@ -27,13 +27,16 @@ block content
         div
           label(for="parent").form-label Parent:
         div
-          input(
-            type="text"
+          select(
             id="parent"
             name="parent"
             class="form-control"
-            value = record.parent
-          )      
+          )
+            option(value="") -- Choose Parent --
+              each item in records  
+                option(
+                  value= item.id
+                )= item.title
     .form-group.mb-3
       div
         label(for="description").form-label Description:

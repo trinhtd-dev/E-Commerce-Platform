@@ -1,0 +1,7 @@
+mixin parent-level(items, level = 1)
+    each item in items
+        option(
+            value= item.id
+        )= `${'-- '.repeat(level)} ${item.title}`
+        if(item.children && item.children.length)
+            +parent-level(item.children, level + 1)

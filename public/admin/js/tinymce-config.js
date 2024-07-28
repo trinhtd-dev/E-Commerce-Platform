@@ -2,6 +2,7 @@ tinymce.init({
     selector: '[tinymce]',
     plugins: 'lists link image table code help wordcount',
     toolbar: 'undo redo | link image | code',
+    license_key: 'gpl',
     /* enable title field in the Image dialog*/
     image_title: true,
     /* enable automatic uploads of images represented by blob or data URIs*/

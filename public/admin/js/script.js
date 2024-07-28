@@ -1,9 +1,8 @@
-// Status Button
+// Change Status
 const statusButtons = document.querySelectorAll("[status-button]");
 if (statusButtons.length > 0) {
     let url = new URL(window.location.href);
     statusButtons.forEach(button => {
-
         button.addEventListener('click', function () {
             const statusValue = button.getAttribute('status-button')
             console.log(statusValue);
