@@ -1,4 +1,4 @@
-const productCategory = require("../../models/product-category");
+const productCategory = require("../../models/product-category.model");
 const { request } = require("../../routes/admin/products-category.route");
 const filterStatusHelpers = require("../../helpers/filterStatus");
 const paginationHelpers = require("../../helpers/pagination");
@@ -48,10 +48,10 @@ module.exports.index = async (req, res) => {
         currentPage: 1,
         limit: 10,
     }, req.query, totalProducts);
-
 //
 
     const newRecord  = records.slice(objectPagination.skip,objectPagination.skip + objectPagination.limit);
+   
     res.render(`admin/pages/products-category/index`, {
         title: "Category of Products",
         records: newRecord,
@@ -185,7 +185,7 @@ module.exports.edit = async (req, res) => {
         res.render("admin/pages/products-category/edit", {
             title: "Edit Product",
             record: record,
-            records: records,
+            records: createTreeHelpers(records),
  
         });
    }

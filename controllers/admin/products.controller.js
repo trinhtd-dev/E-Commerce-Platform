@@ -1,8 +1,11 @@
 const Product = require("../../models/product.model");
+const productCategory = require("../../models/product-category.model");
+
 const { request } = require("../../routes/admin/products.route");
 const filterStatusHelpers = require("../../helpers/filterStatus");
 const paginationHelpers = require("../../helpers/pagination");
 const systemConfig = require("../../config/system")
+const createTreeHelpers = require("../../helpers/createTree");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -147,8 +150,10 @@ module.exports.deleteProduct = async (req, res) => {
 
 // [GET] /admin/products/create
 module.exports.create = async (req, res) => {
+    const categories = await productCategory.find({});
     res.render("admin/pages/products/create", {
         title: "Create Product",
+        categories: createTreeHelpers(categories),
     });
 };
 
@@ -182,9 +187,11 @@ module.exports.edit = async (req, res) => {
    try{
         const id = req.params.id;
         const product = await Product.findById(id);
+        const categories = await productCategory.find({});
         res.render("admin/pages/products/edit", {
             title: "Edit Product",
             product: product,
+            categories: createTreeHelpers(categories),
         });
    }
    catch(err){

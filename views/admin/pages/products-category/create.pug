@@ -1,6 +1,6 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
-include ../../mixins/parent-level.pug
+include ../../mixins/select-tree.pug
 
 
 block content
@@ -35,7 +35,7 @@ block content
             class="form-control"
           )
             option(value="") -- Choose Parent --
-            +parent-level(records)
+            +select-tree(records)
     .form-group.mb-3
       div
         label(for="description" ).form-label Description:

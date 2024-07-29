@@ -1,5 +1,7 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
 block content
   +alert-error(5000)
 
@@ -33,10 +35,7 @@ block content
             class="form-control"
           )
             option(value="") -- Choose Parent --
-              each item in records  
-                option(
-                  value= item.id
-                )= item.title
+              +select-tree(records, 1, record.parent)
     .form-group.mb-3
       div
         label(for="description").form-label Description:

@@ -15,6 +15,10 @@ block content
             .card-body
               h2.card-title= product.title
               ul.list-group.list-group-flush
+                if(product.productCategoryId) 
+                  li.list-group-item
+                    strong Product Category : 
+                    | !{product.productCategoryId}
                 if(product.description) 
                   li.list-group-item
                     strong Description: 

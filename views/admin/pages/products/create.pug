@@ -1,5 +1,7 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
 block content
   +alert-error(5000)
   +alert-success(5000)
@@ -22,6 +24,17 @@ block content
           required
           class="form-control"
         )
+    .form-group.mb-3
+      div
+        label(for="product-category-id").form-label Product Category :
+      div
+        select(
+          id="product-category-id"
+          name="productCategoryId"
+          class="form-control"
+        )
+          option(value="") -- Choose Product Category --
+          +select-tree(categories)
     .form-group.mb-3
       div
         label(for="description" ).form-label Description:

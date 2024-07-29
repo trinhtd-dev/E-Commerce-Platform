@@ -3,7 +3,7 @@ const createTree = (arr, parent = "") => {
     const result = [];
     for (let item of arr) {
         if (item.parent == parent) {
-            let newItem = { ...item._doc };  
+            let newItem = item;
             newItem.index = count;
             count++;
             const children = createTree(arr, item._id);
