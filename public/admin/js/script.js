@@ -16,6 +16,27 @@ if (statusButtons.length > 0) {
     });
 }
 
+//Detele Record
+const buttonDeleteRecord = document.querySelectorAll("[button-delete-record")
+if(buttonDeleteRecord.length > 0) {
+    buttonDeleteRecord.forEach(button => { 
+        button.addEventListener("click", () => {
+            isConfirmDeleteRecord= confirm("Are you sure you want to delete it?");
+            if(isConfirmDeleteRecord){
+                const formDeleteRecord = document.querySelector("[form-delete-record]");
+                console.log(formDeleteRecord);
+
+                const dataPath = formDeleteRecord.getAttribute("data-path");
+                const dataId = button.getAttribute("data-id");
+                const action =  `${dataPath}/${dataId}?_method=DELETE`;
+                formDeleteRecord.setAttribute("action", action);
+                formDeleteRecord.submit();
+            }
+        });
+    });
+}
+
+
 // Search Products----------------------------------------------------------------------------------------------------------------
 const formSearch = document.querySelector("#form-search");
 if(formSearch){

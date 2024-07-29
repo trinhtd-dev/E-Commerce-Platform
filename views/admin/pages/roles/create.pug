@@ -1,0 +1,39 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  h1.mb-4 Create New Role
+  form(
+    action=`${prefixAdmin}/roles/create`
+    method="POST"
+    class="needs-validation"
+    novalidate
+  )
+    .form-group.mb-3
+      div
+        label(for="title").form-label Title:
+      div
+        input(
+          type="text"
+          id="title"
+          name="title"
+          required
+          class="form-control"
+        )
+    .form-group.mb-3
+      div
+        label(for="description" ).form-label Short Description:
+      div
+        textarea(
+          id="description"
+          tinymce
+          name="description"
+          rows="5"
+          required
+          class="form-control"
+        )
+    button(type="submit").btn.btn-primary Create Role
+
+  script(src="/admin/js/script.js") 

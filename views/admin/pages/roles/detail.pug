@@ -1,0 +1,23 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  h1.text-center.mb-4 Role Details
+  .container
+      .card.mb-4
+        .row.gutters
+          .col-md-2
+          .col-md-5
+            .card-body
+              h2.card-title= record.title
+              ul.list-group.list-group-flush
+                if(record.description) 
+                  li.list-group-item
+                    strong Short Description: 
+                    | !{record.description}
+      .text-center
+        a.btn.btn-primary(href=`${prefixAdmin}/roles/edit/${record.id}`) Edit
+  
+  script(src="/admin/js/script.js")

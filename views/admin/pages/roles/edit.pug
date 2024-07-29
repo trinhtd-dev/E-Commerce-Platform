@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
+block content
+  +alert-error(5000)
+
+  h1.mb-4 Edit Role
+  form(
+    action=`${prefixAdmin}/roles/edit/${record.id}?_method=PATCH`
+    method="POST"
+    class="needs-validation"
+  )
+    .form-group.mb-3
+      div
+        label(for="title").form-label Title:
+      div
+        input(
+          type="text"
+          id="title"
+          name="title"
+          required
+          class="form-control"
+          value=record.title
+        )
+    .form-group.mb-3
+      div
+        label(for="description").form-label Short Description:
+      div
+        textarea(
+          tinymce
+          id="description"
+          name="description"
+          rows="5"
+          class="form-control"
+        )= record.description
+    
+    button(type="submit").btn.btn-primary Update Role 
+
+  script(src="/admin/js/script.js")
