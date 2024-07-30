@@ -83,3 +83,28 @@ module.exports.delete = async (req, res) => {
     }    
     res.redirect('back');
 };
+
+module.exports.permissions = async (req, res) => {
+    const find = {
+        deleted: false
+    }
+    const records = await Role.find(find);
+    res.render('admin/pages/roles/permissions', {
+        title: 'Permissions',
+        records: records,
+    });
+};
+
+module.exports.permissionsPatch = async (req, res) => {
+    const permissions = JSON.parse(req.body.permissions);
+    try {
+        for(const permission of permissions){
+            await Role.updateOne({_id: permission.id}, {permissions: permission.permission})
+        }
+        req.flash('success', 'Permissions updated successfully');
+
+    } catch (error) {
+        req.flash('error', "Error updating permissions");
+    }
+    res.redirect(`${systemConfig.prefixAdmin}/roles/permissions`);
+};

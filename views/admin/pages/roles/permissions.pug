@@ -1,0 +1,127 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  -//data 
+  div(data-records=JSON.stringify(records)) 
+
+  h1 Permission Management
+  if(records)
+    .table-responsive.mt-3(table-permission)
+      table.table.table-hover.table-sm
+        thead
+          tr
+            th Feature
+            each item in records 
+              th= item.title
+        tbody
+          tr(data-name="id")
+            th(scope="row") Product Category
+            each item in records 
+              td 
+                input(type="text", value=`${item.id}`, class="d-none")  
+          tr(data-name="product-category-view")  
+            td View
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-category-add") 
+            td Add New
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-category-edit") 
+            td Edit
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-category-detele") 
+            td Delete
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          
+          tr
+            th(scope="row") Product
+            each item in records 
+              td 
+                input(type="text", value=`${item.id}`, class="d-none")  
+          tr(data-name="product-view")  
+            td View
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-add") 
+            td Add New
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-edit") 
+            td Edit
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="product-detele") 
+            td Delete
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+
+
+
+          tr
+            th(scope="row" ) Role
+            each item in records 
+              td 
+                input(type="text", value=`${item.id}`, class="d-none")  
+          tr(data-name="role-view")  
+            td View
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="role-add") 
+            td Add New
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="role-edit") 
+            td Edit
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="role-detele") 
+            td Delete
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="role-permission") 
+            td Permission
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+
+                  
+    .row 
+      .col-md-5
+      .col-md-1
+        button.btn.btn-primary.mt-3(type="button" button-permission) Update
+  form(action=`${prefixAdmin}/roles/permissions?_method=PATCH`, method="post" form-permission)
+    input(type="text" name="permissions" class="d-none") 
+
+  script(src="/admin/js/roles.js")
+  
