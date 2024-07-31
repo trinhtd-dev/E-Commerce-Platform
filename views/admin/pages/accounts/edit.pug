@@ -1,0 +1,70 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  
+  h1 Edit Account
+  form(action=`${prefixAdmin}/accounts/edit/${record.id}?_method=PATCH`
+   method="post"
+   enctype="multipart/form-data"
+  )
+    .form-group
+      label(for="fullName") Full Name
+      input.form-control(
+        type="text"
+        name="fullName"
+        id="fullName"
+        required
+        value= record.fullName
+      )
+    
+    .form-group
+      label(for="avatar") Avatar
+      div
+        input(type="file", name="avatar", id="avatar")
+        div.mt-2
+          if record.avatar
+            img(src=record.avatar, alt="Avatar", width="100")
+    
+    .form-group
+      label(for="email") Email
+      input.form-control(
+        type="email"
+        name="email"
+        id="email"
+        required
+        value= record.email
+      )
+    
+    .form-group
+      label(for="password") Password
+      input.form-control(
+        type="text"
+        name="password"
+        id="password"
+      )
+    
+    .form-group
+      label(for="phone") Phone
+      input.form-control(
+        type="text"
+        name="phone"
+        id="phone"
+        value= record.phone
+      )
+    
+    .form-group
+      label(for="role") Role
+      select.form-control(name="role", id="role")
+        each role in roles
+          option(value=role.id selected=(role.id == record.role))= role.title
+    
+    .form-group
+      label(for="status") Status
+      select.form-control(name="status", id="status")
+        option(value="active" selected=(record.status == "active")) Active
+        option(value="inactive" selected=(record.status == "inactive")) Inactive
+    
+    button.btn.btn-primary(type="submit") Update Account

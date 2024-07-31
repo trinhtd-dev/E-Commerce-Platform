@@ -8,7 +8,7 @@ const streamifier = require('streamifier')
 
 const uploadCloud = require("../../middlewares/uploadCloud.middleware.js");
 
-const productsValudate = require("../../validates/admin/products.valudate.js");
+const productsValidate = require("../../validates/admin/products.validate.js");
 
 const productsController = require("../../controllers/admin/products.controller");
 
@@ -25,7 +25,7 @@ router.get('/create', productsController.create);
 router.post('/create',
     upload.single('thumbnail'),
     uploadCloud,
-    productsValudate.createPost,
+    productsValidate.createPost,
     productsController.createPost
 );
 
@@ -34,7 +34,7 @@ router.get('/edit/:id', productsController.edit);
 router.patch('/edit/:id',
     upload.single('thumbnail'),
     uploadCloud,
-    productsValudate.editPost,
+    productsValidate.editPost,
     productsController.editPost
 );
 

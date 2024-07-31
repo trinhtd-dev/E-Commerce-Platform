@@ -4,7 +4,7 @@ mixin alert-success(time)
             data-time=time
             alert-message 
         ) #{messages.success} 
-            button(class= "close-alert" close-alert) x 
+            button(class= "close-alert" close-alert ) X
 
 mixin alert-error(time)
     - if (messages.error)
@@ -12,4 +12,4 @@ mixin alert-error(time)
             data-time=time
             alert-message
         ) #{messages.error} 
-            button(class= "close-alert" close-alert) x 
+            button(class= "close-alert" close-alert) X
