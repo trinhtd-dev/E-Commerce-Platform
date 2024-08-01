@@ -10,12 +10,12 @@ const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const flash  = require("express-flash");
 const session = require('express-session');
-
+const cookieParser = require('cookie-parser');
 
 
 const app = express();
 
-
+app.use(cookieParser());
 //Set Express Flash : Alert
 app.use(session({
     secret: 'keyboard cat', // Replace with your secret key
