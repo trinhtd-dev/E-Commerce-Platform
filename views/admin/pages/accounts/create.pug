@@ -4,43 +4,43 @@ include ../../mixins/alert.pug
 block content
   +alert-error(5000)
   +alert-success(5000)
-  
-  h1 Create Account
-  form(action=`${prefixAdmin}/accounts/create`
-   method="post"
-   enctype="multipart/form-data"
-  )
-    .form-group
-      label(for="fullName") Full Name
-      input.form-control(type="text", name="fullName", id="fullName", required)
-    
-    .form-group
-      label(for="avatar") Avatar
-      div
-        input(type="file", name="avatar", id="avatar")
-    
-    .form-group
-      label(for="email") Email
-      input.form-control(type="email", name="email", id="email", required)
-    
-    .form-group
-      label(for="password") Password
-      input.form-control(type="tex", name="password", id="password", required)
-    
-    .form-group
-      label(for="phone") Phone
-      input.form-control(type="text", name="phone", id="phone")
-    
-    .form-group
-      label(for="role") Role
-      select.form-control(name="role", id="role")
-        each role in roles
-          option(value=role.id)= role.title
-    
-    .form-group
-      label(for="status") Status
-      select.form-control(name="status", id="status")
-        option(value="active") Active
-        option(value="inactive") Inactive
-    
-    button.btn.btn-primary(type="submit") Create Account
+  if (role.permissions.includes("account-create"))
+    h1 Create Account
+    form(action=`${prefixAdmin}/accounts/create`
+    method="post"
+    enctype="multipart/form-data"
+    )
+      .form-group
+        label(for="fullName") Full Name
+        input.form-control(type="text", name="fullName", id="fullName", required)
+      
+      .form-group
+        label(for="avatar") Avatar
+        div
+          input(type="file", name="avatar", id="avatar")
+      
+      .form-group
+        label(for="email") Email
+        input.form-control(type="email", name="email", id="email", required)
+      
+      .form-group
+        label(for="password") Password
+        input.form-control(type="tex", name="password", id="password", required)
+      
+      .form-group
+        label(for="phone") Phone
+        input.form-control(type="text", name="phone", id="phone")
+      
+      .form-group
+        label(for="role") Role
+        select.form-control(name="role", id="role")
+          each role in roles
+            option(value=role.id)= role.title
+      
+      .form-group
+        label(for="status") Status
+        select.form-control(name="status", id="status")
+          option(value="active") Active
+          option(value="inactive") Inactive
+      
+      button.btn.btn-primary(type="submit") Create Account

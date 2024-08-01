@@ -3,6 +3,10 @@ const md5 = require("md5");
 const systemConfig = require("../../config/system");
 
 module.exports.login = (req, res) => {
+    if(req.cookies.token){
+        return res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+    }
+
     res.render("admin/pages/auths/login", {
     });
 };

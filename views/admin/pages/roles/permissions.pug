@@ -9,6 +9,14 @@ block content
 
   h1 Permission Management
   if(records)
+    .row
+      .col-9.d-flex.justify-content-end
+        button.btn.btn-primary(
+          type="button"
+          button-permission
+        ) Update
+        
+      
     .table-responsive.mt-3(table-permission)
       table.table.table-hover.table-sm
         thead
@@ -40,7 +48,7 @@ block content
               td
                 .form-check
                   input.form-check-input(type="checkbox")
-          tr(data-name="product-category-detele") 
+          tr(data-name="product-category-delete") 
             td Delete
             each item in records
               td
@@ -49,9 +57,6 @@ block content
           
           tr
             th(scope="row") Product
-            each item in records 
-              td 
-                input(type="text", value=`${item.id}`, class="d-none")  
           tr(data-name="product-view")  
             td View
             each item in records
@@ -70,7 +75,7 @@ block content
               td
                 .form-check
                   input.form-check-input(type="checkbox")
-          tr(data-name="product-detele") 
+          tr(data-name="product-delete") 
             td Delete
             each item in records
               td
@@ -81,9 +86,6 @@ block content
 
           tr
             th(scope="row" ) Role
-            each item in records 
-              td 
-                input(type="text", value=`${item.id}`, class="d-none")  
           tr(data-name="role-view")  
             td View
             each item in records
@@ -102,7 +104,7 @@ block content
               td
                 .form-check
                   input.form-check-input(type="checkbox")
-          tr(data-name="role-detele") 
+          tr(data-name="role-delete") 
             td Delete
             each item in records
               td
@@ -116,10 +118,37 @@ block content
                   input.form-check-input(type="checkbox")
 
                   
-    .row 
-      .col-md-5
-      .col-md-1
-        button.btn.btn-primary.mt-3(type="button" button-permission) Update
+   
+          tr
+            th(scope="row") Account
+          tr(data-name="account-view")  
+            td View
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="account-add") 
+            td Add New
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="account-edit") 
+            td Edit
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")
+          tr(data-name="account-delete") 
+            td Delete
+            each item in records
+              td
+                .form-check
+                  input.form-check-input(type="checkbox")   
+   
+   
+   
+   
   form(action=`${prefixAdmin}/roles/permissions?_method=PATCH`, method="post" form-permission)
     input(type="text" name="permissions" class="d-none") 
 

@@ -19,30 +19,38 @@ mixin table-tree(items, level = 1)
                     data-id= item.id
                 )
             td 
-                if(item.status == "active")
-                    a(href="javascript:"
-                        class="badge badge-success"
-                        data-id = item.id
-                        data-status = item.status
-                        button-change-status
-                        ) #{item.status}
+                if(role.permissions.includes("product-category-edit"))
+                    if(item.status == "active")
+                        a(href="javascript:"
+                            class="badge badge-success"
+                            data-id = item.id
+                            data-status = item.status
+                            button-change-status
+                            ) #{item.status}
+                    else 
+                        a(href=`javascript:`
+                            class="badge badge-danger"
+                            data-id = item.id
+                            data-status = item.status
+                            button-change-status
+                            ) #{item.status}
                 else 
-                    a(href=`javascript:`
-                        class="badge badge-danger"
-                        data-id = item.id
-                        data-status = item.status
-                        button-change-status
-                        ) #{item.status}
+                    if(item.status == "active")
+                        span(class="badge badge-success") #{item.status}
+                    else 
+                        span(class="badge badge-danger") #{item.status}
                     
-            td  
-                a(href=`${prefixAdmin}/products-category/edit/${item.id}` 
-                    class="btn btn-warning btn-sm" 
-                    button-edit-product
-                ) Edit 
+            td 
+                if(role.permissions.includes("product-category-edit")) 
+                    a(href=`${prefixAdmin}/products-category/edit/${item.id}` 
+                        class="btn btn-warning btn-sm" 
+                        button-edit-product
+                    ) Edit 
                 a(href=`${prefixAdmin}/products-category/detail/${item.id}` 
                     class="btn btn-secondary btn-sm"
                     style="margin-left: 5px" 
                 ) Detail
-                button(class="btn btn-danger btn-sm ml-1" data-id= item.id button-delete-product) Delete
+                if(role.permissions.includes("product-category-delete"))
+                    button(class="btn btn-danger btn-sm ml-1" data-id= item.id button-delete-product) Delete
         if(item.children && item.children.length)
             +table-tree(item.children, level + 1)

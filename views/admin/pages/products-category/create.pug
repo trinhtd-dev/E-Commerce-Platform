@@ -6,98 +6,99 @@ include ../../mixins/select-tree.pug
 block content
   +alert-error(5000)
   +alert-success(5000)
-  h1.mb-4 Create New Product Category
-  form(
-    action=`${prefixAdmin}/products-category/create`
-    method="POST"
-    class="needs-validation"
-    enctype ="multipart/form-data"
-    novalidate
-  )
-    .form-group.mb-3
-      div
-        label(for="title").form-label Title:
-      div
-        input(
-          type="text"
-          id="title"
-          name="title"
-          required
-          class="form-control"
-        )
+  if(role.permissions.includes("product-category-create"))
+    h1.mb-4 Create New Product Category
+    form(
+      action=`${prefixAdmin}/products-category/create`
+      method="POST"
+      class="needs-validation"
+      enctype ="multipart/form-data"
+      novalidate
+    )
       .form-group.mb-3
         div
-          label(for="parent").form-label Parent:
+          label(for="title").form-label Title:
         div
-          select(
-            id="parent"
-            name="parent"
+          input(
+            type="text"
+            id="title"
+            name="title"
+            required
             class="form-control"
           )
-            option(value="") -- Choose Parent --
-            +select-tree(records)
-    .form-group.mb-3
-      div
-        label(for="description" ).form-label Description:
-      div
-        textarea(
-          id="description"
-          tinymce
-          name="description"
-          rows="5"
-          required
-          class="form-control"
-        )
-    .form-group.mb-3(form-upload)
-      div
-        label(for="thumbnail" ).form-label Product Thumbnail:
-      div()
-        input(
-          type="file"
-          id="thumbnail"
-          name="thumbnail"
-          class="form-control-file"
-          accept="image/*"
-          input-upload 
-        )
-        img(
-          preview-upload
-          src="" 
-          alt="Thumbnail Preview" 
-          style= "max-width: 200px; margin-top: 10px;"
-        )
-    .form-group.mb-3
-      div
-        label(for="status").form-label Status:
-      div
-        .form-check
-          input(
-            type="radio"
-            id="status-active"
-            name="status"
-            value="active"
-            checked
-            class="form-check-input"
+        .form-group.mb-3
+          div
+            label(for="parent").form-label Parent:
+          div
+            select(
+              id="parent"
+              name="parent"
+              class="form-control"
+            )
+              option(value="") -- Choose Parent --
+              +select-tree(records)
+      .form-group.mb-3
+        div
+          label(for="description" ).form-label Description:
+        div
+          textarea(
+            id="description"
+            tinymce
+            name="description"
+            rows="5"
+            required
+            class="form-control"
           )
-          label(for="status-active").form-check-label Active
-        .form-check
+      .form-group.mb-3(form-upload)
+        div
+          label(for="thumbnail" ).form-label Product Thumbnail:
+        div()
           input(
-            type="radio"
-            id="status-inactive"
-            name="status"
-            value="inactive"
-            class="form-check-input"
+            type="file"
+            id="thumbnail"
+            name="thumbnail"
+            class="form-control-file"
+            accept="image/*"
+            input-upload 
           )
-          label(for="status-inactive").form-check-label Inactive
-    .form-group.mb-3
-      div
-        label(for="position").form-label Position:
-      div
-        input(
-          type="number"
-          id="position"
-          name="position"
-          class="form-control"
-        )
+          img(
+            preview-upload
+            src="" 
+            alt="Thumbnail Preview" 
+            style= "max-width: 200px; margin-top: 10px;"
+          )
+      .form-group.mb-3
+        div
+          label(for="status").form-label Status:
+        div
+          .form-check
+            input(
+              type="radio"
+              id="status-active"
+              name="status"
+              value="active"
+              checked
+              class="form-check-input"
+            )
+            label(for="status-active").form-check-label Active
+          .form-check
+            input(
+              type="radio"
+              id="status-inactive"
+              name="status"
+              value="inactive"
+              class="form-check-input"
+            )
+            label(for="status-inactive").form-check-label Inactive
+      .form-group.mb-3
+        div
+          label(for="position").form-label Position:
+        div
+          input(
+            type="number"
+            id="position"
+            name="position"
+            class="form-control"
+          )
 
-    button(type="submit").btn.btn-primary Create Product Category
+      button(type="submit").btn.btn-primary Create Product Category

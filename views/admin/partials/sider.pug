@@ -3,14 +3,19 @@
         ul 
             li
                a(href=  prefixAdmin + "/dashboard") Dashboard
-            li 
-                a(href= prefixAdmin + "/products") Products 
-            li
-                a(href= prefixAdmin + "/products-category") Category of products 
-            li 
-                a(href= prefixAdmin + "/roles") Roles
-            li  
-                a(href= prefixAdmin + "/roles/permissions") Permissions
-            li  
-                a(href= prefixAdmin + "/accounts") Accounts
+            if(role.permissions.includes("product-view"))
+                li 
+                    a(href= prefixAdmin + "/products") Products 
+            if(role.permissions.includes("product-category-view"))
+                li
+                    a(href= prefixAdmin + "/products-category") Category of products 
+            if(role.permissions.includes("role-view"))
+                li 
+                    a(href= prefixAdmin + "/roles") Roles
+            if(role.permissions.includes("role-permission"))
+                li  
+                    a(href= prefixAdmin + "/roles/permissions") Permissions
+            if(role.permissions.includes("account-view"))
+                li  
+                    a(href= prefixAdmin + "/accounts") Accounts
 
