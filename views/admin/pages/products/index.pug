@@ -5,6 +5,7 @@ include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
 include ../../mixins/sort.pug
+include ../../mixins/moment.pug
 
 block content 
     
@@ -50,7 +51,8 @@ block content
                             th Title
                             th Price
                             th Position 
-                            th Status 
+                            th Status
+                            th CreatedBy 
                             th Action
                     tbody 
                         each item, index in products
@@ -95,6 +97,11 @@ block content
                                         else 
                                             span(class="badge badge-danger") #{item.status}    
                                         
+                                td 
+                                    div= item.createdBy.accountName
+                                    if(item.createdBy)
+                                        +formatDay(item.createdBy.createdAt)
+                                
                                 td
                                     if(role.permissions.includes("product-edit"))
                                         a(href=`${prefixAdmin}/products/edit/${item.id}` 

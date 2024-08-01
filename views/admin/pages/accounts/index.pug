@@ -12,7 +12,7 @@ block content
             .card-body
                 .row 
                     .col-10.mb-367
-                        if(role.permissions.includes("account-edit"))
+                        if(role.permissions.includes("account-create"))
                             a(href=`${prefixAdmin}/accounts/create` 
                                 class="btn btn-primary float-right"
                                 ) + Create New

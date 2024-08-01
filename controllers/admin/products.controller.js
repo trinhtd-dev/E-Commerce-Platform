@@ -6,6 +6,8 @@ const filterStatusHelpers = require("../../helpers/filterStatus");
 const paginationHelpers = require("../../helpers/pagination");
 const systemConfig = require("../../config/system")
 const createTreeHelpers = require("../../helpers/createTree");
+const moment = require('moment');
+const Account = require("../../models/account.model");
 
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
@@ -55,6 +57,13 @@ module.exports.index = async (req, res) => {
         .limit(objectPagination.limit)
         .skip(objectPagination.skip);
 
+    const accounts = await Account.find({});
+    for(let product of products){
+        for(let account of accounts)
+            if(product.createdBy.accountId== account.id)
+                product.createdBy.accountName = account.fullName;
+    }
+
     res.render(`admin/pages/products/index`, {
         title: "Products List",
         products: products,
@@ -62,6 +71,7 @@ module.exports.index = async (req, res) => {
         keyword: objectSearch.keyword,
         pagination: objectPagination,
         sortOptions: sortOptions,
+        moment: moment,
     });
 };
 
@@ -139,8 +149,12 @@ module.exports.deleteProduct = async (req, res) => {
     await Product.updateOne({ _id: id }, 
         {   
             deleted: true,
-            deletedAt: new Date()
-        });
+            deletedBy: {
+                accountId: res.locals.user.id,
+                deletedAt: new Date(),
+            },
+        },
+    );
         req.flash("success", `Deleted product successfully`);
    } catch (error) {
      req.flash("error", `Deleted product failed`);
@@ -168,8 +182,12 @@ module.exports.createPost = async (req, res) => {
         req.body.position = await Product.countDocuments({}) + 1;
     }
     else req.body.position = parseInt(req.body.position);
-
+    req.body.createdBy = {
+        accountId: res.locals.user.id,
+    }
     const product = new Product(req.body);
+    
+
 
     try {
         await product.save();

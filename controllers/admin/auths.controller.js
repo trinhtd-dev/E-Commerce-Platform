@@ -14,7 +14,6 @@ module.exports.login = (req, res) => {
 module.exports.loginPost = async (req, res) => {
    const email = req.body.email;
    const password = req.body.password;
-    console.log(email, password);
 
     const emailExist = await Account.findOne({email: email });
 

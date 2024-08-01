@@ -12,6 +12,7 @@ const productsValidate = require("../../validates/admin/products.validate.js");
 
 const productsController = require("../../controllers/admin/products.controller");
 
+
 router.get('/', productsController.index);
 
 router.patch('/change-status/:status/:id/', productsController.changeStatus);
