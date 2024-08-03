@@ -208,3 +208,63 @@ h2.inner-title {
     object-fit: cover; /* Giữ nguyên tỉ lệ ảnh */
   }
 
+  .sub-menu {
+    position: relative;
+    z-index: 999;
+}
+
+.sub-menu > a {
+    display: block;
+    text-decoration: none;
+    color: #fff; /* Change text color to white for better contrast */
+    background-color: #343a40; /* Match header background color */
+    border: 1px solid #343a40;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.sub-menu > a:hover {
+    background-color: #495057; /* Slightly lighter shade for hover effect */
+}
+
+.sub-menu ul {
+    position: absolute;
+    left: 100%; /* Align submenus to the right of parent */
+    top: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: #343a40; /* Match header background color */
+    border: 1px solid #343a40;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    display: none;
+}
+
+.sub-menu ul li {
+    position: relative;
+}
+
+.sub-menu ul li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #fff; /* Change text color to white for better contrast */
+    background-color: #343a40; /* Match header background color */
+    transition: background-color 0.3s ease;
+}
+
+.sub-menu ul li a:hover {
+    background-color: #495057; /* Slightly lighter shade for hover effect */
+}
+
+.sub-menu:hover > ul,
+.sub-menu ul li:hover > ul {
+    display: block;
+}
+
+.sub-menu ul li ul {
+    left: 100%; /* Align nested submenus to the right of parent */
+    top: 0;
+}
