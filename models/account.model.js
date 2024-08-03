@@ -18,7 +18,23 @@ const accountSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    deletedAt: Date,
+    createdBy: {
+        accountId: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+    },
+    deletedBy: {
+        accountId: String,
+        deletedAt: Date,
+    },
+    updatedBy:[
+        {
+            accountId: String,
+            updatedAt: Date,
+        }
+    ],
 }, 
 {
     timestamps: true

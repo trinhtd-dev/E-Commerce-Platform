@@ -31,7 +31,13 @@ const productSchema = new mongoose.Schema({
         accountId: String,
         deletedAt: Date,
     },
-    
+    updatedBy:[
+        {
+            accountId: String,
+            updatedAt: Date,
+        }
+    ],
+
     slug:{
         type: String,
         slug: "title",

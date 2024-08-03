@@ -4,5 +4,10 @@ header.header
             .col-3
                 .inner-logo
                     a(href= `${prefixAdmin}`) ADMIN   
-            .col-9.d-flex.justify-content-end
+            .col-8.d-flex.justify-content-end
+                if(user)
+                 a.btn.btn-primary.ml-auto(href=`${prefixAdmin}/my-account`)= user.fullName
+            
+            .col-1.d-flex.justify-content-end
                 a.btn.btn-danger.ml-auto(href=`${prefixAdmin}/auths/logout`) Logout
+            

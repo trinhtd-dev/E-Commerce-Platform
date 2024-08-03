@@ -37,8 +37,17 @@ module.exports.createPost = async (req, res) => {
     }
 
     try {
-        req.body.password = md5(req.body.password);
+        if(req.body.password){
+            req.body.password = md5(req.body.password);
+        } else {
+            delete req.body.password;
+        }
+    
         const account = new Account(req.body);
+        accout.createdBy = {
+            accountId: res.locals.user.id,
+            createdAt: new Date(),
+        }
         await account.save();
         req.flash('success', "Role created successfully");
         res.redirect(`${systemConfig.prefixAdmin}/accounts`);
@@ -90,7 +99,14 @@ module.exports.editPost = async (req, res) => {
     }
 
     try {
-        await Account.updateOne({_id: id}, req.body);
+        await Account.updateOne({_id: id}, {
+            ...req.body,
+            updatedBy: {
+                accountId: res.locals.user.id,
+                createdAt: new Date(),
+            }
+
+        });
         req.flash('success', 'Account updated successfully');
     } catch (error) {
         req.flash('error', "Account updated failed");
@@ -125,7 +141,13 @@ module.exports.detail = async (req, res) => {
 module.exports.delete = async (req, res) => {
     const id = req.params.id;
     try {
-        await Account.updateOne({_id: id}, {deleted: true});
+        await Account.updateOne({_id: id}, {
+            deletedBy:{
+                accountId: res.locals.user.id,
+                createdAt: new Date(),
+            },
+            deleted: true
+        });
         req.flash('success', 'Account deleted successfully');
     } catch (error) {
         req.flash('error', 'Account deleted failed');

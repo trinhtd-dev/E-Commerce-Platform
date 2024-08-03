@@ -5,7 +5,6 @@ const multer = require('multer');
 const upload = multer();
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier')
-
 const uploadCloud = require("../../middlewares/uploadCloud.middleware.js");
 
 const productsValidate = require("../../validates/admin/products.validate.js");

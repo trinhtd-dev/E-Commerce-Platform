@@ -52,7 +52,8 @@ block content
                             th Price
                             th Position 
                             th Status
-                            th CreatedBy 
+                            th CreatedBy
+                            th UpdatedBy  
                             th Action
                     tbody 
                         each item, index in products
@@ -101,7 +102,11 @@ block content
                                     div= item.createdBy.accountName
                                     if(item.createdBy)
                                         +formatDay(item.createdBy.createdAt)
-                                
+                                td
+                                    if(item.updatedBy && item.updatedBy.length > 0) 
+                                        div= item.updatedBy.slice(-1)[0].accountName
+                                        +formatDay(item.updatedBy.slice(-1)[0].updatedAt)
+
                                 td
                                     if(role.permissions.includes("product-edit"))
                                         a(href=`${prefixAdmin}/products/edit/${item.id}` 

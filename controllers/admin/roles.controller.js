@@ -25,6 +25,10 @@ module.exports.create = (req, res) => {
 
 module.exports.createPost = async (req, res) => {
    const role = new Role(req.body);
+   role.createdBy = {
+    accountId: res.locals.user.id,
+    createdAt: new Date(),
+   }
     try {
         await role.save();
         req.flash('success', "Role created successfully");
@@ -54,7 +58,14 @@ module.exports.edit =  async (req, res) => {
 module.exports.editPost = async (req, res) => {
     const id = req.params.id;
     try {
-        await Role.updateOne({_id: id}, req.body);
+        await Role.updateOne({_id: id}, {
+            ...req.body,
+            updatedBy:{
+                accountId: res.locals.user.id,
+                updatedAt: new Date(),
+            }
+
+        });
         req.flash('success', 'Role updated successfully');
     } catch (error) {
         req.flash('error', "Role updated failed");
@@ -76,7 +87,13 @@ module.exports.detail = async (req, res) => {
 module.exports.delete = async (req, res) => {
     const id = req.params.id;
     try {
-        await Role.updateOne({_id: id}, {deleted: true});
+        await Role.updateOne({_id: id}, {
+            $push: { updatedBy: {
+                accountId: res.locals.user.id,
+                updatedAt: new Date()
+            }},
+            deleted: true
+        });
         req.flash('success', 'Role deleted successfully');
     } catch (error) {
         req.flash('error', 'Role deleted failed');
@@ -99,7 +116,13 @@ module.exports.permissionsPatch = async (req, res) => {
     const permissions = JSON.parse(req.body.permissions);
     try {
         for(const permission of permissions){
-            await Role.updateOne({_id: permission.id}, {permissions: permission.permission})
+            await Role.updateOne({_id: permission.id}, {
+                $push: { updatedBy:{
+                    accountId: res.locals.user.id,
+                    updatedAt: new Date()
+                }},
+                permissions: permission.permission
+            })
         }
         req.flash('success', 'Permissions updated successfully');
 

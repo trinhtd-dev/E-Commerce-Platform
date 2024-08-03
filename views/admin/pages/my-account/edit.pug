@@ -1,0 +1,54 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+    +alert-error(5000)
+    +alert-success(5000)
+    h1 Edit Information
+    form(action=`${prefixAdmin}/my-account/edit?_method=PATCH` method="post" enctype="multipart/form-data")
+        .form-group
+            label(for="fullName") Full Name
+            input.form-control(
+                type="text"
+                name="fullName"
+                id="fullName"
+                required
+                value=user.fullName
+            )
+        .form-group
+            label(for="avatar") Avatar
+            div
+                input(type="file", name="avatar", id="avatar")
+                div.mt-2
+                    if user.avatar
+                        img(src=user.avatar, alt="Avatar", width="100")
+        .form-group
+            label(for="email") Email
+            input.form-control(
+                type="email"
+                name="email"
+                id="email"
+                required
+                value=user.email
+            )
+        .form-group
+            label(for="password") Password
+            input.form-control(
+                type="text"
+                name="password"
+                id="password"
+            )
+        .form-group
+            label(for="phone") Phone
+            input.form-control(
+                type="text"
+                name="phone"
+                id="phone"
+                value=user.phone
+            )
+        .form-group
+            label(for="status") Status
+            select.form-control(name="status", id="status")
+                option(value="active" selected=(user.status == "active")) Active
+                option(value="inactive" selected=(user.status == "inactive")) Inactive
+        button.btn.btn-primary(type="submit") Update
