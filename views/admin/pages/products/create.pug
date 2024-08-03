@@ -38,6 +38,26 @@ block content
             +select-tree(categories)
       .form-group.mb-3
         div
+          label.form-label Featured Product:
+        div.d-flex
+          div.form-check.mr-3
+            input.form-check-input(
+              type="radio"
+              id="featured-yes"
+              name="featured"
+              value="yes"
+            )
+            label.form-check-label(for="featured-yes") Yes
+          div.form-check
+            input.form-check-input(
+              type="radio"
+              id="featured-no"
+              name="featured"
+              value="no"
+            )
+            label.form-check-label(for="featured-no") No 
+            .form-group.mb-3
+        div
           label(for="description" ).form-label Description:
         div
           textarea(
