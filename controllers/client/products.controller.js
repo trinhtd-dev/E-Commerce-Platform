@@ -23,16 +23,15 @@ module.exports.detail = async (req, res) => {
     try{
         let find = {
             deleted: false,
-            slug: req.params.slug,
+            slug: req.params.slugProduct,
             status: "active",
         }
-        const id = req.params.slug;
+
         const product = await Product.findOne(find);
-        product.newPrice = (product.price * (100 - product.discountPercentage) / 100).toFixed(2);
 
         res.render("client/pages/products/detail", {
             title: product.title,
-            product: product,
+            product: addNewPrice.item(product),
         });
     }
     catch(err){

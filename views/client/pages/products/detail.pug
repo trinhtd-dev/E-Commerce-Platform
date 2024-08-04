@@ -1,45 +1,65 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  
-  h1.text-center.mb-4 Product Details
   .container
-      .card.mb-4
-        .row.gutters
-          .col-md-4
-            img(src=product.thumbnail, alt=`${product.title} Thumbnail`, class="card-img img-fluid")
-          .col-md-8
-            .card-body
-              h2.card-title= product.title
-              ul.list-group.list-group-flush
-                if(product.description) 
-                  li.list-group-item
-                    strong Description: 
-                    | #{product.description}
-                if(product.price) 
-                  li.list-group-item
-                    strong Root Price: 
-                    | #{product.price}$
-                
-                if(product.discountPercentage) 
-                  li.list-group-item
-                    strong Discount : 
-                    | #{product.discountPercentage}%
-                if(product.newPrice) 
-                  li.list-group-item
-                    strong New Price: 
-                    | #{product.newPrice}$
-                if(product.stock)
-                  li.list-group-item
-                    strong Stock: 
-                    | #{product.stock}
-                if(product.position)
-                  li.list-group-item
-                    strong Position: 
-                    | #{product.position}
+    .row
+      .col-md-4
+        .product-images.card
+          img(src=product.thumbnail, alt=product.title, class="img-fluid rounded")
+      .col-md-4
+        .product-info.card
+          h1.display-4= product.title
+          .product-category.mb-3
+            span.text-muted Danh mục: #{product.productCategoryId || 'Không xác định'}
+          .product-rating.mb-3
+            span 5.0 
+              i.fa.fa-star
+              i.fa.fa-star
+              i.fa.fa-star
+              i.fa.fa-star
+              i.fa.fa-star
+            span.text-muted (0 đánh giá)
+          .product-price
+            if product.discountPercentage
+              span.original-price.text-muted(style="text-decoration: line-through; font-size: 1.2em; margin-right: 10px;") #{product.price}$
+              span.discount-percentage.text-success(style="font-size: 1.2em; margin-right: 10px;") -#{product.discountPercentage}%
+              span.discounted-price.text-danger(style="font-size: 1.5em; font-weight: bold;") #{product.newPrice}$
+            else
+              span.price.text-danger(style="font-size: 1.5em; font-weight: bold;") #{product.price.toLocaleString()}$
+          .product-stock.mt-3.mb-3
+            if product.stock > 0
+              span.in-stock.text-success(style="font-size: 1.2em;") Stock: #{product.stock}
+            else
+              span.out-of-stock.text-danger(style="font-size: 1.2em;") Out of stock
+          //- .product-colors.mt-3.mb-3
+          //-   label.mr-3(style="font-size: 1.2em;") Color:
+          //-   .btn-group
+          //-     each color in ['Trắng', ' Xanh', ' Tự Nhiên', ' Đen']
+          //-       button.btn.btn-outline-primary.btn-sm(style="font-size: 1.2em; margin-right: 5px;") #{color}
+          //- .product-capacity.mt-3.mb-3
+          //-   label(style="font-size: 1.2em;") Dung lượng:
+          //-   select.form-select
+          //-     option 256GB
+          //-     option 512GB
+          //-     option 1TB
         
-  
-  script(src="/admin/js/script.js")
+      .col-md-4
+        .product-quantity.mt-3.mb-3
+          label(style="font-size: 1.2em;") Số Lượng:
+          .input-group
+            button.btn.btn-outline-secondary(type="button") -
+            input.form-control(type="number", value="1", min="1")
+            button.btn.btn-outline-secondary(type="button") +
+        .product-total.mt-3.mb-3
+          span Tạm tính:
+          span.text-danger #{(product.price - (product.price * product.discountPercentage / 100)).toLocaleString()}$
+        .product-actions.mt-3
+          button.btn.btn-danger.btn-lg.mr-2 Mua ngay
+          button.btn.btn-outline-primary.btn-lg.mr-2 Thêm vào giỏ
+          button.btn.btn-outline-secondary.btn-lg Mua trả góp - trả sau
+
+    .row.mt-4
+      .col-12
+        .product-description.card
+          h2.text-primary.mb-4 Mô tả sản phẩm
+          p !{product.description || 'Mô tả sản phẩm chưa có'}

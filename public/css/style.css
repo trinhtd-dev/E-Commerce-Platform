@@ -268,3 +268,98 @@ h2.inner-title {
     left: 100%; /* Align nested submenus to the right of parent */
     top: 0;
 }
+
+/* product-detail.css */
+
+.container {
+  margin-top: 20px;
+}
+
+.product-images img {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.thumbnails img {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.product-info {
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+}
+
+.product-info h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.product-category span,
+.product-rating span,
+.product-price span,
+.product-stock span,
+.product-status span {
+  display: block;
+  margin-top: 10px;
+}
+
+.product-rating i {
+  color: #ffd700;
+}
+
+.product-price .original-price {
+  font-size: 16px;
+}
+
+.product-price .discounted-price {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.product-price .discount-percentage {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.product-colors,
+.product-capacity,
+.product-quantity,
+.product-total,
+.product-actions {
+  margin-top: 20px;
+}
+
+.product-colors .btn,
+.product-capacity select {
+  margin-top: 10px;
+}
+
+.product-total span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.product-actions button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.product-description {
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 8px;
+}
+
+.product-description h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-description p {
+  font-size: 16px;
+}
