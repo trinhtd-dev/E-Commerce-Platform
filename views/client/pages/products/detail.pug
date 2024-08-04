@@ -1,6 +1,9 @@
 extends ../../layouts/default.pug
+include ../../mixins/alert.pug
 
 block content
+  +alert-success(3000)
+  +alert-error(3000)
   .container
     .row
       .col-md-4
@@ -44,20 +47,19 @@ block content
           //-     option 512GB
           //-     option 1TB
         
-      .col-md-4
+      form(action=`/cart/add/${product.id}`, method="post").col-md-4
         .product-quantity.mt-3.mb-3
           label(style="font-size: 1.2em;") Số Lượng:
           .input-group
             button.btn.btn-outline-secondary(type="button") -
-            input.form-control(type="number", value="1", min="1")
+            input.form-control(type="number", name="quantity", min=1 max=product.stock, value=1)
             button.btn.btn-outline-secondary(type="button") +
         .product-total.mt-3.mb-3
           span Tạm tính:
           span.text-danger #{(product.price - (product.price * product.discountPercentage / 100)).toLocaleString()}$
         .product-actions.mt-3
-          button.btn.btn-danger.btn-lg.mr-2 Mua ngay
-          button.btn.btn-outline-primary.btn-lg.mr-2 Thêm vào giỏ
-          button.btn.btn-outline-secondary.btn-lg Mua trả góp - trả sau
+          a.btn.btn-danger.btn-lg.mr-2 Buy now
+          button.btn.btn-outline-primary.btn-lg.mt-2(type= "submit") Add to cart
 
     .row.mt-4
       .col-12

@@ -363,3 +363,48 @@ h2.inner-title {
 .product-description p {
   font-size: 16px;
 }
+
+
+/* //alert
+*/
+.alert-message {
+  position: fixed;
+  right: -100%; /* Bắt đầu từ bên ngoài màn hình */
+  top: 20px;
+  color: #FFFFFF; /* Màu chữ mới */
+  padding: 15px;
+  margin: 0 15px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.982);
+  transition: all 0.5s ease-in-out;
+  animation: slideIn 0.5s forwards; /* Animation xuất hiện */
+  z-index: 1050; /* Giá trị z-index cao hơn header */
+  text-shadow: 1px 1px #000000; /* Hiệu ứng chữ nổi */
+}
+
+@keyframes slideIn {
+  to {
+      right: 20px; /* Kết thúc animation tại vị trí này */
+  }
+}
+
+.alert-hidden {
+  animation: fadeOut 0.5s forwards; /* Animation mất đi */
+}
+
+@keyframes fadeOut {
+  to {
+      opacity: 0;
+      right: -100%; /* Di chuyển ra khỏi màn hình */
+  }
+}
+
+.close-alert {
+  cursor: pointer;
+  padding: 0 5px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  color: #FF5722; /* Màu mới cho nút đóng */
+  text-shadow: 1px 1px 3px #000; /* Hiệu ứng chữ nổi */
+}
