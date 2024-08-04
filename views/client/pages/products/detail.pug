@@ -10,7 +10,8 @@ block content
         .product-info.card
           h1.display-4= product.title
           .product-category.mb-3
-            span.text-muted Danh mục: #{product.productCategoryId || 'Không xác định'}
+            span.text-muted Danh mục: 
+              a(href=`/products/${category.slug}`) #{category.title}
           .product-rating.mb-3
             span 5.0 
               i.fa.fa-star

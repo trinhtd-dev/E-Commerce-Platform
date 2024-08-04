@@ -3,19 +3,24 @@ include ../mixins/sub-menu.pug
 header.header 
     .container
         .row.align-items-center
-            .col-3
+            .col-md-2
                 .inner-logo
                     a(href="/")
                         img(src="/images/logo.png", alt="logo")
-
-            .col-9 
+            .col-md-6
                 .inner-menu 
-                    ul.menu  
+                    ul.menu
                         li 
                             a(href="/") HOME 
-                        li.sub-menu  
+                        li.sub-menu
                             -const pathProduct = "/products"
                             a(href=pathProduct) PRODUCT 
-                            +sub-menu(productCategory, pathProduct)  
-
-                                 
+                            +sub-menu(productCategory, pathProduct)
+            .col-md-4
+                .search-container
+                    form.form-inline(action=`search` method="get")
+                        .input-group
+                            input.form-control(type="text" placeholder="Search" name="keyword" value= keyword)
+                            lable.form-table(for="")
+                            button.btn.btn-outline-secondary(type="submit") 
+                                i.fas.fa-search

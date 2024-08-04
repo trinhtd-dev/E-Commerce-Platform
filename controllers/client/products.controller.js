@@ -28,10 +28,12 @@ module.exports.detail = async (req, res) => {
         }
 
         const product = await Product.findOne(find);
+        const category = await productCategory.findOne({_id: product.productCategoryId});
 
         res.render("client/pages/products/detail", {
             title: product.title,
             product: addNewPrice.item(product),
+            category: category,
         });
     }
     catch(err){
