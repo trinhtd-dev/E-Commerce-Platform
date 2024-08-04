@@ -1,4 +1,5 @@
 extends ../../layouts/default.pug
+include ../../mixins/product-list.pug
 
 block content
- 
+    +list-grid("Featured Product", products)

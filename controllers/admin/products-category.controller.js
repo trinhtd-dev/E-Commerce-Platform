@@ -50,7 +50,7 @@ module.exports.index = async (req, res) => {
         limit: 10,
     }, req.query, totalProducts);
 //
-
+    const accounts = await Account.find({deleted: false});
 //createdBy
 for(let record of records){
     for(let account of accounts){
