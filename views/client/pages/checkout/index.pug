@@ -1,0 +1,43 @@
+extends ../../layouts/default.pug
+
+block content
+  .container.mt-5
+    h2.text-center.mb-5.font-weight-bold.text-primary Checkout
+    table.table.table-hover.text-center.table-bordered.table-sm(table-cart)
+      thead
+        tr
+          th.text-left
+          th Unit Price
+          th Quantity
+          th Total Amount
+      tbody
+        each product of products 
+          tr
+            td.text-left.font-weight-bold
+                  label.form-check-label
+                    img(src=product.productInfo.thumbnail alt=product.productInfo.title class="img-thumbnail mr-3" style="width: 100px; height: auto;")
+                    | #{product.productInfo.title}
+            td.text-danger #{product.productInfo.newPrice}$
+              del.text-muted.ml-2 #{product.productInfo.price}$
+            td= product.quantity
+            td #{product.totalPrice}$
+          
+    .d-flex.justify-content-end.mt-3
+      .mr-3
+        p.font-weight-bold Total: #{cart.totalCart}$
+
+    .container.border
+        form(action="/checkout/orders", method="post")
+            .form-group
+                label(for="fullName") Full Name
+                input.form-control(type="text" name="fullName" placeholder="Enter your full name")
+            .form-group
+                label(for="email") Email
+                input.form-control(type="email" name="email" placeholder="Enter your email")
+            .form-group
+                label(for="phone") Phone
+                input.form-control(type="text" name="phone" placeholder="Enter your phone")
+            .form-group
+                label(for="address") Shipping Address
+                input#address.form-control(type="text" name="address" placeholder="Enter your shipping address")
+            button(type="submit" class="btn btn-primary") Order
