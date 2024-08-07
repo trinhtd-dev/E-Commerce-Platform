@@ -1,0 +1,51 @@
+extends ../../layouts/default.pug
+
+block content
+  .container.mt-5
+    h2.text-center.mb-4 Shopping Cart
+    table.table.table-hover.text-center(table-cart)
+      thead
+        tr
+          th.text-left
+            input(type="checkbox" checkbox-all name="checkboxAll")
+            |  All 
+          th Unit Price
+          th Quantity
+          th Total Amount
+          th Action
+      tbody
+        each product of products 
+          tr
+            td.text-left.font-weight-bold
+              .form-check
+                input.form-check-input(type="checkbox" name="checkbox")
+                a(href=`/products/detail/${product.productInfo.slug}`) 
+                  label.form-check-label
+                    img(src=product.productInfo.thumbnail alt=product.productInfo.title class="img-thumbnail mr-3" style="width: 100px; height: auto;")
+                    | #{product.productInfo.title}
+            td.text-danger #{product.productInfo.newPrice}$
+              del.text-muted.ml-2 #{product.productInfo.price}$
+            td 
+              form(action=`/cart/update/${product.productInfo.id}`, method="get" form-quantity) 
+                .input-group
+                  div(class="input-group-prepend")
+                    button.btn.btn-outline-secondary(type="button" dec-button) -
+                  input.form-control(
+                    name= "quantity"
+                    type="number"
+                    value= product.quantity 
+                    min=1
+                    max= product.productInfo.stock 
+                    style="width: 50px"
+                  )
+                div(class="input-group-append")
+                  button.btn.btn-outline-secondary(type="button" inc-button) +
+              p.text-warning Remain #{product.productInfo.stock} product
+            td #{product.totalPrice}$
+            td
+              a(href=`/cart/delete/${product.productInfo.id}` delete-button).btn.btn-danger
+                i.fas.fa-trash-alt
+    .d-flex.justify-content-end.mt-3
+      .mr-3
+        p.font-weight-bold Total: #{cart.totalCart}$
+      a(href="checkout" class="btn btn-primary btn-lg") Checkout

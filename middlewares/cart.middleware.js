@@ -1,4 +1,4 @@
-const Cart = require("../models/cart.models");
+const Cart = require("../models/cart.model");
 
 module.exports.cartId = async (req, res, next) => {
     if (!req.cookies.cartId) {
@@ -10,7 +10,6 @@ module.exports.cartId = async (req, res, next) => {
         const cart = await Cart.findOne({ _id: req.cookies.cartId });
         if (cart) {
             cart.totalProduct = cart.products.reduce((sum, item) => sum + item.quantity, 0);
-            console.log(cart.totalProduct);
             res.locals.cart = cart;
         }
     }
