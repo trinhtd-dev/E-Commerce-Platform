@@ -4,6 +4,7 @@ const checkcoutController = require("../../controllers/client/checkout.controlle
 
 router.get('/', checkcoutController.index);
 router.post('/orders', checkcoutController.order);
+router.get('/success/:orderId', checkcoutController.success);
 
 module.exports = router;
 
