@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+const ForgotPassword = require("../../models/forgot-password.model");
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -42,7 +43,9 @@ module.exports.registerPost = async (req, res) => {
 
 // [GET] /user/login
 module.exports.login = (req, res) => {
-    res.render("client/pages/user/login");
+    res.render("client/pages/user/login",{
+        title: "Login",
+    });
 }; 
 
 // [POST] /user/login
@@ -81,3 +84,102 @@ module.exports.logout = (req, res) => {
     req.flash("success", "Logout successful");
     return res.redirect("/");
 }; 
+
+// [GET] /user/password/forgot
+module.exports.passwordForgot = (req, res) => {
+    res.render("client/pages/user/password-forgot", {
+        title: "Forgot Password",
+    });
+}; 
+
+// [POST] /user/password/forgot
+module.exports.passwordForgotPost = async (req, res) => {
+    const email = req.body.email;
+    if(!email){
+        req.flash("error", "Please enter your email");
+        return res.redirect("back");
+    }
+    try {
+        const user = await User.findOne({ email });
+      
+        const forgotPassword = new ForgotPassword({ email });
+        await forgotPassword.save();
+
+        // Send OTP to user's email
+        //...
+
+        req.flash("success", "OTP sent to your email");
+        res.redirect(`/user/password/otp/${user.email}`);
+    } catch (error) {
+        console.error(error);
+        req.flash("error", "An error occurred, please try again");
+        res.redirect("/user/login");
+    }
+};
+
+// [GET] /user/password/otp
+ module.exports.passwordOtp = (req, res) => {
+    res.render("client/pages/user/password-otp", {
+        title: "OTP",
+        email: req.params.email,
+    });
+};
+
+// [POST] /user/password/otp
+ module.exports.passwordOtpPost = async (req, res) => {
+    const { email, otp } = req.body;
+    const forgotPassword = new ForgotPassword({ email: email});
+    try {
+        if(!forgotPassword){
+                req.flash("error", "Email is incorrect");
+                return res.redirect("back");
+            }
+        
+            if(otp !== forgotPassword.otp){
+                req.flash("error", "OTP is incorrect");
+                return res.redirect(`/user/password/otp/${email}`);
+            }
+        
+            const user = await User.findOne({email: email});
+            const expires = 1000 * 60 * 60 * 24 * 365; // 1 year
+            res.cookie("userToken", user.token, { expires: new Date(Date.now() + expires) });
+            await ForgotPassword.deleteOne({ email });
+
+            res.redirect('/user/password/reset');
+    } catch (error) {
+        console.error(error);
+        req.flash("error", "An error occurred, please try again");
+        res.redirect("/user/login");
+        
+    }
+
+}; 
+  
+// [GET] /user/password/reset
+module.exports.passwordReset = (req, res) => {
+    res.render("client/pages/user/password-reset", {
+        title: "Reset Password",
+    });
+}; 
+
+// [POST] /user/password/reset
+module.exports.passwordResetPost = async (req, res) => {
+    const { newPassword, confirmPassword } = req.body;
+    if(confirmPassword != newPassword) {
+        req.flash("error", "Password and Confirm Password do not match");
+        return res.redirect("back");
+    }
+
+    try {
+        const userToken = req.cookies.userToken;
+        await User.updateOne({token: userToken}, {password: bcrypt.hashSync(newPassword, saltRounds)});
+        req.flash("success", "Password reset successful");
+        res.redirect("/");
+
+    } catch (error) {
+        console.log(error);
+        req.flash("error", "Please try again");
+        return res.redirect("user/login");
+        
+    }
+};
