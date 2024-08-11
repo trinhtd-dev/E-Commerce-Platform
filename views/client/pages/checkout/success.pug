@@ -1,0 +1,44 @@
+extends ../../layouts/default.pug
+
+block content
+    .container.mt-5
+        .row
+            .col-md-12
+                .alert.alert-success.text-center
+                    h1.display-4 Order Success
+                    p.lead Thank you for your order. We will contact you soon.
+
+        .row.mt-4
+            .col-md-6
+                .card
+                    .card-header.bg-secondary.text-white
+                        h2 Customer Information
+                    .card-body
+                        ul.list-group
+                            li.list-group-item Full Name: #{order.userInfo.fullName}
+                            li.list-group-item Email: #{order.userInfo.email}
+                            li.list-group-item Phone: #{order.userInfo.phone}
+                            li.list-group-item Address: #{order.userInfo.address}
+
+            .col-md-6
+                .card
+                    .card-header.bg-secondary.text-white
+                        h2 Order Information
+                    .card-body
+                        table.table.table-striped.table-hover
+                            thead.thead-dark
+                                tr
+                                    th Product
+                                    th Price
+                                    th Quantity
+                            tbody
+                                each product, index in order.products
+                                    tr
+                                        td 
+                                            img.img-thumbnail.mr-2(src=product.productInfo.thumbnail, alt=product.productInfo.title, style="width: 100px; height: auto;")
+                                            | #{product.productInfo.title}
+                                        td #{product.productInfo.newPrice}$
+                                        td #{product.quantity}
+                .card
+                    .card-body.text-right
+                        .card-title.font-weight-bold Total Order: #{order.totalOrder}$

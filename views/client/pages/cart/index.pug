@@ -1,6 +1,10 @@
 extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
 
 block content
+  +alert-success(3000)
+  +alert-error(3000)
   .container.mt-5
     h2.text-center.mb-4 Shopping Cart
     table.table.table-hover.text-center(table-cart)
