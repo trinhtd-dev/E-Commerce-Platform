@@ -9,10 +9,8 @@ const addNewPrice = require("../../helpers/addNewPrice");
 module.exports.index = async (req, res) => {
     const cart = res.locals.cart;
     const products = cart.products;
-    for(let product of products) 
+    for(let product of products) {
         product.productInfo = await Product.findOne({_id: product.productId});
-    
-    for(let product of products){
         product.totalPrice = product.productInfo.price * product.quantity;
         product.productInfo = addNewPrice.item(product.productInfo);
     }

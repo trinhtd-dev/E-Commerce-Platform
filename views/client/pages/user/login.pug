@@ -1,0 +1,43 @@
+extends ../../layouts/normal.pug
+include ../../mixins/alert.pug
+
+block content
+  +alert-error(5000)
+  +alert-success(5000)
+  
+  .d-flex.justify-content-center.align-items-center.min-vh-100
+    .col-md-6
+      .card
+        .card-header.text-center
+          h3 Login
+        .card-body
+          form(action=`/user/login`, method="post")
+            .form-group
+                label(for="email") Email
+                input.form-control(
+                    type="email"
+                    name="email"
+                    id="email"
+                    required
+                    placeholder="Enter your email"
+                )
+            
+            .form-group
+                label(for="password") Password
+                input.form-control(
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    placeholder="Enter your password"
+                )
+            
+            .form-group.form-check
+              input.form-check-input(type="checkbox", name="remember", id="remember")
+              label.form-check-label(for="remember") Remember Me
+           
+            button.btn.btn-primary.btn-block(type="submit") Login
+        .card-footer.text-center
+          a(href="/user/forgot-password") Forgot Password?
+          |  | 
+          a(href="/user/register") Register

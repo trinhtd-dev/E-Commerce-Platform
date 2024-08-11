@@ -1,6 +1,6 @@
 const Product = require("../../models/product.model");
 
-
+const addNewPrice = require("../../helpers/addNewPrice")
 module.exports.index = async (req, res) => {
     const products = await Product.find({
         deleted: false,
@@ -9,7 +9,7 @@ module.exports.index = async (req, res) => {
 
     res.render("client/pages/home/index", {
         title: "HOME",
-        products: products
+        products: addNewPrice.items(products),
     });
  };
  

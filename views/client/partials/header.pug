@@ -7,8 +7,8 @@ header.header
                 .inner-logo
                     a(href="/")
                         img(src="/images/logo.png", alt="logo")
-            .col-md-6
-                .inner-menu 
+            .col-md-10
+                .inner-menu.container.align-right
                     ul.menu
                         li 
                             a(href="/") HOME 
@@ -16,19 +16,27 @@ header.header
                             -const pathProduct = "/products"
                             a(href=pathProduct) PRODUCT 
                             +sub-menu(productCategory, pathProduct)
-            .col-md-4
-                .search-container
-                    form.form-inline(action=`search` method="get")
-                        .input-group
-                            input.form-control(style="width= 200px" type="text" placeholder="Search" name="keyword" value= keyword)
-                            lable.form-table(for="")
-                            button.btn.btn-outline-secondary(type="submit") 
-                                i.fas.fa-search
-        if(cart.totalProduct)
-            a(href="/cart")
-                i.fas.fa-shopping-cart.fa-2x
-                span  (#{cart.totalProduct})
-        else
-            a(href="/cart")
-                i.fas.fa-shopping-cart.fa-2x
-                span (0)
+                        li
+                            form.form-inline(action=`search` method="get")
+                                .input-group
+                                    input.form-control(style="width= 200px" type="text" placeholder="Search" name="keyword" value= keyword)
+                                    lable.form-table(for="")
+                                    button.btn.btn-outline-secondary(type="submit") 
+                                        i.fas.fa-search
+                        if(user)
+                            li
+                                a(href="/user/logout" class= "btn btn-danger") Logout
+                        else
+                            li 
+                                a(href="/user/login" class= "btn btn-primary") Login
+                            li
+                                a(href="/user/register" class= "btn btn-primary") Register
+                        li
+                            if(cart.totalProduct)
+                                a(href="/cart")
+                                    i.fas.fa-shopping-cart.fa-2x
+                                    span  (#{cart.totalProduct})
+                            else
+                                a(href="/cart")
+                                    i.fas.fa-shopping-cart.fa-2x
+                                    span (0)

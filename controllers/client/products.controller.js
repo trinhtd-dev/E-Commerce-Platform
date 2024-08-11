@@ -85,7 +85,7 @@ module.exports.category = async (req, res) => {
 
         res.render("client/pages/products", {
             title: category.title,
-            products: products,
+            products: addNewPrice.items(products),
         });
     
  };

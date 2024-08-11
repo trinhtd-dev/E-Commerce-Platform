@@ -12,7 +12,7 @@ const accountSchema = new mongoose.Schema({
     status: String,
     token:{
         type: String,
-        default: generateString(20),
+        default: generateString.token(20),
     },
     deleted:{
         type: Boolean,

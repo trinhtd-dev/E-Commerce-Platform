@@ -1,4 +1,4 @@
-module.exports = (number) => {
+module.exports.token = (number) => {
     const string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let result = "";
     for (let i = 0; i < number; i++) {
@@ -6,3 +6,4 @@ module.exports = (number) => {
     }
     return result; 
 }
+ 
