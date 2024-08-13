@@ -1,13 +1,14 @@
-footer.footer
+footer.footer.bg-dark.text-white.py-4
   .container
     .row
       .col-md-6
-        p © 2024 PHONE SHOP - All rights reserved.
-      .col-md-6.text-right
-        p Follow us on 
-          a(href='https://twitter.com') Twitter 
-          | , 
-          a(href='https://facebook.com') Facebook 
-          | , and 
-          a(href='https://instagram.com') Instagram
-    
+        p.mb-0= generalSetting.footerText
+      .col-md-6.text-md-right
+        p.mb-0
+          | Follow us on 
+          a.text-white.ml-2(href= generalSetting.twitter target="_blank")
+            i.fab.fa-twitter
+          a.text-white.ml-2(href= generalSetting.facebook target="_blank")
+            i.fab.fa-facebook-f
+          a.text-white.ml-2(href= generalSetting.instagram target="_blank")
+            i.fab.fa-instagram
