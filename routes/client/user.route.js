@@ -3,6 +3,9 @@ const router = express.Router();
 
 const userController = require("../../controllers/client/user.controller");
 
+const userAuthenticationMiddleware = require("../../middlewares/user-authentication.middleware")
+
+
 //upload image
 const multer = require('multer');
 const upload = multer();
@@ -32,6 +35,10 @@ router.get("/logout", userController.logout);
 
 
 // Forgot Password
+
+
+router.use("/password", userAuthenticationMiddleware.requireAuth); //Add middleware
+
 router.get("/password/forgot", userController.passwordForgot);
 
 router.post("/password/forgot",
