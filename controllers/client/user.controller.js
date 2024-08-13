@@ -1,8 +1,11 @@
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 
+const sendMailHelper = require("../../helpers/send-mail");
+
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+
 
 
 // [GET] /user/register
@@ -96,12 +99,21 @@ module.exports.passwordForgotPost = async (req, res) => {
     }
     try {
         const user = await User.findOne({ email });
-      
+
+        if(!user){
+            req.flash("error", "Email is not registered");
+            return res.redirect("back");
+        }
+        
+
         const forgotPassword = new ForgotPassword({ email });
         await forgotPassword.save();
 
-        // Send OTP to user's email
-        //...
+    // Send OTP to user's email
+        const subject = 'OTP Verification'
+        const html = `<h1>Your OTP code is ${forgotPassword.otp}. Your OTP code is expired after 3 minutes.</h1>`
+        sendMailHelper.sendMail(email, subject, html);
+    //...
 
         req.flash("success", "OTP sent to your email");
         res.redirect(`/user/password/otp/${user.email}`);
