@@ -15,12 +15,7 @@ module.exports.registerPost = async (req, res) => {
     try {
 
         const { email, password, confirmPassword } = req.body;
-
-        if (password !== confirmPassword) {
-            req.flash("error", "Password and Confirm Password do not match");
-            return res.redirect("back");
-        }
-
+     
         const emailExist = await User.findOne({ email: email });
         if (emailExist) {
             req.flash("error", "Email already exists");
@@ -165,11 +160,7 @@ module.exports.passwordReset = (req, res) => {
 // [POST] /user/password/reset
 module.exports.passwordResetPost = async (req, res) => {
     const { newPassword, confirmPassword } = req.body;
-    if(confirmPassword != newPassword) {
-        req.flash("error", "Password and Confirm Password do not match");
-        return res.redirect("back");
-    }
-
+    
     try {
         const userToken = req.cookies.userToken;
         await User.updateOne({token: userToken}, {password: bcrypt.hashSync(newPassword, saltRounds)});
