@@ -1,0 +1,50 @@
+extends ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block content
+    .container.mt-5
+        .row
+            .col-md-4
+                .card
+                    .card-body
+                        .text-center
+                            if(user.avatar)
+                                img(src=user.avatar alt="User Avatar" class="rounded-circle img-fluid mb-3" img-preview)
+                            else 
+                                img(
+                                    src="https://via.placeholder.com/150" 
+                                    alt="User Avatar" 
+                                    class="rounded-circle img-fluid mb-3"
+                                    img-preview
+                                )
+                            h4= user.fullName
+                            p.text-muted= user.email
+                            p.text-muted= user.phone
+            .col-md-8
+                .card
+                    .card-body
+                        h4 Edit Profile
+                        form(action=`/user/profile/edit?_method=PATCH` method="POST" enctype="multipart/form-data")
+                            .form-group
+                                label(for="fullName") Full Name
+                                input.form-control(type="text" id="fullName" name="fullName" value=user.fullName required)
+                            .form-group
+                                label(for="email") Email
+                                input.form-control(type="text" id="email" name="email" value=user.email required readonly)
+                            .form-group
+                                label(for="phone") Phone
+                                input.form-control(type="text" id="phone" name="phone" value=user.phone)
+                            .form-group
+                                label(for="address") Address
+                                input.form-control(type="text" id="address" name="address" value=user.address)
+                            .form-group
+                                label(for="avatar") Avatar
+                                input.form-control-file(
+                                    type="file" 
+                                    id="avatar" 
+                                    name="avatar"
+                                    accept="image/*"
+                                    input-img
+                                )
+                            button.btn.btn-primary(type="submit") Save Changes
+                            a.btn.btn-secondary(href="/user/profile") Cancel

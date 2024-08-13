@@ -3,6 +3,14 @@ const router = express.Router();
 
 const userController = require("../../controllers/client/user.controller");
 
+//upload image
+const multer = require('multer');
+const upload = multer();
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier')
+const uploadCloud = require("../../middlewares/uploadCloud.middleware.js");
+
+
 const authenticationValidate = require("../../validates/client/authentication.validate");
 const forgotPasswordValidate = require("../../validates/client/forgot-password.validate");
 
@@ -45,6 +53,14 @@ router.post("/password/reset",
     userController.passwordResetPost
 );
 
+router.get("/profile", userController.profile);
 
+router.get("/profile/edit", userController.profileEdit);
+
+router.patch("/profile/edit",
+    upload.single('avatar'),
+    uploadCloud,
+    userController.profileEditPatch
+)
 
 module.exports = router;

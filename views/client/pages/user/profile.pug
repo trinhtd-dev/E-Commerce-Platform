@@ -1,0 +1,45 @@
+extends ../../layouts/default.pug
+include ../../mixins/moment.pug
+
+block content
+    .container.mt-5
+        .row
+            .col-md-4
+                .card
+                    .card-body
+                        .text-center
+                            if(user.avatar)
+                                img(src=user.avatar alt="User Avatar" class="rounded-circle img-fluid")
+                            else 
+                                img(src="https://via.placeholder.com/150" alt="User Avatar" class="rounded-circle img-fluid mb-3")
+                            h4= user.fullName
+                            p.text-muted= user.email
+                            p.text-muted= user.phone
+                            a.btn.btn-primary(href="/user/profile/edit") Edit Profile
+            .col-md-8
+                .card
+                    .card-body
+                        h4 User Information
+                        ul.list-group.list-group-flush
+                            li.list-group-item
+                                strong Full Name:
+                                |  #{user.fullName}
+                            li.list-group-item
+                                strong Email:
+                                |  #{user.email}
+                            li.list-group-item
+                                strong Phone:
+                                if(user.phone)
+                                    |  #{user.phone}
+                                else
+                                    a(href="/user/profile/edit")  Add Phone
+                            li.list-group-item
+                                strong Address:
+                                if(user.address)
+                                    |  #{user.address}
+                                else
+                                    a(href="/user/profile/edit")  Add Address
+                            li.list-group-item
+                                strong Joined:
+                                +formatDay(user.createdAt)
+                        

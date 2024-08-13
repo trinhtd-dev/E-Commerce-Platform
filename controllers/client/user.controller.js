@@ -3,7 +3,9 @@ const ForgotPassword = require("../../models/forgot-password.model");
 
 const sendMailHelper = require("../../helpers/send-mail");
 
+const moment = require("moment");
 const bcrypt = require("bcrypt");
+
 const saltRounds = 10;
 
 
@@ -186,3 +188,35 @@ module.exports.passwordResetPost = async (req, res) => {
         
     }
 };
+
+// [GET] /user/profile
+module.exports.profile = (req, res) => {
+    res.render("client/pages/user/profile", {
+        title: res.locals.user.fullName,
+        moment: moment,
+    });
+};
+
+// [GET] /user/profile/edit
+module.exports.profileEdit = (req, res) => {
+    res.render("client/pages/user/profile-edit", {
+        title: res.locals.user.fullName,
+        moment: moment,
+    });
+}; 
+
+// [PATCH] /user/profile/edit
+module.exports.profileEditPatch = async (req, res) => {
+    try {
+        const userToken = req.cookies.userToken;
+        await User.updateOne({token: userToken}, req.body);
+        req.flash('success', 'User updated successfully');
+        res.redirect('/user/profile');
+    } catch (error) {
+        console.error(error);
+        req.flash("error", "Please try again");
+        res.redirect("/user/profile");
+        
+    }
+}; 
+

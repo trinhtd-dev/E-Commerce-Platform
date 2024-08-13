@@ -24,6 +24,8 @@ header.header
                                     button.btn.btn-outline-secondary(type="submit") 
                                         i.fas.fa-search
                         if(user)
+                            li 
+                                a(href="/user/profile" class="btn btn-primary text-nowrap")= user.fullName
                             li
                                 a(href="/user/logout" class= "btn btn-danger") Logout
                         else

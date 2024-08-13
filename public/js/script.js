@@ -68,3 +68,19 @@ if(tableCart){
         });
     });
 }
+
+
+//IMG Preview--------------------------------------------------------------------------------------------------------------------
+const inputImage = document.querySelector("[input-img]");
+if(inputImage){
+    inputImage.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const imgPreview = document.querySelector("[img-preview]");
+            imgPreview.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+        console.log("123")
+    });
+}
