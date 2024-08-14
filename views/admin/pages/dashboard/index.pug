@@ -1,39 +1,158 @@
-extends  ../../layouts/default.pug
+extends ../../layouts/default.pug
 
 block content
   .container-fluid
-    .row
-      .col-md-2.bg-dark.text-white
-        include ../partials/sidebar.pug
-      .col-md-10
-        .row.mt-3
-          .col-md-12
-            h1 Dashboard
-            p Welcome to the dashboard
-        .row.mt-4
-          .col-md-3
-            .card
-              .card-body
-                h5.card-title Projects
-                p.card-text 10 Active Projects
-          .col-md-3
-            .card
-              .card-body
-                h5.card-title Tasks
-                p.card-text 25 Pending Tasks
-          .col-md-3
-            .card
-              .card-body
-                h5.card-title Teams
-                p.card-text 5 Teams
-          .col-md-3
-            .card
-              .card-body
-                h5.card-title Messages
-                p.card-text 15 New Messages
-        .row.mt-4
-          .col-md-12
-            .card
-              .card-body
-                h5.card-title Recent Activities
-                p.card-text Here you can see the recent activities.
+    .row.text-center
+      .col-md-3
+        .card.text-center
+          .card-body
+            h5.card-title
+              i.fa.fa-box.mr-2
+              | Total Products
+            h6.card-subtitle.mb-2.text-muted #{totalProducts}
+      .col-md-3
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-shopping-cart.mr-2
+              | Total Orders
+            h6.card-subtitle.mb-2.text-muted #{totalOrders}
+      .col-md-3
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-dollar-sign.mr-2
+              | Total Revenue
+            h6.card-subtitle.mb-2.text-muted $#{totalRevenue}
+      .col-md-3
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-users.mr-2
+              | Total Users
+            h6.card-subtitle.mb-2.text-muted #{totalUsers}
+
+    .row.mt-4
+      .col-md-8
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-chart-line.mr-2
+              | Sales Overview
+            canvas#salesChart(width="600" height="300")
+            script.
+              
+              var ctx = document.getElementById('salesChart').getContext('2d');
+              var salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                  datasets: [{
+                    label: 'Sales',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+      .col-md-4
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-clipboard-list.mr-2
+              | Recent Orders
+            .input-group.mb-3
+              input.form-control(type="text", placeholder="Search orders...")
+              .input-group-append
+                button.btn.btn-outline-secondary(type="button") Search
+            table.table.table-striped
+              thead
+                tr
+                  th Order ID
+                  th Amount
+                  th Status
+              tbody
+                tr
+                  td Order #12345
+                  td $1500000000
+                  td
+                    span.badge.badge-success(data-toggle="tooltip", title="Order has been shipped") Shipped
+                tr
+                  td Order #12346
+                  td $180
+                  td
+                    span.badge.badge-warning(data-toggle="tooltip", title="Order is being processed") Processing
+                tr
+                  td Order #12347
+                  td $320
+                  td
+                    span.badge.badge-primary(data-toggle="tooltip", title="Order has been delivered") Delivered
+                tr
+                  td Order #12348
+                  td $120
+                  td
+                    span.badge.badge-danger(data-toggle="tooltip", title="Order has been cancelled") Cancelled
+                tr
+                  td Order #12349
+                  td $150
+                  td
+                    span.badge.badge-warning(data-toggle="tooltip", title="Order is being processed") Processing
+
+    .row.mt-4
+      .col-md-6
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-crown.mr-2
+              | Top Selling Products
+            ul.list-group
+              li.list-group-item
+                | Product A - 200 units
+                .progress
+                  .progress-bar.bg-success(style="width: 80%") 80%
+              li.list-group-item
+                | Product B - 180 units
+                .progress
+                  .progress-bar.bg-info(style="width: 72%") 72%
+              li.list-group-item
+                | Product C - 150 units
+                .progress
+                  .progress-bar.bg-warning(style="width: 60%") 60%
+              li.list-group-item
+                | Product D - 120 units
+                .progress
+                  .progress-bar.bg-danger(style="width: 48%") 48%
+              li.list-group-item
+                | Product E - 100 units
+                .progress
+                  .progress-bar.bg-secondary(style="width: 40%") 40%
+      .col-md-6
+        .card
+          .card-body
+            h5.card-title
+              i.fa.fa-user.mr-2
+              | User Activity
+            ul.list-group
+              li.list-group-item
+                i.fa.fa-user-plus.mr-2
+                | User John Doe signed up
+              li.list-group-item
+                i.fa.fa-shopping-bag.mr-2
+                | User Jane Smith made a purchase
+              li.list-group-item
+                i.fa.fa-comment.mr-2
+                | User Mark Johnson left a review
+              li.list-group-item
+                i.fa.fa-user-edit.mr-2
+                | User Sarah Wilson updated profile
+              li.list-group-item
+                i.fa.fa-cart-plus.mr-2
+                | User Peter Brown added items to cart
