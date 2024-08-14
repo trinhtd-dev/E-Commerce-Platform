@@ -6,8 +6,8 @@ module.exports.login = (req, res) => {
     if(req.cookies.token){
         return res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
     }
-
     res.render("admin/pages/auths/login", {
+        title: "Login Admin",
     });
 };
 

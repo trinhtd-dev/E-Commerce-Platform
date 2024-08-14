@@ -1,9 +1,39 @@
 extends  ../../layouts/default.pug
 
 block content
-  .container
+  .container-fluid
     .row
-      .col-md-12
-        h1 Dashboard
-        p Welcome to the dashboard
-        
+      .col-md-2.bg-dark.text-white
+        include ../partials/sidebar.pug
+      .col-md-10
+        .row.mt-3
+          .col-md-12
+            h1 Dashboard
+            p Welcome to the dashboard
+        .row.mt-4
+          .col-md-3
+            .card
+              .card-body
+                h5.card-title Projects
+                p.card-text 10 Active Projects
+          .col-md-3
+            .card
+              .card-body
+                h5.card-title Tasks
+                p.card-text 25 Pending Tasks
+          .col-md-3
+            .card
+              .card-body
+                h5.card-title Teams
+                p.card-text 5 Teams
+          .col-md-3
+            .card
+              .card-body
+                h5.card-title Messages
+                p.card-text 15 New Messages
+        .row.mt-4
+          .col-md-12
+            .card
+              .card-body
+                h5.card-title Recent Activities
+                p.card-text Here you can see the recent activities.
