@@ -1,7 +1,6 @@
 //reuire
 const express = require("express");
 const path = require('path');
-require("dotenv").config();
 const clientRoutes = require("./routes/client/index.route");
 const adminRoutes = require("./routes/admin/index.route");
 const database = require("./config/database");

@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect index.js"
+    "start": "node --watch --env-file=.env index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +15,6 @@
     "bootstrap": "^5.3.3",
     "cloudinary": "^2.3.1",
     "cookie-parser": "^1.4.6",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-flash": "^0.0.2",
     "express-session": "^1.18.0",
@@ -30,8 +29,5 @@
     "pug": "^3.0.3",
     "streamifier": "^0.1.1",
     "tinymce": "^7.2.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
   }
 }
