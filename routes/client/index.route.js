@@ -10,6 +10,7 @@ const categoryMiddleware = require("../../middlewares/category.middleware");
 const cartMiddleware = require("../../middlewares/cart.middleware");
 const userMiddleware = require("../../middlewares/user.middleware");
 const generalSettingMiddleware = require("../../middlewares/general-setting.middleware");
+const userAuthenticationMiddleware = require("../../middlewares/user-authentication.middleware")
 
 module.exports = (app) => {
     app.use(categoryMiddleware.category);
@@ -23,7 +24,7 @@ module.exports = (app) => {
     app.use("/cart", cartRoutes);
     app.use("/checkout", checkoutRoutes);
     app.use("/user", userRoutes);
-    app.use("/chat", chatRoutes);
+    app.use("/chat",userAuthenticationMiddleware.requireAuth, chatRoutes);
 
     // Middleware 404 put in after all route
      app.use((req, res) => {

@@ -2,36 +2,45 @@ extends ../../layouts/default.pug
 
 block content
   .container.mt-5
-    h2.text-center.mb-5.font-weight-bold.text-primary Chat Room
-    .row
-      .col-12
-        .card
-          .card-header.bg-primary.text-white
-            h5.text-center.font-weight-bold Chat Room
-          .card-body(chat-room)
-            .chat-box
-              ul.list-group
-                if(messages.length == 0)
-                    li.list-group-item.text-center No messages yet
+    h2.text-center.mb-5.font-weight-bold.text-primary Global Chat
+    .row.justify-content-center
+      .col-12.col-md-12.col-lg-10
+        .card.shadow-sm
+          .card-header.bg-primary.text-white.text-center
+            h5.font-weight-bold.mb-0 Chat Room
+          .card-body
+            .chat-box(style="height: 500px; overflow-y: auto;")
+              ul.list-group.list-group-flush(list-message)
+                if messages.length == 0
+                  li.list-group-item.text-center.text-muted No messages yet
                 else
-                    each message in messages
-                        li.list-group-item
-                            .d-flex.align-items-start
-                                if(message.userInfo.avatar)
-                                    img.rounded-circle(
-                                    src=message.userInfo.avatar 
-                                    alt=message.userInfo.fullName
-                                    style="width: 40px; height: 40px;"
-                                    )
-                                else
-                                    img.rounded-circle(src="https://via.placeholder.com/40" alt=message.userInfo.fullName)
-                                .ml-3
-                                    .d-flex.justify-content-between.align-items-center
-                                        p.font-weight-bold.mb-1= message.userInfo.fullName
-                                        small.text-muted= message.createdAt
-                                    p.mb-1= message.content
-            form(action="/chat/send", method="post")
-              .form-group
+                  each message in messages
+                    if message.userId == user.id
+                      li.list-group-item.text-right.bg-light.rounded
+                        .d-flex.justify-content-end
+                          p.mb-0.font-weight-normal= message.content
+                        small.text-muted.ml-2.mt-1= message.time
+                    else
+                      li.list-group-item
+                        .d-flex.align-items-start
+                          if message.userInfo.avatar
+                            img.rounded-circle(
+                              src=message.userInfo.avatar 
+                              alt=message.userInfo.fullName
+                              style="width: 40px; height: 40px; margin-right: 10px;"
+                            )
+                          else
+                            img.rounded-circle(src="https://via.placeholder.com/40" alt=message.userInfo.fullName style="width: 40px; height: 40px; margin-right: 10px;")
+                          .ml-3
+                            .d-flex.flex-column.rounded
+                              div.d-flex.justify-content
+                                p.font-weight-bold.mb-0= message.userInfo.fullName
+                                small.text-muted.ml-2= message.time
+                              p.mb-0.font-weight-normal.mt-2= message.content
+            form(form-chat my-id=user.id)
+              .form-group.mt-4
                 label(for="message") Message
-                input.form-control(type="text" name="message" placeholder="Enter your message")
-              button(type="submit" class="btn btn-primary mt-2") Send
+                div.d-flex
+                  input.form-control(type="text" name="message" placeholder="Enter your message")
+                  button(type="submit" class="btn btn-primary float-right")
+                    i.fa.fa-paper-plane

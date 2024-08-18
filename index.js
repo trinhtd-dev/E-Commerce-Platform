@@ -10,9 +10,16 @@ const bodyParser = require("body-parser");
 const flash  = require("express-flash");
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const { Server } = require("socket.io");
 
 
 const app = express();
+
+// Socket.io
+const server = http.createServer(app);
+const io = new Server(server);
+global._io = io;
 
 app.use(cookieParser());
 //Set Express Flash : Alert
@@ -60,4 +67,4 @@ adminRoutes(app);
 
 
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+server.listen(port, () => console.log(`Server running on port ${port}`));
