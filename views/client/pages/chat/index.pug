@@ -9,7 +9,7 @@ block content
           .card-header.bg-primary.text-white.text-center
             h5.font-weight-bold.mb-0 Chat Room
           .card-body
-            .chat-box(style="height: 500px; overflow-y: auto;")
+            .chat-box(style="height: 500px; overflow-y: auto;" chat-box)
               ul.list-group.list-group-flush(list-message)
                 if messages.length == 0
                   li.list-group-item.text-center.text-muted No messages yet
@@ -42,5 +42,9 @@ block content
                 label(for="message") Message
                 div.d-flex
                   input.form-control(type="text" name="message" placeholder="Enter your message")
+                  span.btn.btn-secondary(emoji-button) 
+                    i.fa.fa-smile
                   button(type="submit" class="btn btn-primary float-right")
                     i.fa.fa-paper-plane
+                emoji-picker(id="emoji-picker" class="d-none")
+

@@ -1,22 +1,25 @@
 const socket = io();
 
 const form = document.querySelector("[form-chat]");
-const input = form.querySelector('input');
-if(form){
+const chatBox = document.querySelector('.chat-box');
+const listMessage = document.querySelector("[list-message]");
+
+if (form) {
+  const inputMessage = form.querySelector('input[name="message"]');
+  
   form.addEventListener('submit', function(e) {
     e.preventDefault();
-    if (input.value) {
-      socket.emit('CLIENT_SEND_DATA', input.value);
-      input.value = '';
+    if (inputMessage.value) {
+      socket.emit('CLIENT_SEND_DATA', inputMessage.value);
+      inputMessage.value = '';
     }
   });
-  
+
   socket.on("SERVER_SEND_DATA", (message) => {
-    const listMessage = document.querySelector("[list-message]");
     const liMessage = document.createElement("li");
     liMessage.classList.add("list-group-item");
     const userId = form.getAttribute("my-id");
-  
+
     if (message.userId === userId) {
       liMessage.classList.add("text-right", "bg-light", "rounded");
       liMessage.innerHTML = `
@@ -40,8 +43,30 @@ if(form){
         </div>
       `;
     }
-  
+
     listMessage.appendChild(liMessage);
-    liMessage.scrollIntoView({ behavior: "smooth" }); // Cuộn xuống dưới cùng
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+}
+
+// Scroll to the bottom of the chat box when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+  if (chatBox) {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+});
+
+// Emoji picker functionality
+const emojiPicker = document.querySelector('#emoji-picker');
+if (emojiPicker) {
+  const emojiButton = document.querySelector("[emoji-button]");
+  emojiButton.addEventListener('click', () => {
+    emojiPicker.classList.toggle("d-none");
+  });
+
+  emojiPicker.addEventListener('emoji-click', event => {
+    const inputMessage = form.querySelector('input[name="message"]');
+    inputMessage.value += event.detail.unicode;
+    inputMessage.focus();
   });
 }
