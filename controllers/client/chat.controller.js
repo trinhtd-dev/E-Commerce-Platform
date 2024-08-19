@@ -35,8 +35,9 @@ module.exports.index = async (req, res) => {
         const messages = await Message.find({}).sort({ createdAt: -1 }).limit(10)
 
         for (const message of messages) {
-            message.userInfo = res.locals.user;
+            message.userInfo = await User.findOne({ _id: message.userId });
             message.time = moment(message.createdAt).format('HH:mm');
+            
         }
 
         res.render('client/pages/chat/index', {

@@ -1,0 +1,54 @@
+/* Emoji Picker Popup */
+.emoji-picker-popup {
+    position: absolute;
+    bottom: 50px; /* Adjust this value as needed */
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Softer shadow for a more professional look */
+    padding: 15px; /* Increased padding for better spacing */
+    width: 400px; /* Adjusted width */
+    height: 400px; /* Adjusted height */
+    overflow-y: auto;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for showing/hiding */
+    transform: translateY(10px);
+  }
+  
+  .emoji-picker-popup.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Chat Box */
+  .chat-box {
+    min-height: 400px; /* Set minimum height for chat box */
+    max-height: 400px; /* Set maximum height for chat box */
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds max height */
+    margin-bottom: 20px;
+    padding: 10px; /* Added padding for better spacing */
+    border: 1px solid #ddd; /* Border for better separation */
+    border-radius: 8px; /* Rounded corners for a modern look */
+    background-color: #f9f9f9; /* Light background color for better readability */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow for depth */
+  }
+  
+  /* Scrollbar Styling */
+  .chat-box::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .chat-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+  }
+  
+  .chat-box::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 8px;
+  }
+  
+  .chat-box::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

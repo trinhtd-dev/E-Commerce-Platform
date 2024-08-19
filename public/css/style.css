@@ -410,10 +410,3 @@ h2.inner-title {
 }
 
 
-.chat-box {
-  min-height: 400px; /* Đặt chiều cao tối thiểu cho khung chat */
-  max-height: 400px; /* Đặt chiều cao tối đa cho khung chat */
-  overflow-y: auto;  /* Thêm thanh cuộn dọc nếu nội dung vượt quá chiều cao tối đa */
-  margin-bottom: 20px;
-}
-

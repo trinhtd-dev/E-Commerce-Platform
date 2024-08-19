@@ -37,14 +37,15 @@ block content
                                 p.font-weight-bold.mb-0= message.userInfo.fullName
                                 small.text-muted.ml-2= message.time
                               p.mb-0.font-weight-normal.mt-2= message.content
-            form(form-chat my-id=user.id)
-              .form-group.mt-4
-                label(for="message") Message
-                div.d-flex
-                  input.form-control(type="text" name="message" placeholder="Enter your message")
-                  span.btn.btn-secondary(emoji-button) 
-                    i.fa.fa-smile
-                  button(type="submit" class="btn btn-primary float-right")
-                    i.fa.fa-paper-plane
-                emoji-picker(id="emoji-picker" class="d-none")
-
+            
+            .position-relative
+              emoji-picker(id="emoji-picker" class="emoji-picker-popup d-none")
+              form(form-chat my-id=user.id)
+                .form-group.mt-4
+                  label(for="message") Message
+                  div.d-flex
+                    input.form-control(type="text" name="message" placeholder="Enter your message")
+                    span.btn.btn-secondary(emoji-button) 
+                      i.fa.fa-smile
+                    button(type="submit" class="btn btn-primary float-right")
+                      i.fa.fa-paper-plane
