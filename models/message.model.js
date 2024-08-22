@@ -10,7 +10,8 @@ const messageSchema = new Schema({
     content: {
         type: String,
         required: true
-    }
+    },
+    files: { type: [String], default: [] },
     }, { 
     timestamps: true
 });

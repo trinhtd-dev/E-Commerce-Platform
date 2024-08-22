@@ -37,8 +37,9 @@ block content
                                 p.font-weight-bold.mb-0= message.userInfo.fullName
                                 small.text-muted.ml-2= message.time
                               p.mb-0.font-weight-normal.mt-2= message.content
-            
-            .position-relative
+         
+              .position-relative(box-typing user-id= user.id)
+           
               emoji-picker(id="emoji-picker" class="emoji-picker-popup d-none")
               form(form-chat my-id=user.id)
                 .form-group.mt-4
@@ -47,5 +48,8 @@ block content
                     input.form-control(type="text" name="message" placeholder="Enter your message")
                     span.btn.btn-secondary(emoji-button) 
                       i.fa.fa-smile
+                    span.btn.btn-dark(upload-button)
+                     i.fa-solid.fa-cloud-upload-alt
                     button(type="submit" class="btn btn-primary float-right")
                       i.fa.fa-paper-plane
+              div(class="custom-file-container d-none" data-upload-id="my-unique-id" file-upload-with-preview)
