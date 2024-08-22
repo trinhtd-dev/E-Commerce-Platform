@@ -9,9 +9,10 @@ const messageSchema = new Schema({
     },
     content: {
         type: String,
-        required: true
     },
-    files: { type: [String], default: [] },
+    images:[{
+        type: String
+    }],
     }, { 
     timestamps: true
 });

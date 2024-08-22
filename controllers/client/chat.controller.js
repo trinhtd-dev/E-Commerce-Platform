@@ -7,32 +7,30 @@ const path = require('path');
 // Function to handle client send data
 const handleClientSendData = async (socket, user, messageData) => {
     try {
-        const files = [];
-
-        // Lưu trữ các tệp ảnh
+        //save images to upload
+        const images = [];
         for (const file of messageData.files) {
-            const base64Data = file.data.replace(/^data:image\/\w+;base64,/, '');
-            const buffer = Buffer.from(base64Data, 'base64');
-            const filePath = path.join(__dirname, '../../uploads', file.name);
-            fs.writeFileSync(filePath, buffer);
-            files.push(`/uploads/${file.name}`);
+            fileName = `${Date.now()}.png`;
+            const filePath = path.join(__dirname, '../../public/uploads', fileName);
+            fs.writeFileSync(filePath, file);
+            images.push(`/uploads/${fileName}`);
         }
 
         const message = new Message({
             userId: user.id,
             content: messageData.message,
-            files: files
+            images: images
         });
-        await message.save();
 
+        await message.save();
+        
         const data = {
             userId: user.id,
             content: messageData.message,
+            images: images,
             userInfo: user,
             time: moment(message.createdAt).format('HH:mm'),
-            files: files
         };
-
         _io.emit("SERVER_SEND_DATA", data);
     } catch (error) {
         console.error('Error saving message:', error);

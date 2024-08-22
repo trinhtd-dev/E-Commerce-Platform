@@ -16,51 +16,41 @@ if (form) {
       const messageData = {
         message: inputMessage.value,
         userId: userId,
-        files: []
+        files: upload.cachedFileArray
       };
-
-      // Chuyển đổi các tệp thành base64
-      upload.cachedFileArray.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          messageData.files.push({
-            name: file.name,
-            type: file.type,
-            data: event.target.result
-          });
-
-          // Kiểm tra nếu tất cả các tệp đã được chuyển đổi
-          if (messageData.files.length === upload.cachedFileArray.length) {
-            socket.emit('CLIENT_SEND_DATA', messageData);
-            inputMessage.value = '';
-            upload.resetPreviewPanel();
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-
-      // Nếu không có tệp, gửi tin nhắn ngay lập tức
-      if (upload.cachedFileArray.length === 0) {
-        socket.emit('CLIENT_SEND_DATA', messageData);
-        inputMessage.value = '';
+          
+      socket.emit('CLIENT_SEND_DATA', messageData);
+      inputMessage.value = '';
+      upload.resetPreviewPanel();
+      const divUpload = document.querySelector("[file-upload-with-preview");
+      if(divUpload){
+        divUpload.classList.add("d-none");
       }
+
     }
   });
 
   socket.on("SERVER_SEND_DATA", (message) => {
-    const liMessage = document.createElement("li");
-    liMessage.classList.add("list-group-item");
-  
+    const liMessage = document.createElement('li');
+    liMessage.classList.add('list-group-item');
+
     if (message.userId === userId) {
-      liMessage.classList.add("text-right", "bg-light", "rounded");
+      liMessage.classList.add('text-right', 'bg-light', 'rounded');
       liMessage.innerHTML = `
         <div class="d-flex justify-content-end">
-          <p class="mb-0 font-weight-normal">${message.content}</p>
+          <div class="message-content">
+            <p class="mb-0 font-weight-normal">${message.content}</p>
+            ${message.images && message.images.length > 0 ? `
+              <div class="message-images mt-2">
+                ${message.images.map(image => `<img src="${image}" alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;">`).join('')}
+              </div>
+            ` : ''}
+          </div>
         </div>
         <small class="text-muted ml-2 mt-1">${message.time}</small>
       `;
     } else {
-      const avatar = message.userInfo.avatar || "https://via.placeholder.com/40";
+      const avatar = message.userInfo.avatar || 'https://via.placeholder.com/40';
       liMessage.innerHTML = `
         <div class="d-flex align-items-start">
           <img class="rounded-circle" src="${avatar}" alt="${message.userInfo.fullName}" style="width: 40px; height: 40px; margin-right: 10px;">
@@ -70,14 +60,19 @@ if (form) {
               <small class="text-muted ml-2">${message.time}</small>
             </div>
             <p class="mb-0 font-weight-normal mt-2">${message.content}</p>
-            ${message.files.map(file => `<img src="${file.data}" alt="${file.name}" style="max-width: 100%;">`).join('')}
+            ${message.images && message.images.length > 0 ? `
+              <div class="message-images mt-2">
+                ${message.images.map(image => `<img src="${image}" alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;">`).join('')}
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
     }
-  
+
     listMessage.appendChild(liMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
+
 
     // Xóa thông báo "đang gõ"
     const divTyping = boxTyping.querySelector(`[userId="${message.userInfo.userId}"]`);
@@ -159,11 +154,16 @@ const upload = new FileUploadWithPreview.FileUploadWithPreview('my-unique-id', {
 const uploadButton = document.querySelector("[upload-button]");
 if(uploadButton) {
   uploadButton.addEventListener('click', () => {
+    const inputUpload = document.querySelector("#file-upload-with-preview-my-unique-id");
+    inputUpload.click();
     const divUpload = document.querySelector("[file-upload-with-preview");
     if(divUpload){
-      divUpload.classList.toggle("d-none");
+      divUpload.classList.remove("d-none");
     }
     chatBox.scrollTop = chatBox.scrollHeight;
+    const imagePreview = document.querySelector(".image-preview");
 
   });
 }
+
+//hidden image preview when all images are deleted

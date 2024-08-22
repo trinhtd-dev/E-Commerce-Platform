@@ -18,7 +18,12 @@ block content
                     if message.userId == user.id
                       li.list-group-item.text-right.bg-light.rounded
                         .d-flex.justify-content-end
-                          p.mb-0.font-weight-normal= message.content
+                          .message-content
+                            p.mb-0.font-weight-normal= message.content
+                            if message.images && message.images.length > 0
+                              .message-images.mt-2
+                                each image in message.images
+                                  img(src=image alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;")
                         small.text-muted.ml-2.mt-1= message.time
                     else
                       li.list-group-item
@@ -36,11 +41,15 @@ block content
                               div.d-flex.justify-content
                                 p.font-weight-bold.mb-0= message.userInfo.fullName
                                 small.text-muted.ml-2= message.time
-                              p.mb-0.font-weight-normal.mt-2= message.content
-         
+                              .message-content.mt-2
+                                p.mb-0.font-weight-normal= message.content
+                                if message.images && message.images.length > 0
+                                  .message-images.mt-2
+                                    each image in message.images
+                                      img(src=image alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;")
               .position-relative(box-typing user-id= user.id)
-           
               emoji-picker(id="emoji-picker" class="emoji-picker-popup d-none")
+              div(class="custom-file-container d-none" data-upload-id="my-unique-id" file-upload-with-preview)
               form(form-chat my-id=user.id)
                 .form-group.mt-4
                   label(for="message") Message
@@ -52,4 +61,3 @@ block content
                      i.fa-solid.fa-cloud-upload-alt
                     button(type="submit" class="btn btn-primary float-right")
                       i.fa.fa-paper-plane
-              div(class="custom-file-container d-none" data-upload-id="my-unique-id" file-upload-with-preview)
