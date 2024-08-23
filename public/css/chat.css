@@ -103,15 +103,15 @@
 
 /* Giảm chiều cao của thẻ 'image-preview' */
 .image-preview {
-  height: 60px !important;  /* Thay đổi giá trị này theo ý bạn */
-  background-size: cover;
+  height: auto !important;  /* Thay đổi giá trị này theo ý bạn */
   background-position: center;
   background-repeat: no-repeat;
+  padding: 0 !important;
 }
 
 /* Giảm kích thước ảnh trong preview */
 .image-preview-item  {
-  width: 20% !important;;
-  height: 100% !important;;
+  width: 90px !important;;
   object-fit: cover;
+  
 }

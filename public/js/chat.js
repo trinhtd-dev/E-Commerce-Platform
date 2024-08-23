@@ -22,11 +22,6 @@ if (form) {
       socket.emit('CLIENT_SEND_DATA', messageData);
       inputMessage.value = '';
       upload.resetPreviewPanel();
-      const divUpload = document.querySelector("[file-upload-with-preview");
-      if(divUpload){
-        divUpload.classList.add("d-none");
-      }
-
     }
   });
 
@@ -166,4 +161,3 @@ if(uploadButton) {
   });
 }
 
-//hidden image preview when all images are deleted
