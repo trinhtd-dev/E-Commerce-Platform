@@ -35,7 +35,6 @@ const handleClientSendData = async (socket, user, messageData) => {
 
 module.exports.chat = (res) => {
     _io.once('connection', (socket) => {
-        console.log('a user connected');
         socket.on("CLIENT_SEND_DATA", (messageData) => {
             handleClientSendData(socket, res.locals.user, messageData);
         });

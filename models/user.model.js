@@ -6,7 +6,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    avatar: String,
+    avatar:{
+        type: String,
+        default: "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1"
+    },
     phone: String,
     address: String,
     email: {
@@ -22,6 +25,30 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
+    status: {
+        type: String,
+        default: "active",
+    },
+
+    friendList: [
+        {
+            userId: String,
+            room_chat_id: String,
+        }
+    ],
+
+    friendRequest: [{
+        userId: String,
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
+
+    sentInvitation: [{
+        userId: String,
+    }],
+
     token:{
         type: String,
         default: generateString.token(20),

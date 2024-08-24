@@ -2,6 +2,14 @@ extends ../../layouts/default.pug
 
 block content
   .container.mt-5
+    .row.mb-4
+      .col-12
+        .btn-group.d-flex.justify-content-center
+          a.btn.btn-outline-primary(href="/users/user-list") User List
+          a.btn.btn-outline-primary(href="/users/friend-list") Friend List
+          a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
+          a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
+
     h2.text-center.mb-5.font-weight-bold.text-primary Global Chat
     .row.justify-content-center
       .col-12.col-md-12.col-lg-10
@@ -61,3 +69,7 @@ block content
                      i.fa-solid.fa-cloud-upload-alt
                     button(type="submit" class="btn btn-primary float-right")
                       i.fa.fa-paper-plane
+block script 
+  script(src="/js/chat.js") 
+  script(type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js")
+  script(src="https://unpkg.com/file-upload-with-preview/dist/file-upload-with-preview.iife.js")

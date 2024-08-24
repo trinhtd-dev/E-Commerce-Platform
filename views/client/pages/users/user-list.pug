@@ -1,0 +1,24 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  .container.mt-5
+    .row.mb-4
+      .col-12
+        h4 90 User 
+    .row
+      each user in users
+        .col-12.col-md-6.col-lg-3.mb-4
+          .card.shadow-sm
+            .card-body
+              .d-flex.align-items-center.mb-3
+                img.rounded-circle(src=user.avatar alt="Profile picture" style="width: 50px; height: 50px;")
+                .ml-3
+                  h5.mb-0= user.fullName
+                  p.text-muted.mb-0 2 tuần
+              .d-flex.justify-content-around.mt-3
+                button.btn.btn-primary(my-id =user.id add-button) Add friend 
+                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel request
+                
+block script 
+  script(src="/js/users.js")
