@@ -21,8 +21,11 @@ block content
                   h5.mb-0= user.fullName
                   p.text-muted.mb-0 2 tuần
               .d-flex.justify-content-around.mt-3
+                span.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2.d-none(
+                    sent-button data-user-id=user.id
+                ) Sent Invitation 
                 button.btn.btn-primary(my-id =user.id add-button) Add friend 
-                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel request
+                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel
                 
 block script 
   script(src="/js/users.js")

@@ -140,7 +140,41 @@ module.exports = async (res) => {
                 console.error(err);
             }
         });
-        
+    
+    // Unfriend
+        socket.on("CLIENT_UNFRIEND", async (userId) => {
+            try {
+                await User.updateOne(
+                    {
+                        _id: myId
+                    },
+                    {
+                        $pull:{
+                            friendList:{
+                                userId: userId,
+                            }
+                        }
+                    }
+                );
+                
+                await User.updateOne(
+                    {
+                        _id: userId
+                    },
+                    {
+                        $pull:{
+                            friendList:{
+                                userId: myId,
+                            }
+                        }
+                    }
+                );
+                
+            } catch (err) {
+                console.error(err);
+            };
+
+        });
 
     });
 }

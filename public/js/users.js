@@ -1,7 +1,7 @@
 const socket = io();
 // ADD FRIEND
 const addFrinendButtons = document.querySelectorAll("[add-button]");
-if(addFrinendButtons.length > 0)
+if(addFrinendButtons.length > 0){
     addFrinendButtons.forEach(button => {
         button.addEventListener("click", () => {
             const userId = button.getAttribute("my-id");
@@ -9,13 +9,15 @@ if(addFrinendButtons.length > 0)
             button.classList.toggle("d-none");
             const cancelButton = document.querySelector(`button[cancel-button][my-id="${userId}"]`);
             cancelButton.classList.toggle("d-none");
+            const sentButton = document.querySelector(`[sent-button][data-user-id="${userId}"]`);
+            sentButton.classList.toggle("d-none");
         })
     });
-
+}
+   
 // CANCEL REQUEST
-
 const cancelRequestButtons = document.querySelectorAll("[cancel-button]");
-if(cancelRequestButtons.length > 0)
+if(cancelRequestButtons.length > 0){
     cancelRequestButtons.forEach(button => {
         button.addEventListener("click", () => {
             const userId = button.getAttribute("my-id");
@@ -23,8 +25,12 @@ if(cancelRequestButtons.length > 0)
             button.classList.toggle("d-none");
             const addButton = document.querySelector(`button[add-button][my-id="${userId}"]`);
             addButton.classList.toggle("d-none");
+            const sentButton = document.querySelector(`[sent-button][data-user-id="${userId}"]`);
+            sentButton.classList.toggle("d-none");
         })
     });
+}
+    
 
 // Friend Request
 const acceptButtons = document.querySelectorAll("[accept-button]");
@@ -44,7 +50,6 @@ if(acceptButtons.length > 0){
 
 //Delete Request
 const deleteRequest = document.querySelectorAll("[decline-button]");
-
 if(deleteRequest.length > 0){
     deleteRequest.forEach(button => {
         button.addEventListener("click", () => {
@@ -52,6 +57,23 @@ if(deleteRequest.length > 0){
             socket.emit("CLIENT_DELETE_REQUEST", userId);
             const boxUser = document.querySelector(`[box-user][data-user-id="${userId}"]`);
             boxUser.remove();
+        });
+    });
+}
+
+// Unfriend
+
+const unfriendButtons = document.querySelectorAll("[unfriend-button]");
+if(unfriendButtons.length > 0){
+    unfriendButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const userId = button.getAttribute("my-id");
+            socket.emit("CLIENT_UNFRIEND", userId);
+            button.classList.toggle("d-none");
+            const friendButton = document.querySelector(`span[friend-button][data-user-id="${userId}"]`);
+            friendButton.classList.toggle("d-none");
+            const addButton = document.querySelector(`button[add-button][my-id="${userId}"]`);
+            addButton.classList.toggle("d-none");
         });
     });
 }

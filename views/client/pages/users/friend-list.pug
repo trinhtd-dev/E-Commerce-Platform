@@ -6,8 +6,8 @@ block content
     .row.mb-4
       .col-12
         .btn-group.d-flex.justify-content-center
-            a.btn.btn-primary(href="/users/user-list") User List
-            a.btn.btn-outline-primary(href="/users/friend-list") Friend List
+            a.btn.btn-outline-primary(href="/users/user-list") User List
+            a.btn.btn-primary(href="/users/friend-list") Friend List
             a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
             a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
     .row
@@ -21,8 +21,15 @@ block content
                   h5.mb-0= user.fullName
                   p.text-muted.mb-0 2 tuần
               .d-flex.justify-content-around.mt-3
-                button.btn.btn-primary(my-id =user.id add-button) Add friend 
-                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel request
+                span.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2(
+                    friend-button data-user-id=user.id
+                ) Friend 
+                span.d-none.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2(
+                    sent-button data-user-id=user.id
+                ) Sent invitation  
+                button.btn.btn-danger(my-id =user.id unfriend-button) Unfriend 
+                button.btn.btn-primary.d-none(my-id =user.id add-button) Add friend 
+                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel
                 
 block script 
   script(src="/js/users.js")

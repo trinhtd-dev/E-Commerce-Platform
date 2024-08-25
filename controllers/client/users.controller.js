@@ -11,7 +11,8 @@ module.exports.userList = async (req, res) => {
         const myId = res.locals.user.id;
         const friendRequestIds = res.locals.user.friendRequest.map(request => request.userId);
         const sentInvitationIds = res.locals.user.sentInvitation.map(invitation => invitation.userId);
-        const excludeIds = [myId, ...friendRequestIds, ...sentInvitationIds];
+        const friendListIds = res.locals.user.friendList.map(friend => friend.userId);
+        const excludeIds = [myId, ...friendRequestIds, ...sentInvitationIds, ...friendListIds];
 
         const users = await User.find({
             _id: { $nin: excludeIds },
@@ -30,11 +31,11 @@ module.exports.userList = async (req, res) => {
 // [GET] /users/user-list
 module.exports.friendList = async (req, res) => {
     try {
-        const friendList = res.locals.user.friendList;
+        await usersSocket(res);
+        const friendList = res.locals.user.friendList.map(friend => friend.userId);
         const users = await User.find({
             _id: { $in: friendList },
             status: 'active',
-            deleted: false,
         }).select("-password");
 
         res.render('client/pages/users/friend-list', {
@@ -51,11 +52,11 @@ module.exports.friendList = async (req, res) => {
 // [GET] /users/sent-invitation
 module.exports.sentInvitation = async (req, res) => {
     try {
-        const sentInvitations = res.locals.user.sentInvitation;
+        await usersSocket(res);
+        const sentInvitationsId = res.locals.user.sentInvitation.map(invitation => invitation.userId);
         const users = await User.find({
-            _id: { $in: sentInvitations },
+            _id: { $in: sentInvitationsId },
             status: 'active',
-            deleted: false,
         }).select("-password");
 
         res.render('client/pages/users/sent-invitation', {
