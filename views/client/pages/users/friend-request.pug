@@ -5,11 +5,14 @@ block content
   .container.mt-5
     .row.mb-4
       .col-12
-        h4 90 lời mời kết bạn
-        a.btn.btn-outline-primary(href='#') Xem lời mời đã gửi
+        .btn-group.d-flex.justify-content-center
+            a.btn.btn-outline-primary(href="/users/user-list") User List
+            a.btn.btn-outline-primary(href="/users/friend-list") Friend List
+            a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
+            a.btn.btn-primary(href="/users/friend-request") Friend Requests
     .row
       each user in users
-        .col-12.col-md-6.col-lg-3.mb-4
+        .col-12.col-md-6.col-lg-3.mb-4(box-user data-user-id=user.id)
           .card.shadow-sm
             .card-body
               .d-flex.align-items-center.mb-3
@@ -18,8 +21,8 @@ block content
                   h5.mb-0= user.fullName
                   p.text-muted.mb-0 2 tuần
               .d-flex.justify-content-around.mt-3
-                button.btn.btn-success.accept-btn Accept 
-                button.btn.btn-danger.decline-btn Delete 
-
+                button.btn.btn-success.border(accept-button data-user-id=user.id) Accept 
+                button.btn.btn-danger.border(decline-button data-user-id=user.id) Delete 
+                span.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2.d-none(accepted-button data-user-id=user.id) Accepted
 block script 
   script(src="/js/users.js")

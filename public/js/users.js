@@ -25,3 +25,33 @@ if(cancelRequestButtons.length > 0)
             addButton.classList.toggle("d-none");
         })
     });
+
+// Friend Request
+const acceptButtons = document.querySelectorAll("[accept-button]");
+if(acceptButtons.length > 0){
+    acceptButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const userId = button.getAttribute("data-user-id");
+            socket.emit("CLIENT_ACCEPT_REQUEST", userId);
+            button.classList.toggle("d-none");
+            const rejectButton = document.querySelector(`button[decline-button][data-user-id="${userId}"]`);
+            rejectButton.classList.toggle("d-none");
+            const acceptedButton = document.querySelector(`[accepted-button][data-user-id="${userId}"]`);
+            acceptedButton.classList.toggle("d-none");
+        });
+    });
+}
+
+//Delete Request
+const deleteRequest = document.querySelectorAll("[decline-button]");
+
+if(deleteRequest.length > 0){
+    deleteRequest.forEach(button => {
+        button.addEventListener("click", () => {
+            const userId = button.getAttribute("data-user-id");
+            socket.emit("CLIENT_DELETE_REQUEST", userId);
+            const boxUser = document.querySelector(`[box-user][data-user-id="${userId}"]`);
+            boxUser.remove();
+        });
+    });
+}

@@ -5,7 +5,7 @@ const moment = require('moment');
 module.exports = async (res) => {
     _io.once('connection', (socket) => {
         const myId = res.locals.user.id;
-
+     // Send Invitation
         socket.on("CLIENT_ADD_FRIEND", async (userId) => {
                 try {
                     await User.updateOne(
@@ -58,5 +58,89 @@ module.exports = async (res) => {
                     console.error('Error Cancel Request:', err);
                 }
         });
+
+    // Accept Request
+        socket.on("CLIENT_ACCEPT_REQUEST", async (userId) => {
+            try {
+                await User.updateOne(
+                    { 
+                        _id: myId 
+                    },
+                    
+                    {
+                        $addToSet:{
+                            friendList:{
+                            userId: userId,
+                            }
+                        },
+
+                        $pull:{
+                            friendRequest:{
+                                userId: userId,
+                            }
+                        }
+                
+                    }
+                );
+
+                await User.updateOne(
+                    {
+                        _id: userId
+                    },
+
+                    {
+                        $addToSet: {
+                            friendList:{
+                                userId: myId,
+                            }
+                        },
+                        $pull: {
+                            sentInvitation:{
+                                userId: myId,
+                            }
+                        }
+                    }
+                );
+
+
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+    // Delete Request
+        socket.on("CLIENT_DELETE_REQUEST", async (userId) => {
+            try {
+                await User.updateOne(
+                    {
+                        _id: myId
+                    },
+                    {
+                        $pull:{
+                            friendRequest:{
+                                userId: userId,
+                            }
+                        }
+                    }
+                );
+
+                await User.updateOne(
+                    {
+                        _id: userId
+                    },
+                    {
+                        $pull:{
+                            sentInvitation:{
+                                userId: myId,
+                            }
+                        }
+                    }
+                );
+            } catch (err) {
+                console.error(err);
+            }
+        });
+        
+
     });
 }

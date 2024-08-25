@@ -5,7 +5,11 @@ block content
   .container.mt-5
     .row.mb-4
       .col-12
-        h4 90 User 
+        .btn-group.d-flex.justify-content-center
+            a.btn.btn-primary(href="/users/user-list") User List
+            a.btn.btn-outline-primary(href="/users/friend-list") Friend List
+            a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
+            a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
     .row
       each user in users
         .col-12.col-md-6.col-lg-3.mb-4

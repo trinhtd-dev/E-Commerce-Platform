@@ -73,12 +73,12 @@ module.exports.sentInvitation = async (req, res) => {
 // [GET] /users/friend-request
 module.exports.friendRequest = async (req, res) => {
     try {
-        const friendRequest = res.locals.user.friendRequest;
+        await usersSocket(res);
+        const friendRequestIds = res.locals.user.friendRequest.map(friendRequest => friendRequest.userId);
         const users = await User.find({
-            _id: { $in: friendRequest },
+            _id: { $in: friendRequestIds },
             status: 'active',
-            deleted: false,
-        }).select("-password");
+        }).select("avatar fullName id");
 
         res.render('client/pages/users/friend-request', {
             title: 'Friend Requests',
