@@ -10,7 +10,8 @@ block content
             a.btn.btn-outline-primary(href="/users/friend-list") Friend List
             a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
             a.btn.btn-primary(href="/users/friend-request") Friend Requests
-    .row
+              span.badge.badge-danger.ml-2(friend-request-length)= user.friendRequest.length
+    .row(my-id= user.id box-friend-request)
       each user in users
         .col-12.col-md-6.col-lg-3.mb-4(box-user data-user-id=user.id)
           .card.shadow-sm

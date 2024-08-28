@@ -9,6 +9,7 @@ block content
           a.btn.btn-outline-primary(href="/users/friend-list") Friend List
           a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
           a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
+              span.badge.badge-danger.ml-2(friend-request-length)= user.friendRequest.length
 
     h2.text-center.mb-5.font-weight-bold.text-primary Global Chat
     .row.justify-content-center

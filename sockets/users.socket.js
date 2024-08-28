@@ -24,13 +24,15 @@ module.exports = async (res) => {
                             }
                         }
                     });
-
-                    console.log('Invitation sent successfully');
+                    const user = await User.findOne({_id: myId})
+                    .select("avatar fullName id");
+                    socket.broadcast.emit("SERVER_ADD_FRIEND", user, userId);
+                    const userB = await User.findOne({_id: userId}).select("id friendRequest");
+                    socket.broadcast.emit("SERVER_UPDATE_LENGTH_FRIEND_REQUEST", userB);
                 } catch (err) {
                     console.error('Error sending invitation:', err);
                 }
         });
-
 
     // Cancel Request
         socket.on("CLIENT_CANCEL_REQUEST", async (userId) => {
@@ -53,7 +55,11 @@ module.exports = async (res) => {
                             }
                         }
                     });
-
+                    
+                    const user = await User.findOne({_id: myId});
+                    socket.broadcast.emit("SERVER_CANCEL_REQUEST", user, userId);
+                    const userB = await User.findOne({_id: userId}).select("id friendRequest");
+                    socket.broadcast.emit("SERVER_UPDATE_LENGTH_FRIEND_REQUEST", userB);
                 } catch (err) {
                     console.error('Error Cancel Request:', err);
                 }
@@ -102,6 +108,9 @@ module.exports = async (res) => {
                     }
                 );
 
+                const user = await User.findOne({_id: myId}).select("id avatar fullName friendRequest");
+                socket.broadcast.emit("SERVER_ACCEPT_REQUEST", user, userId);
+
 
             } catch (err) {
                 console.error(err);
@@ -136,7 +145,10 @@ module.exports = async (res) => {
                         }
                     }
                 );
-            } catch (err) {
+                
+                const user = await User.findOne({_id: myId}).select("id avatar fullName friendRequest");
+                socket.broadcast.emit("SERVER_DELETE_REQUEST", user, userId);
+                } catch (err) {
                 console.error(err);
             }
         });
@@ -170,6 +182,8 @@ module.exports = async (res) => {
                     }
                 );
                 
+                const user = await User.findOne({_id: myId});
+                socket.broadcast.emit("SERVER_UNFRIEND", user, userId);
             } catch (err) {
                 console.error(err);
             };

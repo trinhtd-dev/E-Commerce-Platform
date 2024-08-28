@@ -62,8 +62,8 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 
 
 //routes
-clientRoutes(app);
 adminRoutes(app);
+clientRoutes(app);
 
 
 
