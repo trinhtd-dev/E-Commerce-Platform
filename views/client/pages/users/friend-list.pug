@@ -18,7 +18,13 @@ block content
           .card.shadow-sm
             .card-body
               .d-flex.align-items-center.mb-3
-                img.rounded-circle(src=user.avatar alt="Profile picture" style="width: 50px; height: 50px;")
+                .position-relative
+                  img.rounded-circle(src=user.avatar alt="Profile picture" style="width: 50px; height: 50px; position: relative;")
+                  div(online-status
+                    style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background-color: green; border-radius: 50%; border: 2px solid white;"
+                    class= (user.status_online == "online") ? "" : "d-none"
+                    data-user-id=user.id
+                  )
                 .ml-3
                   h5.mb-0= user.fullName
                   p.text-muted.mb-0 2 tuần

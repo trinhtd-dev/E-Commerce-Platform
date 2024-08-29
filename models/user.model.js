@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "active",
     },
+    status_online:{
+        type: String,
+        default: "offline"
+    },
 
     friendList: [
         {

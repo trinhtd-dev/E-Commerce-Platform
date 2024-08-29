@@ -66,7 +66,9 @@ module.exports.loginPost = async (req, res) => {
         }
 
         res.cookie("userToken", user.token);
-
+        
+        await User.updateOne({_id: user._id}, {status_online: "online"});
+        _io.sockets.emit('SERVER_LOGIN', user._id);
         req.flash("success", "Login successful");
         return res.redirect("/");
 
@@ -79,8 +81,11 @@ module.exports.loginPost = async (req, res) => {
 }; 
 
 // [GET] /user/logout
-module.exports.logout = (req, res) => {
+module.exports.logout = async (req, res) => {
+    await User.updateOne({_id: res.locals.user.id}, {status_online: "offline"});
     res.clearCookie("userToken");
+    _io.sockets.emit('SERVER_LOGOUT', res.locals.user.id);
+
     req.flash("success", "Logout successful");
     return res.redirect("/");
 }; 

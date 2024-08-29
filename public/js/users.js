@@ -152,3 +152,19 @@ socket.on("SERVER_UPDATE_LENGTH_FRIEND_REQUEST", (userB) => {
         }
     };    
 });
+
+// LOGIN
+
+socket.on("SERVER_LOGIN", (userId) => {
+    console.log("Login")
+    const onlineStatusDiv = document.querySelector(`[online-status][data-user-id="${userId}"]`);
+    if(onlineStatusDiv)
+        onlineStatusDiv.classList.toggle("d-none");
+});
+
+socket.on("SERVER_LOGOUT", (userId) => {
+    console.log("Logout")
+    const onlineStatusDiv = document.querySelector(`[online-status][data-user-id="${userId}"]`);
+    if(onlineStatusDiv)
+        onlineStatusDiv.classList.toggle("d-none");
+});
