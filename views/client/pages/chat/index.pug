@@ -1,7 +1,7 @@
 extends ../../layouts/default.pug
 
 block content
-  .container.mt-5
+  .container-fluid.mt-4
     .row.mb-4
       .col-12
         .btn-group.d-flex.justify-content-center
@@ -11,65 +11,59 @@ block content
           a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
               span.badge.badge-danger.ml-2(friend-request-length)= user.friendRequest.length
 
-    h2.text-center.mb-5.font-weight-bold.text-primary Global Chat
+    h2.text-center.mb-4.font-weight-bold.text-primary Global Chat
     .row.justify-content-center
-      .col-12.col-md-12.col-lg-10
-        .card.shadow-sm
-          .card-header.bg-primary.text-white.text-center
-            h5.font-weight-bold.mb-0 Chat Room
-          .card-body
-            .chat-box(style="height: 500px; overflow-y: auto;" chat-box)
-              ul.list-group.list-group-flush(list-message)
+      .col-12.col-lg-10
+        .card.shadow
+          .card-header.bg-primary.text-white
+            h5.font-weight-bold.mb-0.text-center Chat Room
+          .card-body.p-0
+            .chat-box.p-3(style="height: 500px; overflow-y: auto;" chat-box)
+              ul.list-unstyled(list-message)
                 if messages.length == 0
-                  li.list-group-item.text-center.text-muted No messages yet
+                  li.text-center.text-muted.py-3 No messages yet
                 else
                   each message in messages
                     if message.userId == user.id
-                      li.list-group-item.text-right.bg-light.rounded
-                        .d-flex.justify-content-end
-                          .message-content
-                            p.mb-0.font-weight-normal= message.content
+                      li.d-flex.justify-content-end.mb-3
+                        .message-bubble.bg-primary.text-white.p-2.rounded
+                          p.mb-0= message.content
+                          if message.images && message.images.length > 0
+                            .message-images.mt-2
+                              each image in message.images
+                                img.img-fluid.rounded(src=image alt="Image" style="max-width: 150px;")
+                          small.text-light.d-block.text-right.mt-1= message.time
+                    else
+                      li.d-flex.mb-3
+                        if message.userInfo.avatar
+                          img.rounded-circle.mr-2(src=message.userInfo.avatar alt=message.userInfo.fullName style="width: 40px; height: 40px;")
+                        else
+                          img.rounded-circle.mr-2(src="https://via.placeholder.com/40" alt=message.userInfo.fullName style="width: 40px; height: 40px;")
+                        .message-content
+                          .d-flex.align-items-center.mb-1
+                            strong.mr-2= message.userInfo.fullName
+                            small.text-muted= message.time
+                          .message-bubble.bg-light.p-2.rounded
+                            p.mb-0= message.content
                             if message.images && message.images.length > 0
                               .message-images.mt-2
                                 each image in message.images
-                                  img(src=image alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;")
-                        small.text-muted.ml-2.mt-1= message.time
-                    else
-                      li.list-group-item
-                        .d-flex.align-items-start
-                          if message.userInfo.avatar
-                            img.rounded-circle(
-                              src=message.userInfo.avatar 
-                              alt=message.userInfo.fullName
-                              style="width: 40px; height: 40px; margin-right: 10px;"
-                            )
-                          else
-                            img.rounded-circle(src="https://via.placeholder.com/40" alt=message.userInfo.fullName style="width: 40px; height: 40px; margin-right: 10px;")
-                          .ml-3
-                            .d-flex.flex-column.rounded
-                              div.d-flex.justify-content
-                                p.font-weight-bold.mb-0= message.userInfo.fullName
-                                small.text-muted.ml-2= message.time
-                              .message-content.mt-2
-                                p.mb-0.font-weight-normal= message.content
-                                if message.images && message.images.length > 0
-                                  .message-images.mt-2
-                                    each image in message.images
-                                      img(src=image alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;")
-              .position-relative(box-typing user-id= user.id)
-              emoji-picker(id="emoji-picker" class="emoji-picker-popup d-none")
-              div(class="custom-file-container" data-upload-id="my-unique-id" file-upload-with-preview)
-              form(form-chat my-id=user.id)
-                .form-group.mt-4
-                  label(for="message") Message
-                  div.d-flex
-                    input.form-control(type="text" name="message" placeholder="Enter your message")
-                    span.btn.btn-secondary(emoji-button) 
-                      i.fa.fa-smile
-                    span.btn.btn-dark(upload-button)
-                     i.fa-solid.fa-cloud-upload-alt
-                    button(type="submit" class="btn btn-primary float-right")
-                      i.fa.fa-paper-plane
+                                  img.img-fluid.rounded(src=image alt="Image" style="max-width: 150px;")
+
+            .position-relative.p-3(box-typing user-id=user.id)
+            emoji-picker#emoji-picker.emoji-picker-popup.d-none
+            .custom-file-container(data-upload-id="my-unique-id" file-upload-with-preview)
+            form.mt-3.p-3(form-chat my-id=user.id)
+              .input-group
+                input.form-control(type="text" name="message" placeholder="Type your message here")
+                .input-group-append
+                  button.btn.btn-outline-secondary(type="button" emoji-button)
+                    i.far.fa-smile
+                  button.btn.btn-outline-secondary(type="button" upload-button)
+                    i.fas.fa-paperclip
+                  button.btn.btn-primary(type="submit")
+                    i.fas.fa-paper-plane
+
 block script 
   script(src="https://unpkg.com/file-upload-with-preview/dist/file-upload-with-preview.iife.js")
   script(src="/js/chat.js") 

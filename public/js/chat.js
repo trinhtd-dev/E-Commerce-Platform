@@ -27,37 +27,36 @@ if (form) {
 
   socket.on("SERVER_SEND_DATA", (message) => {
     const liMessage = document.createElement('li');
-    liMessage.classList.add('list-group-item');
+    liMessage.classList.add('mb-3');
 
     if (message.userId === userId) {
-      liMessage.classList.add('text-right', 'bg-light', 'rounded');
+      liMessage.classList.add('d-flex', 'justify-content-end');
       liMessage.innerHTML = `
-        <div class="d-flex justify-content-end">
-          <div class="message-content">
-            <p class="mb-0 font-weight-normal">${message.content}</p>
-            ${message.images && message.images.length > 0 ? `
-              <div class="message-images mt-2">
-                ${message.images.map(image => `<img src="${image}" alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;">`).join('')}
-              </div>
-            ` : ''}
-          </div>
+        <div class="message-bubble bg-primary text-white p-2 rounded">
+          <p class="mb-0">${message.content}</p>
+          ${message.images && message.images.length > 0 ? `
+            <div class="message-images mt-2">
+              ${message.images.map(image => `<img src="${image}" alt="Image" class="img-fluid rounded" style="max-width: 150px;">`).join('')}
+            </div>
+          ` : ''}
+          <small class="text-light d-block text-right mt-1">${message.time}</small>
         </div>
-        <small class="text-muted ml-2 mt-1">${message.time}</small>
       `;
     } else {
+      liMessage.classList.add('d-flex');
       const avatar = message.userInfo.avatar || 'https://via.placeholder.com/40';
       liMessage.innerHTML = `
-        <div class="d-flex align-items-start">
-          <img class="rounded-circle" src="${avatar}" alt="${message.userInfo.fullName}" style="width: 40px; height: 40px; margin-right: 10px;">
-          <div class="ml-3 d-flex flex-column rounded">
-            <div class="d-flex justify-content">
-              <p class="font-weight-bold mb-0">${message.userInfo.fullName}</p>
-              <small class="text-muted ml-2">${message.time}</small>
-            </div>
-            <p class="mb-0 font-weight-normal mt-2">${message.content}</p>
+        <img class="rounded-circle mr-2" src="${avatar}" alt="${message.userInfo.fullName}" style="width: 40px; height: 40px;">
+        <div class="message-content">
+          <div class="d-flex align-items-center mb-1">
+            <strong class="mr-2">${message.userInfo.fullName}</strong>
+            <small class="text-muted">${message.time}</small>
+          </div>
+          <div class="message-bubble bg-light p-2 rounded">
+            <p class="mb-0">${message.content}</p>
             ${message.images && message.images.length > 0 ? `
               <div class="message-images mt-2">
-                ${message.images.map(image => `<img src="${image}" alt="Image" class="img-thumbnail mr-2" style="max-width: 100px;">`).join('')}
+                ${message.images.map(image => `<img src="${image}" alt="Image" class="img-fluid rounded" style="max-width: 150px;">`).join('')}
               </div>
             ` : ''}
           </div>
@@ -67,7 +66,6 @@ if (form) {
 
     listMessage.appendChild(liMessage);
     chatBox.scrollTop = chatBox.scrollHeight;
-
 
     // Xóa thông báo "đang gõ"
     const divTyping = boxTyping.querySelector(`[userId="${message.userInfo.userId}"]`);
@@ -108,16 +106,16 @@ if (form) {
       }
       const divTyping = document.createElement('div');
       const avatar = user.avatar || "https://via.placeholder.com/40";
-      divTyping.setAttribute("class", "bg-light rounded");
+      divTyping.setAttribute("class", "d-flex mb-3");
       divTyping.setAttribute("userId", user.id);
       divTyping.innerHTML = `
-        <div class="d-flex align-items-start">
-          <img class="rounded-circle" src="${avatar}" alt="${user.fullName}" style="width: 40px; height: 40px; margin-right: 10px;">
-          <div class="ml-3 d-flex flex-column rounded">
-            <div class="d-flex justify-content">
-              <p class="font-weight-bold mb-0">${user.fullName}</p>
-            </div>
-            <div class="typing-indicator mb-2">
+        <img class="rounded-circle mr-2" src="${avatar}" alt="${user.fullName}" style="width: 40px; height: 40px;">
+        <div class="message-content">
+          <div class="d-flex align-items-center mb-1">
+            <strong class="mr-2">${user.fullName}</strong>
+          </div>
+          <div class="message-bubble bg-light p-2 rounded">
+            <div class="typing-indicator">
               <span></span>
               <span></span>
               <span></span>
