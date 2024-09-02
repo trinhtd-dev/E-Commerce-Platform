@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     friendList: [
         {
             userId: String,
-            room_chat_id: String,
+            roomChatId: String,
         }
     ],
 

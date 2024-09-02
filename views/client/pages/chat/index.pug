@@ -1,22 +1,18 @@
 extends ../../layouts/default.pug
 
 block content
-  .container-fluid.mt-4
-    .row.mb-4
-      .col-12
-        .btn-group.d-flex.justify-content-center
-          a.btn.btn-outline-primary(href="/users/user-list") User List
-          a.btn.btn-outline-primary(href="/users/friend-list") Friend List
-          a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
-          a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
-              span.badge.badge-danger.ml-2(friend-request-length)= user.friendRequest.length
 
-    h2.text-center.mb-4.font-weight-bold.text-primary Global Chat
+    h2.text-center.mb-4.font-weight-bold.text-primary Chat
     .row.justify-content-center
       .col-12.col-lg-10
         .card.shadow
           .card-header.bg-primary.text-white
-            h5.font-weight-bold.mb-0.text-center Chat Room
+            if (roomChat.title != "")
+              h5.font-weight-bold.mb-0.text-center= roomChat.title
+            else if roomChat.participants[1].userId == user.id
+              h5.font-weight-bold.mb-0.text-center= roomChat.participants[0].userInfo.fullName
+            else
+              h5.font-weight-bold.mb-0.text-center= roomChat.participants[1].userInfo.fullName
           .card-body.p-0
             .chat-box.p-3(style="height: 500px; overflow-y: auto;" chat-box)
               ul.list-unstyled(list-message)
@@ -53,7 +49,7 @@ block content
             .position-relative.p-3(box-typing user-id=user.id)
             emoji-picker#emoji-picker.emoji-picker-popup.d-none
             .custom-file-container(data-upload-id="my-unique-id" file-upload-with-preview)
-            form.mt-3.p-3(form-chat my-id=user.id)
+            form.mt-3.p-3(form-chat my-id=user.id room-id=roomChat._id)
               .input-group
                 input.form-control(type="text" name="message" placeholder="Type your message here")
                 .input-group-append

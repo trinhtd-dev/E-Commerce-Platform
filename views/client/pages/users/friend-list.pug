@@ -2,42 +2,50 @@ extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
 block content
-  .container.mt-5
-    .row.mb-4
-      .col-12
-        .btn-group.d-flex.justify-content-center
-            a.btn.btn-outline-primary(href="/users/user-list") User List
-            a.btn.btn-primary(href="/users/friend-list") Friend List
-            a.btn.btn-outline-primary(href="/users/sent-invitation") Sent Invitations
-            a.btn.btn-outline-primary(href="/users/friend-request") Friend Requests
-              span.badge.badge-danger.ml-2(friend-request-length)= user.friendRequest.length
+  .container-fluid.py-5.bg-light
+    .container
+      .row.mb-4
+        .col-12
+          nav.nav.nav-pills.nav-justified.mb-3
+            a.nav-item.nav-link(href="/users/user-list") User List
+            a.nav-item.nav-link.active(href="/users/friend-list") Friend List
+            a.nav-item.nav-link(href="/users/sent-invitation") Sent Invitations
+            a.nav-item.nav-link.position-relative(href="/users/friend-request")
+              | Friend Requests
+              span.badge.badge-danger.badge-pill.position-absolute.top-0.start-100.translate-middle(friend-request-length)= user.friendRequest.length
 
-    .row
-      each user in users
-        .col-12.col-md-6.col-lg-3.mb-4
-          .card.shadow-sm
-            .card-body
-              .d-flex.align-items-center.mb-3
-                .position-relative
-                  img.rounded-circle(src=user.avatar alt="Profile picture" style="width: 50px; height: 50px; position: relative;")
-                  div(online-status
-                    style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; background-color: green; border-radius: 50%; border: 2px solid white;"
-                    class= (user.status_online == "online") ? "" : "d-none"
-                    data-user-id=user.id
-                  )
-                .ml-3
-                  h5.mb-0= user.fullName
-                  p.text-muted.mb-0 2 tuần
-              .d-flex.justify-content-around.mt-3
-                span.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2(
-                    friend-button data-user-id=user.id
-                ) Friend 
-                span.d-none.accepted-message.text-success.font-weight-bold.border.border-success.rounded.p-2(
-                    sent-button data-user-id=user.id
-                ) Sent invitation  
-                button.btn.btn-danger(my-id =user.id unfriend-button) Unfriend 
-                button.btn.btn-primary.d-none(my-id =user.id add-button) Add friend 
-                button.btn.btn-danger.d-none(my-id =user.id cancel-button) Cancel
-                
+      .row
+        each user in users
+          .col-12.col-md-6.col-lg-4.col-xl-3.mb-4
+            .card.shadow-sm.h-100
+              .card-body
+                .d-flex.align-items-center.mb-3
+                  .position-relative.mr-3
+                    img.rounded.circle(src=user.avatar alt=user.fullName style="width: 60px; height: 60px; object-fit: cover;")
+                    .status-indicator(class=user.status_online === "online" ? "bg-success" : "bg-secondary")
+                  .flex-grow-1
+                    .d-flex.justify-content-between.align-items-center
+                      h5.mb-0.font-weight-bold= user.fullName
+                      a.btn.btn-sm.btn-outline-primary.rounded.circle(href=`/chat/room/${user.roomId}` title="Chat with this user")
+                        i.fas.fa-comment-dots
+                hr.my-3
+                .d-flex.justify-content-between.align-items-center
+                  .btn-group.mr-2
+                    button.btn.btn-sm.btn-outline-success.mr-1(friend-button data-user-id=user._id)
+                      i.fas.fa-user-check.mr-1
+                      | Friend
+                    button.btn.btn-sm.btn-outline-danger(data-user-id=user._id unfriend-button)
+                      i.fas.fa-user-times.mr-1
+                      | Unfriend
+                  .d-flex
+                    button.btn.btn-sm.btn-outline-primary.d-none.mr-2(data-user-id=user._id add-button)
+                      i.fas.fa-user-plus.mr-1
+                      | Add Friend
+                    button.btn.btn-sm.btn-outline-secondary.d-none.mr-2(data-user-id=user._id sent-button)
+                      i.fas.fa-check.mr-1
+                      | Sent 
+                    button.btn.btn-sm.btn-outline-warning.d-none(data-user-id=user._id cancel-button)
+                      i.fas.fa-ban.mr-1
+                      | Cancel
 block script 
   script(src="/js/users.js")

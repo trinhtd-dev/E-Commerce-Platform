@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+const RoomChat = require("../../models/room-chat.model");
 
 const moment = require('moment');
 
@@ -37,10 +38,27 @@ module.exports.friendList = async (req, res) => {
             _id: { $in: friendList },
             status: 'active',
         }).select("-password");
-
+        let usersWithRoom = [];
+        if(users.length > 0) {
+            usersWithRoom = await Promise.all(
+                users.map(async (user) => {
+                    let room = await RoomChat.findOne({
+                        participants: { $all: [
+                            { $elemMatch: { userId: res.locals.user._id } },
+                            { $elemMatch: { userId: user._id } }
+                        ]   },
+                        type: 'private'
+                    });
+                    return {
+                        ...user.toObject(),
+                        roomId: room ? room._id : null
+                    }
+                })
+            );
+        }
         res.render('client/pages/users/friend-list', {
             title: 'Friend List',
-            users: users
+            users: usersWithRoom
         });
 
     } catch (error) {

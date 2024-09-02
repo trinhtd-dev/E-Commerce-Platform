@@ -23,6 +23,15 @@ header.header
                                     lable.form-table(for="")
                                     button.btn.btn-outline-secondary(type="submit") 
                                         i.fas.fa-search
+                        
+                        li
+                            a(href="/users/friend-list")
+                                i.fas.fa-user-friends.fa-2x
+                               
+                        li
+                            a(href="/chat")
+                                i.fas.fa-comments.fa-2x
+                        
                         if(user)
                             li 
                                 a(href="/user/profile" class="btn btn-primary text-nowrap")= user.fullName
@@ -33,9 +42,6 @@ header.header
                                 a(href="/user/login" class= "btn btn-primary") Login
                             li
                                 a(href="/user/register" class= "btn btn-primary") Register
-                        li
-                            a(href="/chat")
-                                i.fas.fa-comments.fa-2x
                         li
                             if(cart.totalProduct)
                                 a(href="/cart")

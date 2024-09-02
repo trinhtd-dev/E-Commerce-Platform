@@ -1,0 +1,73 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block content
+  .container.chat-container.py-4
+    .row.justify-content-center
+      .col-lg-8.col-md-10
+        .card.shadow
+          .card-header.bg-white
+            .d-flex.justify-content-between.align-items-center
+              h4.mb-0 Chat
+              button.btn.btn-primary(data-toggle="modal" data-target="#createGroupModal") + Create Group
+          
+          .card-body
+            .input-group.mb-3
+              input.form-control(type="text" placeholder="Search...")
+              .input-group-append
+                button.btn.btn-outline-secondary(type="button")
+                  i.fas.fa-search
+
+            ul.nav.nav-pills.nav-fill.mb-3
+              li.nav-item
+                a.nav-link.active(href="#") All
+              li.nav-item
+                a.nav-link(href="#") Unread
+
+            .chat-list
+              each room in rooms
+                a.chat-item.d-flex.align-items-center.p-3(href=`/chat/room/${room._id}`)
+                  .position-relative.mr-3
+                    .avatar-group
+                        img.rounded.circle.border.border-white(src=room.avatar alt=room.title style=`width: 48px; height: 48px; object-fit: cover; position: absolute; left: ${index * 20}px; z-index: ${2 - index};`)
+                    if room.isOnline
+                      .status-indicator.bg-success
+                  .flex-grow-1
+                    h6.mb-1.font-weight-bold= room.title || room.participants[0].fullName
+                    p.mb-0.text-muted.small.text-truncate= room.lastMessage || 'No messages yet'
+                  .text-right
+                    small.text-muted.d-block= room.lastActivity
+                    if room.unreadCount
+                      span.badge.badge-primary.badge-pill= room.unreadCount
+
+  #createGroupModal.modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title Create New Chat Group
+          button.close(type="button" data-dismiss="modal")
+            span &times;
+        .modal-body
+          form#formCreateGroup(action="/chat/create-group" method="POST")
+            .form-group
+              label(for="title") Group Name
+              input#title.form-control(type="text" name="title" required)
+            .form-group
+              label Members
+              .user-list
+                each user in users
+                  .form-check.d-flex.align-items-center.mb-2
+                    input.form-check-input(type="checkbox" name="participants" value=user._id id=`user-${user._id}`)
+                    label.form-check-label(for=`user-${user._id}`).d-flex.align-items-center.ml-2
+                      img.rounded.circle(src=user.avatar alt=user.fullName style="width: 32px; height: 32px; object-fit: cover;")
+                      span.ml-2= user.fullName
+            .custom-alert
+              i.fas.fa-info-circle.mr-2
+              span Please select at least 2 participants
+            button.btn.btn-primary.btn-block(type="submit") Create Group
+
+block script
+  script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js")
+  script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js")
+  script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js")
+  script(src="/js/rooms.js")

@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 // Định nghĩa schema cho Message
 const messageSchema = new Schema({
+    roomId: {
+        type: String,
+        required: true
+    },
     userId: {
         type: String,
         required: true

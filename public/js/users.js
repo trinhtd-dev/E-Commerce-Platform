@@ -51,13 +51,18 @@ function handleDeleteRequest(button) {
 
 // Hàm xử lý sự kiện hủy kết bạn
 function handleUnfriend(button) {
-    const userId = button.getAttribute("my-id");
+    const userId = button.getAttribute("data-user-id");
     socket.emit("CLIENT_UNFRIEND", userId);
-    button.classList.toggle("d-none");
-    const friendButton = document.querySelector(`span[friend-button][data-user-id="${userId}"]`);
-    if (friendButton) friendButton.classList.toggle("d-none");
-    const addButton = document.querySelector(`button[add-button][my-id="${userId}"]`);
-    if (addButton) addButton.classList.toggle("d-none");
+    
+    const cardBody = button.closest('.card-body');
+    if (cardBody) {
+        const friendButton = cardBody.querySelector('button[friend-button]');
+        const addButton = cardBody.querySelector('button[add-button]');
+        
+        if (friendButton) friendButton.classList.add('d-none');
+        if (addButton) addButton.classList.remove('d-none');
+        button.classList.add('d-none');
+    }
 }
 
 // Thêm sự kiện cho các nút thêm bạn
@@ -85,9 +90,11 @@ deleteRequestButtons.forEach(button => {
 });
 
 // Thêm sự kiện cho các nút hủy kết bạn
-const unfriendButtons = document.querySelectorAll("[unfriend-button]");
-unfriendButtons.forEach(button => {
-    button.addEventListener("click", () => handleUnfriend(button));
+document.addEventListener('DOMContentLoaded', function() {
+    const unfriendButtons = document.querySelectorAll("[unfriend-button]");
+    unfriendButtons.forEach(button => {
+        button.addEventListener("click", () => handleUnfriend(button));
+    });
 });
 
 // Xử lý sự kiện từ server khi thêm bạn
@@ -97,23 +104,35 @@ socket.on("SERVER_ADD_FRIEND", (user, userId) => {
         const boxFriendRequest = document.querySelector("[box-friend-request]");
         if (boxFriendRequest) {
             const divFriendRequest = document.createElement("div");
-            divFriendRequest.classList.add("col-12", "col-md-6", "col-lg-3", "mb-4");
+            divFriendRequest.classList.add("col-12", "col-md-6", "col-lg-4", "col-xl-3", "mb-4");
             divFriendRequest.setAttribute("box-user", "");
-            divFriendRequest.setAttribute("data-user-id", user._id);
+            divFriendRequest.setAttribute("data-user-id", user.id);
             divFriendRequest.innerHTML = `
-                <div class="card shadow-sm">
+                <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
-                            <img class="rounded-circle" src="${user.avatar}" alt="Profile picture" style="width: 50px; height: 50px;">
-                            <div class="ml-3">
-                                <h5 class="mb-0">${user.fullName}</h5>
-                                <p class="text-muted mb-0">2 tuần</p>
+                            <div class="position-relative mr-3">
+                                <img class="rounded-circle" src="${user.avatar}" alt="${user.fullName}" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div class="status-indicator bg-secondary"></div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-0 font-weight-bold">${user.fullName}</h5>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-around mt-3">
-                            <button class="btn btn-success border" accept-button data-user-id="${user._id}">Accept</button>
-                            <button class="btn btn-danger border" decline-button data-user-id="${user._id}">Delete</button>
-                            <span class="accepted-message text-success font-weight-bold border border-success rounded p-2 d-none" accepted-button data-user-id="${user._id}">Accepted</span>
+                        <hr class="my-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-sm btn-outline-success" accept-button data-user-id="${user.id}">
+                                <i class="fas fa-check mr-1"></i>
+                                Accept
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" decline-button data-user-id="${user.id}">
+                                <i class="fas fa-times mr-1"></i>
+                                Delete
+                            </button>
+                            <span class="text-success font-weight-bold d-none" accepted-button data-user-id="${user.id}">
+                                <i class="fas fa-user-check mr-1"></i>
+                                Accepted
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -154,7 +173,6 @@ socket.on("SERVER_UPDATE_LENGTH_FRIEND_REQUEST", (userB) => {
 });
 
 // LOGIN
-
 socket.on("SERVER_LOGIN", (userId) => {
     console.log("Login")
     const onlineStatusDiv = document.querySelector(`[online-status][data-user-id="${userId}"]`);
@@ -167,4 +185,21 @@ socket.on("SERVER_LOGOUT", (userId) => {
     const onlineStatusDiv = document.querySelector(`[online-status][data-user-id="${userId}"]`);
     if(onlineStatusDiv)
         onlineStatusDiv.classList.toggle("d-none");
+});
+
+// Xử lý sự kiện từ server khi hủy kết bạn
+socket.on("SERVER_UNFRIEND", (user, userId) => {
+    const myId = document.querySelector("div[my-id]").getAttribute("my-id");
+    if (myId == userId) {
+        const friendCard = document.querySelector(`[data-user-id="${user._id}"]`);
+        if (friendCard) {
+            const friendButton = friendCard.querySelector('button[friend-button]');
+            const unfriendButton = friendCard.querySelector('button[unfriend-button]');
+            const addButton = friendCard.querySelector('button[add-button]');
+            
+            if (friendButton) friendButton.classList.add('d-none');
+            if (unfriendButton) unfriendButton.classList.add('d-none');
+            if (addButton) addButton.classList.remove('d-none');
+        }
+    }
 });

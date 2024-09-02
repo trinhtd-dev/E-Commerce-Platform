@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const moment = require('moment');
+const RoomChat = require("../models/room-chat.model");
 
 // Function to handle client send data
 module.exports = async (res) => {
@@ -68,6 +69,32 @@ module.exports = async (res) => {
     // Accept Request
         socket.on("CLIENT_ACCEPT_REQUEST", async (userId) => {
             try {
+                let roomChat;
+                const roomChatExist = await RoomChat.findOne({
+                    participants: { 
+                        $all: [
+                            { $elemMatch: { userId: myId } },
+                            { $elemMatch: { userId: userId } }
+                        ]
+                    },
+                    type: "private"
+                });
+
+                if (roomChatExist) {
+                    roomChat = roomChatExist;
+                } else {
+            // Create room chat
+                    let objectRoomChat = {
+                        title: "",
+                        type: "private",
+                        participants: [
+                            { userId: myId, role: "admin" },
+                            { userId: userId, role: "admin" }
+                        ],
+                    };
+                    roomChat = new RoomChat(objectRoomChat);
+                    await roomChat.save();
+                }
                 await User.updateOne(
                     { 
                         _id: myId 
@@ -77,6 +104,7 @@ module.exports = async (res) => {
                         $addToSet:{
                             friendList:{
                             userId: userId,
+                            roomChatId: roomChat._id,
                             }
                         },
 
@@ -98,6 +126,7 @@ module.exports = async (res) => {
                         $addToSet: {
                             friendList:{
                                 userId: myId,
+                                roomChatId: roomChat._id,
                             }
                         },
                         $pull: {
@@ -109,11 +138,12 @@ module.exports = async (res) => {
                 );
 
                 const user = await User.findOne({_id: myId}).select("id avatar fullName friendRequest");
+                console.log("Emitting SERVER_ACCEPT_REQUEST for user:", user); // Thêm log này
                 socket.broadcast.emit("SERVER_ACCEPT_REQUEST", user, userId);
 
 
             } catch (err) {
-                console.error(err);
+                console.error('Error accepting friend request:', err);
             }
         });
 
@@ -157,37 +187,20 @@ module.exports = async (res) => {
         socket.on("CLIENT_UNFRIEND", async (userId) => {
             try {
                 await User.updateOne(
-                    {
-                        _id: myId
-                    },
-                    {
-                        $pull:{
-                            friendList:{
-                                userId: userId,
-                            }
-                        }
-                    }
+                    { _id: myId },
+                    { $pull: { friendList: { userId: userId } } }
                 );
                 
                 await User.updateOne(
-                    {
-                        _id: userId
-                    },
-                    {
-                        $pull:{
-                            friendList:{
-                                userId: myId,
-                            }
-                        }
-                    }
+                    { _id: userId },
+                    { $pull: { friendList: { userId: myId } } }
                 );
                 
-                const user = await User.findOne({_id: myId});
+                const user = await User.findOne({_id: myId}).select("id avatar fullName");
                 socket.broadcast.emit("SERVER_UNFRIEND", user, userId);
             } catch (err) {
-                console.error(err);
-            };
-
+                console.error('Error unfriending:', err);
+            }
         });
 
     });

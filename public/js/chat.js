@@ -9,16 +9,14 @@ const emojiPicker = document.querySelector('#emoji-picker');
 if (form) {
   const inputMessage = form.querySelector('input[name="message"]');
   const userId = form.getAttribute("my-id");
-
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     if (inputMessage.value || upload.cachedFileArray.length > 0) {
       const messageData = {
         message: inputMessage.value,
         userId: userId,
-        files: upload.cachedFileArray
+        files: upload.cachedFileArray,
       };
-          
       socket.emit('CLIENT_SEND_DATA', messageData);
       inputMessage.value = '';
       upload.resetPreviewPanel();
