@@ -1,7 +1,16 @@
-mixin sub-menu(items, path)
-    ul
+mixin sub-menu(items, menuLength)
+    ul.category-menu
         each item in items
-            li
-                a(href=`${path}/${item.slug}`)= item.title
-                if item.children && item.children.length
-                    +sub-menu(item.children, path)
+            li.sub-menu
+                a(href=`/category/${item.slug}`)
+                    span= item.title
+                    if item.children && item.children.length > 0
+                        i.fas.fa-chevron-right.float-end
+                if item.children && item.children.length > 0
+                    +sub-menu(item.children, menuLength)
+        - const emptyCount = menuLength - items.length
+        if emptyCount > 0
+            - for (let i = 0; i < emptyCount; i++)
+                li.sub-menu.empty-item
+                    a(href="javascript:void(0)")
+                        span &nbsp;

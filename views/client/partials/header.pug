@@ -52,9 +52,14 @@ header.header
     .header-nav
         .container
             .nav-wrapper
-                button.category-btn
-                    i.fas.fa-bars
-                    span ALL CATEGORIES
+                .dropdown
+                    button.category-btn.dropdown-toggle(type="button" data-bs-toggle="dropdown" aria-expanded="false")
+                        i.fas.fa-bars
+                        span ALL CATEGORIES
+                    .dropdown-menu.category-dropdown
+                        if categories && categories.length > 0
+                            +sub-menu(categories, categories.length)
+
 
                 nav.main-nav
                     a.nav-link(href="/") ALL PRODUCTS
