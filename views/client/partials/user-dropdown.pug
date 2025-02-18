@@ -1,0 +1,20 @@
+a.dropdown-item(href="/user/profile")
+    i.fas.fa-user
+    span Profile
+
+a.dropdown-item(href="/users/friend-list")
+    i.fas.fa-user-friends
+    .d-flex.justify-content-between.align-items-center.w-100
+        span Friends
+        if user.friendRequest && user.friendRequest.length > 0
+            span.badge.rounded-pill.bg-danger.ms-2= user.friendRequest.length
+
+a.dropdown-item(href="/chat")
+    i.fas.fa-comments
+    span Messages
+
+.dropdown-divider
+
+a.dropdown-item.text-danger(href="/user/logout")
+    i.fas.fa-sign-out-alt
+    span Logout 

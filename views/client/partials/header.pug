@@ -1,53 +1,68 @@
 include ../mixins/sub-menu.pug
 
-header.header 
-    .container
-        .row.align-items-center
-            .col-md-2
-                .inner-logo
-                    a(href="/")
-                        img(src= generalSetting.logo, alt="logo" )
-            .col-md-10
-                .inner-menu.container.align-right
-                    ul.menu
-                        li 
-                            a(href="/") HOME 
-                        li.sub-menu
-                            -const pathProduct = "/products"
-                            a(href=pathProduct) PRODUCT 
-                            +sub-menu(productCategory, pathProduct)
-                        li
-                            form.form-inline(action=`search` method="get")
-                                .input-group
-                                    input.form-control(style="width= 200px" type="text" placeholder="Search" name="keyword" value= keyword)
-                                    lable.form-table(for="")
-                                    button.btn.btn-outline-secondary(type="submit") 
-                                        i.fas.fa-search
-                        
-                        li
-                            a(href="/users/friend-list")
-                                i.fas.fa-user-friends.fa-2x
-                               
-                        li
-                            a(href="/chat")
-                                i.fas.fa-comments.fa-2x
-                        
-                        if(user)
-                            li 
-                                a(href="/user/profile" class="btn btn-primary text-nowrap")= user.fullName
-                            li
-                                a(href="/user/logout" class= "btn btn-danger") Logout
-                        else
-                            li 
-                                a(href="/user/login" class= "btn btn-primary") Login
-                            li
-                                a(href="/user/register" class= "btn btn-primary") Register
-                        li
-                            if(cart.totalProduct)
-                                a(href="/cart")
-                                    i.fas.fa-shopping-cart.fa-2x
-                                    span  (#{cart.totalProduct})
-                            else
-                                a(href="/cart")
-                                    i.fas.fa-shopping-cart.fa-2x
-                                    span (0)
+header.header
+    // Top Header
+    .header-main
+        .container
+            .header-wrapper
+                // Logo
+                a.header-logo(href="/")
+                    img.logo-img(src=generalSetting.logo, alt="logo")
+                    .logo-text
+                        span.brand-name Genius
+                        span.brand-subtitle store
+
+                // Search Bar
+                form.search-wrapper(action="/search" method="get")
+                    .search-input-wrapper
+                        input.form-control.search-input(
+                            type="text"
+                            placeholder="Search products..."
+                            name="keyword" 
+                            value=keyword
+                            autocomplete="off"
+                        )
+                        button.btn.btn-search(type="submit" title="Search")
+                            i.fas.fa-search
+
+                // Right Actions
+                .header-actions
+                    if user
+                        .user-menu.dropdown
+                            a.nav-link.dropdown-toggle(href="#" data-bs-toggle="dropdown")
+                                if user.avatar
+                                    img.avatar-mini(src=user.avatar alt=user.fullName)
+                                span.username.text-light= user.fullName
+                            
+                            .dropdown-menu.dropdown-menu-end
+                                include ./user-dropdown.pug
+                    else
+                        .auth-links
+                            a.auth-link(href="/user/register") Register
+                            span.divider /
+                            a.auth-link(href="/user/login") Login
+
+                    .cart-wrapper
+                        a.cart-link(href="/cart" title="Shopping Cart")
+                            i.fas.fa-shopping-cart
+                            if cart.totalProduct > 0
+                                span.cart-badge #{cart.totalProduct}
+
+    // Bottom Navigation
+    .header-nav
+        .container
+            .nav-wrapper
+                button.category-btn
+                    i.fas.fa-bars
+                    span ALL CATEGORIES
+
+                nav.main-nav
+                    a.nav-link(href="/") ALL PRODUCTS
+                    a.nav-link(href="/new-arrivals") NEW PRODUCTS
+                    a.nav-link(href="/faq") FAQ
+                    a.nav-link(href="/contact") CONTACT
+                    a.nav-link(href="/about") ABOUT US
+
+                .contact-info
+                    i.fas.fa-phone
+                    span 0354647124
