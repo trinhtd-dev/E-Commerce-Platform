@@ -1,18 +1,88 @@
 mixin list-grid(title, products)
-    .container.my-3
-        .row
-            .col-12
-                .box-head
-                    h2.inner-title= title 
-            .row
-            each product in products
-                .col-4.mb-3
-                    .product-item
-                        a(href=`/products/detail/${product.slug}`)
-                            .inner-image
-                                img(src=product.thumbnail alt=product.title)
-                            .inner-content
-                                h3.inner-title= product.title
-                                .inner-price-old #{product.price}$
-                                .inner-discount -#{product.discountPercentage}%
-                                .inner-price-new  #{product.newPrice}$
+    section.product-section
+        .container.my-4
+            .row.mb-4
+                .col-12.text-center
+                    h2.section-title.mb-3= title
+                    .title-separator.mb-4
+                        span.separator-line
+                        span.separator-icon
+                            i.fas.fa-store
+                        span.separator-line
+
+            .row.row-cols-1.row-cols-sm-2.row-cols-md-3.row-cols-lg-4.g-4
+                each product in products
+                    .col
+                        .product-card
+                            //- Badges Section (Fixed Position)
+                            .product-badges
+                                if product.discountPercentage > 0
+                                    span.badge.discount-badge
+                                        i.fas.fa-bolt.me-1
+                                        | -#{product.discountPercentage}%
+                                if product.stock === 0
+                                    span.badge.out-of-stock-badge
+                                        i.fas.fa-times-circle.me-1
+                                        | Hết hàng
+                                if product.featured === 'yes'
+                                    span.badge.featured-badge
+                                        i.fas.fa-crown.me-1
+                                        | Hot
+                            
+                            //- Image Section (Fixed Height)
+                            .product-image-section
+                                a.product-link(href=`/products/detail/${product.slug}`)
+                                    .product-image
+                                        img.img-fluid(src=product.thumbnail alt=product.title)
+                            
+                            //- Content Section (Fixed Layout)
+                            .product-content
+                                //- Title Section (Fixed Height)
+                                .product-header
+                                    h3.product-title= product.title
+                                //- Rating Section (Fixed Height)
+                                .product-rating-section
+                                    .product-rating
+                                        .stars
+                                            - var rating = product.rating ? product.rating.average : 0
+                                            - for (var i = 1; i <= 5; i++)
+                                                if i <= rating
+                                                    i.fas.fa-star
+                                                else if i - rating < 1
+                                                    i.fas.fa-star-half-alt
+                                                else
+                                                    i.far.fa-star
+                                        if product.rating && product.rating.count > 0
+                                            span.review-count.ms-2 (#{product.rating.count})
+                                        if product.sold
+                                            span.sold-count.ms-2 | Đã bán #{product.sold}
+                                
+                                //- Price Section (Fixed Height)
+                                .product-price-section
+                                    .product-price
+                                        if product.discountPercentage > 0
+                                            span.original-price #{product.price}$
+                                        span.current-price #{product.newPrice}$
+                                
+                                //- Stock Info Section (Fixed Height)
+                                .product-stock-section
+                                    if product.stock > 0
+                                        .stock-info.in-stock
+                                            i.fas.fa-check-circle.me-1
+                                            | Còn #{product.stock} sản phẩm
+                                    else
+                                        .stock-info.out-of-stock
+                                            i.fas.fa-times-circle.me-1
+                                            | Hết hàng
+                                
+                                //- Actions Section (Fixed Height)
+                                .product-actions-section
+                                    .product-actions
+                                        button.btn.btn-primary.btn-sm.w-100.mb-2(disabled=product.stock === 0)
+                                            i.fas.fa-shopping-cart.me-1
+                                            | Thêm vào giỏ
+                                        .action-buttons.d-flex.gap-2
+                                            button.btn.btn-outline-danger.btn-sm.flex-grow-1(title="Thêm vào yêu thích")
+                                                i.fas.fa-heart
+                                            button.btn.btn-outline-secondary.btn-sm.flex-grow-1(title="So sánh")
+                                                i.fas.fa-exchange-alt
