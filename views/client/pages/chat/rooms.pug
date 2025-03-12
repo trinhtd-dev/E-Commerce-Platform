@@ -1,6 +1,9 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
+block css
+  link(rel="stylesheet", href="/css/chat.css")
+
 block content
   .container.chat-container.py-4
     .row.justify-content-center

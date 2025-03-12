@@ -1,5 +1,8 @@
 extends ../../layouts/default.pug
 include ../../mixins/product-list.pug
 
+block css
+  link(rel="stylesheet", href="/css/components/product-list.css")
+
 block content
     +list-grid("Featured Product", products)
