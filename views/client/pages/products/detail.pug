@@ -1,68 +1,185 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
+block css
+  link(rel="stylesheet", href="/css/components/product-detail.css")
+
 block content
   +alert-success(3000)
   +alert-error(3000)
-  .container
-    .row
-      .col-md-4
-        .product-images.card
-          img(src=product.thumbnail, alt=product.title, class="img-fluid rounded")
-      .col-md-4
-        .product-info.card
-          h1.display-4= product.title
-          .product-category.mb-3
-            span.text-muted Danh mục: 
-              a(href=`/products/${category.slug}`) #{category.title}
-          .product-rating.mb-3
-            span 5.0 
-              i.fa.fa-star
-              i.fa.fa-star
-              i.fa.fa-star
-              i.fa.fa-star
-              i.fa.fa-star
-            span.text-muted (0 đánh giá)
-          .product-price
-            if product.discountPercentage
-              span.original-price.text-muted(style="text-decoration: line-through; font-size: 1.2em; margin-right: 10px;") #{product.price}$
-              span.discount-percentage.text-success(style="font-size: 1.2em; margin-right: 10px;") -#{product.discountPercentage}%
-              span.discounted-price.text-danger(style="font-size: 1.5em; font-weight: bold;") #{product.newPrice}$
-            else
-              span.price.text-danger(style="font-size: 1.5em; font-weight: bold;") #{product.price.toLocaleString()}$
-          .product-stock.mt-3.mb-3
-            if product.stock > 0
-              span.in-stock.text-success(style="font-size: 1.2em;") Stock: #{product.stock}
-            else
-              span.out-of-stock.text-danger(style="font-size: 1.2em;") Out of stock
-          //- .product-colors.mt-3.mb-3
-          //-   label.mr-3(style="font-size: 1.2em;") Color:
-          //-   .btn-group
-          //-     each color in ['Trắng', ' Xanh', ' Tự Nhiên', ' Đen']
-          //-       button.btn.btn-outline-primary.btn-sm(style="font-size: 1.2em; margin-right: 5px;") #{color}
-          //- .product-capacity.mt-3.mb-3
-          //-   label(style="font-size: 1.2em;") Dung lượng:
-          //-   select.form-select
-          //-     option 256GB
-          //-     option 512GB
-          //-     option 1TB
-        
-      form(action=`/cart/add/${product.id}`, method="post").col-md-4
-        .product-quantity.mt-3.mb-3
-          label(style="font-size: 1.2em;") Số Lượng:
-          .input-group
-            button.btn.btn-outline-secondary(type="button") -
-            input.form-control(type="number", name="quantity", min=1 max=product.stock, value=1)
-            button.btn.btn-outline-secondary(type="button") +
-        .product-total.mt-3.mb-3
-          span Tạm tính:
-          span.text-danger #{(product.price - (product.price * product.discountPercentage / 100)).toLocaleString()}$
-        .product-actions.mt-3
-          a.btn.btn-danger.btn-lg.mr-2 Buy now
-          button.btn.btn-outline-primary.btn-lg.mt-2(type= "submit") Add to cart
+  .container.pd-container
+    .row.pd-detail-sections(style='display: flex;')
+      //- Product Images Section
+      .col-md-4.pd-image-section
+        .card.pd-images 
+          //- Main Image
+          .pd-thumbnail-container
+            img#main-product-image.pd-thumbnail.img-fluid(
+              alt=product.title,
+              src=product.thumbnail,  
+              aria-label='Main product image'
+            )
+            button.pd-image-nav.prev(type='button', aria-label='Previous image')
+              i.fas.fa-chevron-left
+            button.pd-image-nav.next(type='button', aria-label='Next image')
+              i.fas.fa-chevron-right
+            .loading-spinner(style='display: none;')
+              i.fas.fa-spinner.fa-spin
 
+          //- Product Images Gallery
+          .pd-image-gallery.mt-3
+            .swiper.gallery-thumbs
+              .swiper-wrapper
+                //- Main thumbnail
+                .swiper-slide
+                  img.pd-gallery-thumb(
+                    src=product.thumbnail,
+                    alt=product.title,
+                    aria-label='Thumbnail of product'
+                  )
+                //- Additional product images
+                if product.images && product.images.length
+                  each image in product.images
+                    .swiper-slide
+                      img.pd-gallery-thumb(
+                        src=image.url,
+                        alt=image.alt || product.title,
+                        aria-label='Thumbnail of product'
+                      )
+
+      //- Product Info Section and Attribute Section
+      .col-md-6.pd-info-section
+        .card.pd-info
+          .card-body
+            //- Product title and basic info
+            div.pd-title-container
+              h1.pd-title= product.title
+              //- Brand
+              if product.brand
+                span.pd-brand 
+                  span.meta-label Thương hiệu: 
+                  strong= product.brand
+              //- Category
+              if category
+                span.pd-category 
+                  span.meta-label Danh mục: 
+                  a(href=`/products/category/${category.slug}`)= category.title
+            //- Rating Section
+            .pd-rating-section(style='margin-top: 0.5rem;')
+              .pd-rating-stars
+                - var rating = product.rating ? product.rating.average : 0
+                - for (var i = 1; i <= 5; i++)
+                  if i <= rating
+                    i.fas.fa-star
+                  else if i - rating < 1
+                    i.fas.fa-star-half-alt
+                  else
+                    i.far.fa-star
+                span.pd-rating-count #{product.rating ? product.rating.average : '0.0'}
+                if product.rating && product.rating.count > 0
+                  a.pd-reviews-count(href="#reviews")  (#{product.rating.count})
+            hr.pd-divider
+            //- Price Section
+            .pd-price-section
+              span#variant-final-price.pd-final-price #{defaultVariant.price - (defaultVariant.price * defaultVariant.discountPercentage / 100)}$ 
+              span#variant-original-price.pd-original-price #{defaultVariant.price}$ 
+              span#variant-discount.pd-discount -#{defaultVariant.discountPercentage}%
+            //- Variant Selection Section
+            if product.attributeTypes && product.attributeTypes.length
+              #variant-attributes.pd-variants-section.mt-4
+                each attribute in product.attributeTypes
+                  //- Create a container for each attribute
+                  .pd-attribute.mb-3
+                    label.form-label= attribute.name + ":"
+                    .pd-attribute-options(data-attribute=attribute.name)
+                      each value in attribute.values
+                        button.btn.btn-outline-secondary.pd-attribute-option(type='button', data-value=value)
+                          | #{value.value}
+
+      //- Action Buttons Section
+      .col-md-2.pd-action-buttons-section
+        //- Selected Variant Info
+        div#selected-variant-info.mt-2(style='display: none;')
+        //- Stock Status
+        .pd-stock-section.mt-3
+          span#variant-stock.pd-stock
+        hr.pd-divider
+        //- Quantity Selection
+        form#add-to-cart-form(action="/cart/add", method="POST")
+          input(type="hidden", name="productId", value=product._id)
+          input#selected-variant-id(type="hidden", name="variantId")
+          .pd-quantity.mt-4
+            label.form-label Số lượng:
+            .input-group
+              button.btn.btn-outline-secondary#decrease-quantity(type="button") -
+              input.form-control#quantity-input(
+                type="number",
+                name="quantity",
+                min="1",
+                value="1",
+                aria-label="Quantity"
+              )
+              button.btn.btn-outline-secondary#increase-quantity(type="button") +
+        //- Action Buttons
+        .pd-buttons.mt-4
+          button.btn.btn-danger.btn-lg.pd-btn-buy(type="submit", name="buyNow", value="true", aria-label="Buy Now")
+            i.fas.fa-bolt.me-2
+            | Mua ngay
+          button.btn.btn-outline-primary.btn-lg.pd-btn-cart(type="button", aria-label="Add to Cart")
+            i.fas.fa-shopping-cart.me-2
+            | Thêm vào giỏ
+
+    //- Product Description Section
     .row.mt-4
       .col-12
-        .product-description.card
-          h2.text-primary.mb-4 Mô tả sản phẩm
-          p !{product.description || 'Mô tả sản phẩm chưa có'}
+        .card.pd-description
+          .card-header
+            ul.nav.nav-tabs.card-header-tabs#product-detail-tabs
+              li.nav-item
+                a.nav-link.active#tab-description(data-bs-toggle="tab", href="#description") Chi tiết sản phẩm
+              li.nav-item
+                a.nav-link#tab-specification(data-bs-toggle="tab", href="#specification") Thông số kỹ thuật
+              if product.rating && product.rating.details && product.rating.details.length > 0
+                li.nav-item
+                  a.nav-link#tab-reviews(data-bs-toggle="tab", href="#reviews") Đánh giá (#{product.rating.count})
+          
+          .card-body
+            .tab-content
+              .tab-pane.fade.show.active#description
+                .pd-description-content !{product.description || 'Chưa có mô tả chi tiết'}
+              
+              .tab-pane.fade#specification
+                if product.specifications
+                  table.table.table-striped
+                    tbody
+                      each spec in product.specifications
+                        tr
+                          th(scope="row")= spec.name
+                          td= spec.value
+                else
+                  p Chưa có thông số kỹ thuật chi tiết
+              
+              if product.rating && product.rating.details && product.rating.details.length > 0
+                .tab-pane.fade#reviews
+                  each review in product.rating.details
+                    .pd-review-item
+                      .pd-review-header
+                        .pd-review-user
+                          i.fas.fa-user-circle.me-2
+                          span= review.userId.fullName || 'Khách hàng'
+                        .pd-review-date= new Date(review.createdAt).toLocaleDateString()
+                      .pd-review-rating
+                        - for (var i = 1; i <= 5; i++)
+                          if i <= review.score
+                            i.fas.fa-star
+                          else
+                            i.far.fa-star
+                      .pd-review-comment= review.comment
+
+block scripts
+  link(rel="stylesheet", href="https://unpkg.com/swiper/swiper-bundle.min.css")
+  script(src="https://unpkg.com/swiper/swiper-bundle.min.js")
+  script(src="/js/product-detail.js")
+  script.
+    // Pass product data to JavaScript
+    const productData = !{JSON.stringify(product)};
