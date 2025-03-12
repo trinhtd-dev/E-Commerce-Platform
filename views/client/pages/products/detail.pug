@@ -30,21 +30,15 @@ block content
           .pd-image-gallery.mt-3
             .swiper.gallery-thumbs
               .swiper-wrapper
-                //- Main thumbnail
-                .swiper-slide
-                  img.pd-gallery-thumb(
-                    src=product.thumbnail,
-                    alt=product.title,
-                    aria-label='Thumbnail of product'
-                  )
-                //- Additional product images
                 if product.images && product.images.length
                   each image in product.images
                     .swiper-slide
                       img.pd-gallery-thumb(
-                        src=image.url,
+                        data-src=image.url,
+                        src= "/images/placeholder-image.jpg",
                         alt=image.alt || product.title,
                         aria-label='Thumbnail of product'
+                        loading="lazy"
                       )
 
       //- Product Info Section and Attribute Section
