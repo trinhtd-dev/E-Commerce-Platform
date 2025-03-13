@@ -1,86 +1,59 @@
 //Alert --------------------------------------------------------------------------------------------------------------------
-const alertSuccess = document.querySelector("[alert-message]")
-if(alertSuccess){
-    setTimeout(() => {
-        alertSuccess.classList.add("alert-hidden");
-    
-    }, parseInt(alertSuccess.getAttribute("data-time")));
-    const buttonClose = document.querySelector("[close-alert]");
-    buttonClose.addEventListener("click", () => {
-        alertSuccess.classList.add("alert-hidden");
-    });   
+function showToast(type, message) {
+  // Create toast container if not exists
+  let container = document.querySelector(".pd-toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "pd-toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `pd-toast ${type}`;
+
+  // Icon mapping
+  const icons = {
+    success: "fa-check-circle",
+    error: "fa-exclamation-circle",
+    warning: "fa-exclamation-triangle",
+  };
+
+  toast.innerHTML = `
+    <div class="pd-toast-icon">
+      <i class="fas ${icons[type]}"></i>
+    </div>
+    <div class="pd-toast-message">${message}</div>
+    <button class="pd-toast-close">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+
+  container.appendChild(toast);
+
+  // Add close button functionality
+  const closeBtn = toast.querySelector(".pd-toast-close");
+  closeBtn.addEventListener("click", () => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  });
+
+  // Animation timing
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
-
-
-
-//update Quantity Product In Cart--------------------------------------------------------------------------------------------------------------------
-const inputQuantity = document.querySelectorAll("input[name='quantity']");
-if(inputQuantity.length > 0){
-    inputQuantity.forEach(input => {
-        input.addEventListener("change", (e) => {
-            const formQuantity = e.target.parentElement.parentElement;
-            formQuantity.submit();
-        });
-    });
-}
-
-//dec-button and inc-button--------------------------------------------------------------------------------------------------------------------
-const decButton = document.querySelectorAll("[dec-button]");
-const incButton = document.querySelectorAll("[inc-button]");
-if(decButton.length > 0){
-    decButton.forEach(button => {
-        button.addEventListener("click", (e) => {
-            const inputQuantity = e.target.parentElement.parentElement.querySelector("input[name='quantity']");
-            if(inputQuantity.value > 1 ){
-                inputQuantity.value = parseInt(inputQuantity.value) - 1;
-                const formQuantity = inputQuantity.parentElement.parentElement;
-                formQuantity.submit();
-            }
-        });
-    });
-}
-if(incButton){
-    incButton.forEach(button => {
-        button.addEventListener("click", (e) => {
-            const inputQuantity = e.target.parentElement.parentElement.querySelector("input[name='quantity']");
-            inputQuantity.value = parseInt(inputQuantity.value) + 1;
-            const formQuantity = inputQuantity.parentElement.parentElement;
-            formQuantity.submit();
-        });
-    });
-}
-
-//Checkbox in cart--------------------------------------------------------------------------------------------------------------------
-const tableCart = document.querySelector("[table-cart]");
-if(tableCart){
-    const checkboxAll = tableCart.querySelector("input[name='checkboxAll']");
-    const checkboxs = tableCart.querySelectorAll("input[name='checkbox']");
-    checkboxAll.addEventListener("change", (e) => {
-        checkboxs.forEach(checkbox => {
-            checkbox.checked = e.target.checked;
-        });
-    });
-    checkboxs.forEach(checkbox => {
-        checkbox.addEventListener("change", (e) => {
-            const checked = Array.from(checkboxs).filter(item => item.checked);
-            checkboxAll.checked = checked.length === checkboxs.length;
-        });
-    });
-}
-
-
-//IMG Preview--------------------------------------------------------------------------------------------------------------------
-const inputImage = document.querySelector("[input-img]");
-if(inputImage){
-    inputImage.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const imgPreview = document.querySelector("[img-preview]");
-            imgPreview.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-        console.log("123")
-    });
-}
+// Handle server-side flash messages
+document.addEventListener("DOMContentLoaded", function () {
+  const alertMessage = document.querySelector("[alert-message]");
+  if (alertMessage) {
+    const type = alertMessage.getAttribute("data-type");
+    const message = alertMessage.getAttribute("data-message");
+    if (type && message) {
+      showToast(type, message);
+      alertMessage.remove();
+    }
+  }
+});

@@ -1,43 +1,123 @@
-/* //alert
-*/
-.alert-message {
+/* Toast container */
+.pd-toast-container {
   position: fixed;
-  right: -100%; /* Bắt đầu từ bên ngoài màn hình */
   top: 20px;
-  color: #ffffff; /* Màu chữ mới */
-  padding: 15px;
-  margin: 0 15px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.982);
-  transition: all 0.5s ease-in-out;
-  animation: slideIn 0.5s forwards; /* Animation xuất hiện */
-  z-index: 1050; /* Giá trị z-index cao hơn header */
-  text-shadow: 1px 1px #000000; /* Hiệu ứng chữ nổi */
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  pointer-events: none; /* Allow clicking through container */
 }
 
-@keyframes slideIn {
-  to {
-    right: 20px; /* Kết thúc animation tại vị trí này */
-  }
+/* Base toast styling */
+.pd-toast {
+  position: relative;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #ffffff; /* Solid white background */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateX(110%);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  opacity: 0;
+  pointer-events: auto; /* Re-enable clicking on toast */
+  font-family: "Arial", sans-serif;
+  font-style: italic;
 }
 
-.alert-hidden {
-  animation: fadeOut 0.5s forwards; /* Animation mất đi */
+.pd-toast.show {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    right: -100%; /* Di chuyển ra khỏi màn hình */
-  }
+/* Toast icon styling */
+.pd-toast-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.close-alert {
-  cursor: pointer;
-  padding: 0 5px;
-  border: none;
+/* Toast message styling */
+.pd-toast-message {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #1a1a1a;
+  word-break: break-word;
+  flex-grow: 1;
+}
+
+/* Close button styling */
+.pd-toast-close {
   background: none;
-  font-size: 20px;
-  color: #ff5722; /* Màu mới cho nút đóng */
-  text-shadow: 1px 1px 3px #000; /* Hiệu ứng chữ nổi */
+  border: none;
+  color: #757575;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.pd-toast-close:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+/* Toast types with solid colors */
+.pd-toast.success {
+  border-left: 4px solid #00c853;
+  background: #f0fff5; /* Light green background */
+}
+
+.pd-toast.error {
+  border-left: 4px solid #ff3d71;
+  background: #fff0f3; /* Light red background */
+}
+
+.pd-toast.warning {
+  border-left: 4px solid #ffc107;
+  background: #fffbeb; /* Light yellow background */
+}
+
+/* Icon colors with updated palette */
+.pd-toast.success .pd-toast-icon {
+  color: #00c853;
+}
+
+.pd-toast.error .pd-toast-icon {
+  color: #ff3d71;
+}
+
+.pd-toast.warning .pd-toast-icon {
+  color: #ffc107;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 576px) {
+  .pd-toast-container {
+    right: 16px;
+    left: 16px;
+  }
+
+  .pd-toast {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+  }
 }
