@@ -57,9 +57,8 @@ header.header
                         i.fas.fa-bars
                         span ALL CATEGORIES
                     .dropdown-menu.category-dropdown
-                        if categories && categories.length > 0
-                            +sub-menu(categories, categories.length)
-
+                        if productCategories && productCategories.length > 0
+                            +sub-menu(productCategories, productCategories.length)
 
                 nav.main-nav
                     a.nav-link(href="/") ALL PRODUCTS

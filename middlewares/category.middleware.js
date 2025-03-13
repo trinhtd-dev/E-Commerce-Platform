@@ -1,10 +1,10 @@
 const productCategory = require("../models/product-category.model");
-const createTreeHelper = require("../helpers/createTree");
+const buildCategoryTree = require("../helpers/buildCategoryTree");
 
-/ [GET] /
+// [GET] /
 
-module.exports.category = async (req, res, next) =>{
-    const productCategories = await productCategory.find({deleted: false});
-    res.locals.productCategory = createTreeHelper(productCategories);
-    next();
-}
+module.exports.category = async (req, res, next) => {
+  const productCategories = await productCategory.find({ deleted: false });
+  res.locals.productCategories = buildCategoryTree(productCategories);
+  next();
+};
