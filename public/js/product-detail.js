@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
   initProductGallery();
   initVariantSelection();
+  initAddToCartButton();
+  initBuyNowButton();
 });
 
 // Initialize product gallery
@@ -438,13 +440,6 @@ function updateSelectedVariantInfo() {
   }
 }
 
-// Update buy buttons
-function updateBuyButtons() {
-  const buyNowButton = document.querySelector(".pd-btn-buy");
-  const addToCartButton = document.querySelector(".pd-btn-cart");
-  const quantityInput = document.getElementById("quantity-input");
-}
-
 // Initialize quantity controls
 function initQuantityControls() {
   const decreaseBtn = document.getElementById("decrease-quantity");
@@ -482,5 +477,155 @@ function initQuantityControls() {
       this.value = max;
       showToast("warning", "The maximum quantity is reached");
     }
+  });
+}
+
+// Initialize add to cart button---------------------------------------------------
+function initAddToCartButton() {
+  const addToCartButton = document.querySelector(".pd-btn-cart");
+  const buyNowButton = document.querySelector(".pd-btn-buy");
+  const quantityInput = document.getElementById("quantity-input");
+  // Xử lý sự kiện thêm vào giỏ hàng
+  addToCartButton.addEventListener("click", function () {
+    if (!currentVariant || currentVariant.stock < quantityInput.value) {
+      showToast("error", "Product is currently out of stock");
+      return;
+    }
+
+    // Gửi AJAX request để thêm vào giỏ hàng
+    fetch("/cart/add", {
+      method: "POST",
+      body: JSON.stringify({
+        productId: productData._id,
+        variantId: currentVariant._id,
+        quantity: quantityInput.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Cập nhật UI giỏ hàng (số lượng, hiệu ứng)
+          updateCartCounter(data.cartCount);
+          showToastGoToCart();
+        } else {
+          showToast("error", data.message || "Cannot add to cart");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding to cart:", error);
+        showToast("error", "Something went wrong, please try again");
+      });
+  });
+}
+
+function updateCartCounter(count) {
+  const counter = document.querySelector(".cart-badge");
+  if (counter) {
+    counter.textContent = count;
+    counter.classList.add("cart-updated");
+    setTimeout(() => counter.classList.remove("cart-updated"), 1000);
+  }
+}
+
+function showToastGoToCart() {
+  // Remove any existing toasts first
+  const existingToast = document.querySelector(".custom-toast");
+  if (existingToast) {
+    existingToast.remove();
+  }
+
+  // Create toast container
+  const toast = document.createElement("div");
+  toast.classList.add("custom-toast");
+
+  // Create toast content with icon, message and button
+  toast.innerHTML = `
+    <div class="toast-header">
+      <div class="toast-icon success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="toast-title ">Successfully!</div>
+      <button class="toast-close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="toast-body">
+      <div class="toast-message">
+        Product has been added to your cart
+      </div>
+      <button class="toast-action">
+        <span>View cart</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  // Add animation class after a small delay to trigger transition
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 10);
+
+  // Add event listener to go to cart button
+  const goToCartButton = toast.querySelector(".toast-action");
+  goToCartButton.addEventListener("click", () => {
+    window.location.href = "/cart";
+  });
+
+  // Add event listener to close button
+  const closeButton = toast.querySelector(".toast-close");
+  closeButton.addEventListener("click", () => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  });
+
+  // Auto remove toast after 5 seconds
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 5000);
+}
+
+// Initialize buy now button
+function initBuyNowButton() {
+  const buyNowButton = document.querySelector(".pd-btn-buy");
+  const quantityInput = document.getElementById("quantity-input");
+  buyNowButton.addEventListener("click", function () {
+    if (!currentVariant || currentVariant.stock < quantityInput.value) {
+      showToast("error", "Product is currently out of stock");
+      return;
+    }
+
+    const selectedProduct = [
+      {
+        productId: productData._id,
+        variantId: currentVariant._id,
+        quantity: quantityInput.value,
+      },
+    ];
+
+    fetch("/cart/pre-order", {
+      method: "POST",
+      body: JSON.stringify(selectedProduct),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = "/order";
+      })
+      .catch((error) => {
+        console.error("Error adding to cart:", error);
+        showToast("error", "Something went wrong, please try again");
+      });
   });
 }
