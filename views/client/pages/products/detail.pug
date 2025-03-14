@@ -51,12 +51,12 @@ block content
               //- Brand
               if product.brand
                 span.pd-brand 
-                  span.meta-label Thương hiệu: 
+                  span.meta-label Brand: 
                   strong= product.brand
               //- Category
               if category
                 span.pd-category 
-                  span.meta-label Danh mục: 
+                  span.meta-label Category: 
                   a(href=`/products/category/${category.slug}`)= category.title
             //- Rating Section
             .pd-rating-section(style='margin-top: 0.5rem;')
@@ -96,14 +96,17 @@ block content
         div#selected-variant-info.mt-2(style='display: none;')
         //- Stock Status
         .pd-stock-section.mt-3
-          span#variant-stock.pd-stock
-        hr.pd-divider
+          .stock-status-container
+            .stock-icon
+              i#stock-icon.fas.fa-check-circle
+            .stock-info
+              span#variant-stock.pd-stock
         //- Quantity Selection
         form#add-to-cart-form(action="/cart/add", method="POST")
           input(type="hidden", name="productId", value=product._id)
           input#selected-variant-id(type="hidden", name="variantId")
           .pd-quantity.mt-4
-            label.form-label Số lượng:
+            label.form-label Quantity:
             .input-group
               button.btn.btn-outline-secondary#decrease-quantity(type="button") -
               input.form-control#quantity-input(
@@ -118,10 +121,10 @@ block content
         .pd-buttons.mt-4
           button.btn.btn-danger.btn-lg.pd-btn-buy(type="submit", name="buyNow", value="true", aria-label="Buy Now")
             i.fas.fa-bolt.me-2
-            | Mua ngay
+            | Buy Now
           button.btn.btn-outline-primary.btn-lg.pd-btn-cart(type="button", aria-label="Add to Cart")
             i.fas.fa-shopping-cart.me-2
-            | Thêm vào giỏ
+            | Add to Cart
 
     //- Product Description Section
     .row.mt-4
@@ -130,17 +133,17 @@ block content
           .card-header
             ul.nav.nav-tabs.card-header-tabs#product-detail-tabs
               li.nav-item
-                a.nav-link.active#tab-description(data-bs-toggle="tab", href="#description") Chi tiết sản phẩm
+                a.nav-link.active#tab-description(data-bs-toggle="tab", href="#description") Product Details
               li.nav-item
-                a.nav-link#tab-specification(data-bs-toggle="tab", href="#specification") Thông số kỹ thuật
+                a.nav-link#tab-specification(data-bs-toggle="tab", href="#specification") Specifications
               if product.rating && product.rating.details && product.rating.details.length > 0
                 li.nav-item
-                  a.nav-link#tab-reviews(data-bs-toggle="tab", href="#reviews") Đánh giá (#{product.rating.count})
+                  a.nav-link#tab-reviews(data-bs-toggle="tab", href="#reviews") Reviews (#{product.rating.count})
           
           .card-body
             .tab-content
               .tab-pane.fade.show.active#description
-                .pd-description-content !{product.description || 'Chưa có mô tả chi tiết'}
+                .pd-description-content !{product.description || 'No detailed description available'}
               
               .tab-pane.fade#specification
                 if product.specifications
@@ -151,7 +154,7 @@ block content
                           th(scope="row")= spec.name
                           td= spec.value
                 else
-                  p Chưa có thông số kỹ thuật chi tiết
+                  p No detailed specifications available
               
               if product.rating && product.rating.details && product.rating.details.length > 0
                 .tab-pane.fade#reviews
@@ -160,7 +163,7 @@ block content
                       .pd-review-header
                         .pd-review-user
                           i.fas.fa-user-circle.me-2
-                          span= review.userId.fullName || 'Khách hàng'
+                          span= review.userId.fullName || 'Customer'
                         .pd-review-date= new Date(review.createdAt).toLocaleDateString()
                       .pd-review-rating
                         - for (var i = 1; i <= 5; i++)
@@ -173,7 +176,8 @@ block content
 block scripts
   link(rel="stylesheet", href="https://unpkg.com/swiper/swiper-bundle.min.css")
   script(src="https://unpkg.com/swiper/swiper-bundle.min.js")
-  script(src="/js/product-detail.js")
   script.
     // Pass product data to JavaScript
     const productData = !{JSON.stringify(product)};
+    const defaultVariant = !{JSON.stringify(defaultVariant)};
+  script(src="/js/product-detail.js")
