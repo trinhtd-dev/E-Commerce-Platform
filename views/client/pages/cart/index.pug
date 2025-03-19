@@ -1,55 +1,180 @@
 extends ../../layouts/default.pug
 include ../../mixins/alert.pug
 
+block css 
+  link(rel="stylesheet" href="/css/components/cart.css")
 
 block content
   +alert-success(3000)
   +alert-error(3000)
-  .container.mt-5
-    h2.text-center.mb-4 Shopping Cart
-    table.table.table-hover.text-center(table-cart)
-      thead
-        tr
-          th.text-left
-            input(type="checkbox" checkbox-all name="checkboxAll")
-            |  All 
-          th Unit Price
-          th Quantity
-          th Total Amount
-          th Action
-      tbody
-        each product of products 
-          tr
-            td.text-left.font-weight-bold
-              .form-check
-                input.form-check-input(type="checkbox" name="checkbox")
-                a(href=`/products/detail/${product.productInfo.slug}`) 
-                  label.form-check-label
-                    img(src=product.productInfo.thumbnail alt=product.productInfo.title class="img-thumbnail mr-3" style="width: 100px; height: auto;")
-                    | #{product.productInfo.title}
-            td.text-danger #{product.productInfo.newPrice}$
-              del.text-muted.ml-2 #{product.productInfo.price}$
-            td 
-              form(action=`/cart/update/${product.productInfo.id}`, method="get" form-quantity) 
-                .input-group
-                  div(class="input-group-prepend")
-                    button.btn.btn-outline-secondary(type="button" dec-button) -
-                  input.form-control(
-                    name= "quantity"
-                    type="number"
-                    value= product.quantity 
-                    min=1
-                    max= product.productInfo.stock 
-                    style="width: 50px"
-                  )
-                div(class="input-group-append")
-                  button.btn.btn-outline-secondary(type="button" inc-button) +
-              p.text-warning Remain #{product.productInfo.stock} product
-            td #{product.totalPrice}$
-            td
-              a(href=`/cart/delete/${product.productInfo.id}` delete-button).btn.btn-danger
-                i.fas.fa-trash-alt
-    .d-flex.justify-content-end.mt-3
-      .mr-3
-        p.font-weight-bold Total: #{cart.totalCart}$
-      a(href="checkout" class="btn btn-primary btn-lg") Checkout
+  
+  .container.mt-4.mb-5
+    h1.cart-title.text-center Shopping Cart
+    
+    if isEmpty
+      .empty-cart-container
+        .text-center.py-5
+          .empty-cart-icon.mb-4
+            i.fas.fa-shopping-cart.fa-5x.text-muted
+          h3.text-muted Your cart is empty
+          p.mb-4 Looks like you haven't added anything to your cart yet.
+          a.btn.btn-primary.btn-lg(href="/products") Continue Shopping
+    else
+      .row.mt-4
+        .col-lg-8.mb-4
+          .card.shadow-sm.cart-items-card
+            .card-header.bg-white.py-3
+              .d-flex.justify-content-between.align-items-center
+                h5.mb-0 Cart Items (#{cart.itemCount})
+                button.btn.btn-sm.btn-outline-danger.clear-cart-btn(data-toggle="modal" data-target="#clearCartModal")
+                  i.fas.fa-trash-alt.me-2
+                  | Clear Cart
+            
+            if stockWarnings
+              .alert.alert-warning.m-3
+                i.fas.fa-exclamation-triangle.me-2
+                | Some items in your cart have quantity or stock issues.
+            
+            .card-body.p-0
+              each product, index in products
+                .cart-item.p-3(class=index < products.length - 1 ? 'border-bottom' : '')
+                  .row.align-items-center
+                    .col-12.col-md-2.mb-3.mb-md-0.text-center
+                      a(href=`/products/detail/${product.productInfo.slug}?variant=${product.variantId || ''}`)
+                        img.cart-item-image.img-fluid.rounded(
+                          src=product.variantInfo.thumbnail || product.productInfo.thumbnail 
+                          alt=product.productInfo.title
+                        )
+                    
+                    .col-12.col-md-5.mb-3.mb-md-0
+                      .cart-item-details
+                        a.item-title(href=`/products/detail/${product.productInfo.slug}?variant=${product.variantId || ''}`)
+                          h5.mb-2 #{product.productInfo.title}
+                        
+                        if product.variantInfo && product.variantInfo.attributes && product.variantInfo.attributes.length
+                          .variant-badges.mb-2
+                            each attr in product.variantInfo.attributes
+                              span.badge.bg-secondary.text-white.me-2
+                                | #{attr.type}: #{attr.value}
+                        
+                        if product.variantInfo.stock < 10
+                          p.stock-warning.mb-1
+                            i.fas.fa-exclamation-circle.me-1
+                            if product.variantInfo.stock === 0
+                              | Out of stock
+                            else
+                              | Only #{product.variantInfo.stock} left
+                        
+                        .d-md-none.d-block.mt-2
+                          a.text-danger.remove-item(href=`/cart/delete/${product.productId}?variantId=${product.variantId || ''}`)
+                            i.fas.fa-trash-alt.me-1
+                            | Remove
+                    
+                    .col-6.col-md-2
+                      .price-container
+                        if product.discountPercentage > 0
+                          p.original-price.text-muted.mb-0
+                            del $#{product.originalPrice.toFixed(2)}
+                          p.final-price.fw-bold $#{product.finalPrice.toFixed(2)}
+                        else
+                          p.price.fw-bold $#{product.originalPrice.toFixed(2)}
+                    
+                    .col-6.col-md-2
+                      form.quantity-form(
+                        action=`/cart/update/${product.productId}?variantId=${product.variantId || ''}`
+                        method="get"
+                      )
+                        input(type="hidden" name="variantId" value=product.variantId || '')
+                        .input-group.quantity-selector
+                          button.btn.btn-sm.btn-outline-secondary.quantity-btn(
+                            type="button" 
+                            onclick="updateQuantity(this, -1)"
+                            aria-label="Decrease quantity"
+                          )
+                            i.fas.fa-minus
+                          
+                          input.form-control.form-control-sm.text-center.quantity-input(
+                            name="quantity"
+                            type="number"
+                            value=product.quantity
+                            min="1"
+                            max=product.variantInfo.stock
+                            aria-label="Quantity"
+                            onchange="this.form.submit()"
+                          )
+                          
+                          button.btn.btn-sm.btn-outline-secondary.quantity-btn(
+                            type="button"
+                            onclick="updateQuantity(this, 1)"
+                            aria-label="Increase quantity"
+                          )
+                            i.fas.fa-plus
+                    
+                    .col-md-1.d-none.d-md-block.text-end
+                      a.text-danger.remove-item(
+                        href=`/cart/delete/${product.productId}?variantId=${product.variantId || ''}`
+                        aria-label="Remove item"
+                      )
+                        i.fas.fa-trash-alt.fa-lg
+              
+              if products.length === 0
+                .p-5.text-center
+                  p.text-muted Your cart is empty after removing invalid items.
+        
+        .col-lg-4
+          .card.shadow-sm.order-summary-card.mb-4
+            .card-header.bg-white.py-3
+              h5.mb-0 Order Summary
+            
+            .card-body
+              .d-flex.justify-content-between.mb-2
+                span.text-muted Subtotal
+                span.fw-bold $#{cart.subtotal.toFixed(2)}
+              
+              if cart.discount > 0
+                .d-flex.justify-content-between.mb-2
+                  span.text-muted Discount
+                  span.text-success -$#{cart.discount.toFixed(2)}
+              
+              if cart.shipping > 0
+                .d-flex.justify-content-between.mb-3
+                  span.text-muted Shipping
+                  span $#{cart.shipping.toFixed(2)}
+              
+              hr
+              
+              .d-flex.justify-content-between.mb-3
+                span.fw-bold Total
+                span.fw-bold.fs-5 $#{cart.totalCart.toFixed(2)}
+            
+            .card-footer.bg-white.py-3
+              a.btn.btn-primary.btn-lg.w-100(href="/checkout") Proceed to Checkout
+          
+          .card.shadow-sm.promo-card
+            .card-body
+              h5.mb-3 Have a promo code?
+              .input-group
+                input.form-control(type="text" placeholder="Enter code")
+                button.btn.btn-secondary(type="button") Apply
+      
+      .row.mt-4
+        .col-12.text-center
+          a.continue-shopping(href="/products")
+            i.fas.fa-arrow-left.me-2
+            | Continue Shopping
+  
+  // Modal for clearing cart
+  #clearCartModal.modal.fade(tabindex='-1' aria-labelledby='clearCartModalLabel' aria-hidden='true')
+    .modal-dialog.modal-dialog-centered
+      .modal-content
+        .modal-header
+          h5#clearCartModalLabel.modal-title Clear Shopping Cart
+          button.btn-close(type='button' data-dismiss='modal' aria-label='Close')
+        .modal-body
+          p Are you sure you want to remove all items from your cart?
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+          a.btn.btn-danger(href='/cart/clear') Clear Cart
+
+block scripts
+  script(src="/js/cart.js")
