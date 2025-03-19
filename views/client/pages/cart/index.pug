@@ -5,9 +5,6 @@ block css
   link(rel="stylesheet" href="/css/components/cart.css")
 
 block content
-  +alert-success(3000)
-  +alert-error(3000)
-  
   .container.mt-4.mb-5
     h1.cart-title.text-center Shopping Cart
     
@@ -39,53 +36,67 @@ block content
               each product, index in products
                 .cart-item.p-3(class=index < products.length - 1 ? 'border-bottom' : '')
                   .row.align-items-center
-                    .col-12.col-md-2.mb-3.mb-md-0.text-center
+                    .col-auto
+                      .form-check
+                        input.form-check-input.product-selector(
+                          type="checkbox"
+                          checked
+                          data-product-id=product.productId
+                          data-variant-id=product.variantId || ''
+                          data-price=product.finalPrice
+                          data-quantity=product.quantity
+                          data-original-price=product.originalPrice
+                          data-discount=product.discountPercentage > 0 ? (product.originalPrice - product.finalPrice) * product.quantity : 0
+                        )
+                    
+                    .col-md-2.col-3.px-1.text-center
                       a(href=`/products/detail/${product.productInfo.slug}?variant=${product.variantId || ''}`)
                         img.cart-item-image.img-fluid.rounded(
                           src=product.variantInfo.thumbnail || product.productInfo.thumbnail 
                           alt=product.productInfo.title
+                          style="max-height: 80px; object-fit: contain;"
                         )
                     
-                    .col-12.col-md-5.mb-3.mb-md-0
+                    .col-md-4.col-9.ps-2.pe-1
                       .cart-item-details
                         a.item-title(href=`/products/detail/${product.productInfo.slug}?variant=${product.variantId || ''}`)
-                          h5.mb-2 #{product.productInfo.title}
+                          h6.mb-1 #{product.productInfo.title}
                         
                         if product.variantInfo && product.variantInfo.attributes && product.variantInfo.attributes.length
-                          .variant-badges.mb-2
+                          .variant-badges.mb-1
                             each attr in product.variantInfo.attributes
-                              span.badge.bg-secondary.text-white.me-2
+                              span.badge.bg-light.text-dark.me-1.small
                                 | #{attr.type}: #{attr.value}
                         
                         if product.variantInfo.stock < 10
-                          p.stock-warning.mb-1
+                          p.stock-warning.mb-0.small
                             i.fas.fa-exclamation-circle.me-1
                             if product.variantInfo.stock === 0
                               | Out of stock
                             else
                               | Only #{product.variantInfo.stock} left
                         
-                        .d-md-none.d-block.mt-2
-                          a.text-danger.remove-item(href=`/cart/delete/${product.productId}?variantId=${product.variantId || ''}`)
+                        .d-md-none.d-block.mt-1
+                          a.text-danger.remove-item.small(href=`/cart/delete/${product.productId}?variantId=${product.variantId || ''}`)
                             i.fas.fa-trash-alt.me-1
                             | Remove
                     
-                    .col-6.col-md-2
+                    .col-md-2.col-4.px-1.text-md-center.text-start.mt-2.mt-md-0
                       .price-container
                         if product.discountPercentage > 0
-                          p.original-price.text-muted.mb-0
+                          p.original-price.text-muted.mb-0.small
                             del $#{product.originalPrice.toFixed(2)}
-                          p.final-price.fw-bold $#{product.finalPrice.toFixed(2)}
+                          p.final-price.fw-bold.mb-0 $#{product.finalPrice.toFixed(2)}
                         else
-                          p.price.fw-bold $#{product.originalPrice.toFixed(2)}
+                          p.price.fw-bold.mb-0 $#{product.originalPrice.toFixed(2)}
                     
-                    .col-6.col-md-2
+                    .col-md-3.col-8.px-1.mt-2.mt-md-0
                       form.quantity-form(
                         action=`/cart/update/${product.productId}?variantId=${product.variantId || ''}`
                         method="get"
                       )
                         input(type="hidden" name="variantId" value=product.variantId || '')
-                        .input-group.quantity-selector
+                        .input-group.input-group-sm.quantity-selector
                           button.btn.btn-sm.btn-outline-secondary.quantity-btn(
                             type="button" 
                             onclick="updateQuantity(this, -1)"
@@ -101,6 +112,7 @@ block content
                             max=product.variantInfo.stock
                             aria-label="Quantity"
                             onchange="this.form.submit()"
+                            style="max-width: 60px;"
                           )
                           
                           button.btn.btn-sm.btn-outline-secondary.quantity-btn(
@@ -110,12 +122,12 @@ block content
                           )
                             i.fas.fa-plus
                     
-                    .col-md-1.d-none.d-md-block.text-end
+                    .col-1.d-none.d-md-block.text-end.ps-0
                       a.text-danger.remove-item(
                         href=`/cart/delete/${product.productId}?variantId=${product.variantId || ''}`
                         aria-label="Remove item"
                       )
-                        i.fas.fa-trash-alt.fa-lg
+                        i.fas.fa-trash-alt
               
               if products.length === 0
                 .p-5.text-center
@@ -128,27 +140,31 @@ block content
             
             .card-body
               .d-flex.justify-content-between.mb-2
+                span.text-muted Items
+                span#selected-count.fw-bold #{cart.itemCount}
+              
+              .d-flex.justify-content-between.mb-2
                 span.text-muted Subtotal
-                span.fw-bold $#{cart.subtotal.toFixed(2)}
+                span#selected-subtotal.fw-bold $#{cart.subtotal.toFixed(2)}
               
               if cart.discount > 0
                 .d-flex.justify-content-between.mb-2
                   span.text-muted Discount
-                  span.text-success -$#{cart.discount.toFixed(2)}
+                  span#selected-discount.text-success -$#{cart.discount.toFixed(2)}
               
               if cart.shipping > 0
                 .d-flex.justify-content-between.mb-3
                   span.text-muted Shipping
-                  span $#{cart.shipping.toFixed(2)}
+                  span#selected-shipping $#{cart.shipping.toFixed(2)}
               
               hr
               
               .d-flex.justify-content-between.mb-3
                 span.fw-bold Total
-                span.fw-bold.fs-5 $#{cart.totalCart.toFixed(2)}
+                span#selected-total.fw-bold.fs-5 $#{cart.totalCart.toFixed(2)}
             
             .card-footer.bg-white.py-3
-              a.btn.btn-primary.btn-lg.w-100(href="/checkout") Proceed to Checkout
+              button#checkout-selected-btn.btn.btn-primary.btn-lg.w-100 Proceed to Order
           
           .card.shadow-sm.promo-card
             .card-body

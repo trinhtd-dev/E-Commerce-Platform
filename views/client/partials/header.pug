@@ -45,7 +45,7 @@ header.header
                     .cart-wrapper
                         a.cart-link(href="/cart" title="Shopping Cart")
                             i.fas.fa-shopping-cart
-                            if cart.products.length > 0
+                            if cart && cart.products && cart.products.length > 0
                                 span.cart-badge #{cart.products.length}
 
     // Bottom Navigation

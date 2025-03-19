@@ -32,18 +32,18 @@
 
 /* Cart Item Styles */
 .cart-item {
-  transition: background-color 0.2s ease;
+  padding: 12px !important;
+  transition: background-color 0.2s;
 }
 
 .cart-item:hover {
-  background-color: #f8f9fa;
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 .cart-item-image {
-  max-height: 100px;
+  max-height: 80px;
+  width: auto;
   object-fit: contain;
-  border: 1px solid #eee;
-  padding: 5px;
 }
 
 .item-title {
@@ -63,16 +63,16 @@
 }
 
 .variant-badges .badge {
-  padding: 6px 10px;
-  font-weight: 500;
-  background-color: #f0f0f0;
-  color: #666;
-  border-radius: 4px;
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  background-color: #f0f0f0 !important;
+  color: #333 !important;
+  border: 1px solid #e0e0e0;
 }
 
 .stock-warning {
+  font-size: 0.75rem;
   color: #dc3545;
-  font-size: 0.875rem;
 }
 
 .original-price {
@@ -88,23 +88,19 @@
 
 /* Quantity Selector */
 .quantity-selector {
-  width: 120px;
-  margin: 0 auto;
+  max-width: 120px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .quantity-btn {
-  border-color: #ced4da;
-  background-color: #f8f9fa;
-}
-
-.quantity-btn:hover {
-  background-color: #e9ecef;
+  padding: 0.25rem 0.5rem !important;
 }
 
 .quantity-input {
-  border-left: 0;
-  border-right: 0;
-  font-weight: 500;
+  max-width: 45px !important;
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
 }
 
 .quantity-input:focus {
@@ -114,13 +110,12 @@
 
 /* Remove Item Button */
 .remove-item {
-  color: #dc3545;
+  font-size: 0.9rem;
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 
 .remove-item:hover {
-  color: #c82333;
+  text-decoration: underline;
 }
 
 /* Order Summary Card */
@@ -157,25 +152,25 @@
 /* Responsive Adjustments */
 @media (max-width: 767.98px) {
   .cart-item {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 10px !important;
+  }
+
+  .cart-item-details h6 {
+    font-size: 0.9rem;
+  }
+
+  .variant-badges .badge {
+    font-size: 0.7rem;
+    padding: 0.2em 0.4em;
   }
 
   .price-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin-top: 8px;
   }
 
-  .original-price,
-  .final-price,
-  .price {
-    margin-bottom: 0 !important;
-  }
-
-  .quantity-form {
-    display: flex;
-    justify-content: flex-end;
+  .quantity-selector {
+    margin-left: 0;
+    max-width: 100%;
   }
 }
 
@@ -194,4 +189,14 @@
 
 .item-updated {
   animation: highlight 1.5s ease;
+}
+
+.form-check-input.product-selector {
+  margin-top: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.price-container {
+  font-size: 0.9rem;
 }
