@@ -11,28 +11,31 @@ const logFormat = winston.format.combine(
   })
 );
 
-// Tạo logger instance
+// Tạo logger instance với các transport khác nhau tùy môi trường
 const logger = winston.createLogger({
   format: logFormat,
-  transports: [
-    // Log errors
-    new winston.transports.File({
-      filename: path.join(__dirname, "../logs/error.log"),
-      level: "error",
-    }),
-    // Log info
-    new winston.transports.File({
-      filename: path.join(__dirname, "../logs/app.log"),
-      level: "info",
-    }),
-  ],
+  transports: [],
 });
 
-// Log to console in development
-if (process.env.NODE_ENV !== "production") {
+// Trong môi trường development hoặc Vercel (production), sử dụng console
+if (process.env.NODE_ENV !== "production" || process.env.VERCEL) {
   logger.add(
     new winston.transports.Console({
       format: winston.format.simple(),
+    })
+  );
+} else {
+  // Chỉ trong môi trường production không phải Vercel, ghi ra file
+  logger.add(
+    new winston.transports.File({
+      filename: path.join(__dirname, "../logs/error.log"),
+      level: "error",
+    })
+  );
+  logger.add(
+    new winston.transports.File({
+      filename: path.join(__dirname, "../logs/app.log"),
+      level: "info",
     })
   );
 }
