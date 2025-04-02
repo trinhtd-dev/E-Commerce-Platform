@@ -29,11 +29,19 @@ mixin list-grid(title, products)
                                         i.fas.fa-crown.me-1
                                         | Hot
                             
-                            //- Image Section (Fixed Height)
+                            //- Image Section (Fixed Height) with Lazy Loading
                             .product-image-section
                                 a.product-link(href=`/products/detail/${product.slug}`)
                                     .product-image
-                                        img.img-fluid(src=product.thumbnail alt=product.title)
+                                        //- Đặt ảnh trước placeholder để CSS selector có thể hoạt động đúng
+                                        img.img-fluid.lazy-image(
+                                            data-src=product.thumbnail 
+                                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3C/svg%3E"
+                                            alt=product.title
+                                            loading="lazy"
+                                        )
+                                        //- Đặt placeholder sau ảnh
+                                        .lazy-load-placeholder
                             
                             //- Content Section (Fixed Layout)
                             .product-content
@@ -62,7 +70,7 @@ mixin list-grid(title, products)
                                     .product-price
                                         if product.discountPercentage > 0
                                             span.original-price #{product.price}$
-                                        span.current-price #{product.newPrice}$
+                                        span.current-price #{product.priceNew}$
                                 
                                 //- Stock Info Section (Fixed Height)
                                 .product-stock-section
