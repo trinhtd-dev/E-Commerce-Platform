@@ -1,0 +1,279 @@
+/* Reset and Base Styles */
+.order-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 25px;
+  transition: all 0.3s ease;
+}
+
+.order-heading {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.order-heading:after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #3498db;
+}
+
+/* Product Table Styles */
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+.order-table th {
+  background-color: #f8fafc;
+  color: #4a5568;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid #edf2f7;
+}
+
+.order-table td {
+  padding: 15px;
+  border-bottom: 1px solid #edf2f7;
+  vertical-align: middle;
+}
+
+.product-cell {
+  display: flex;
+  align-items: center;
+}
+
+.product-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 15px;
+  border: 1px solid #edf2f7;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #2d3748;
+  font-size: 1rem;
+}
+
+.product-variant {
+  color: #718096;
+  font-size: 0.875rem;
+}
+
+.quantity-cell {
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.price-cell {
+  font-weight: 500;
+}
+
+.discount-price {
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.original-price {
+  color: #a0aec0;
+  text-decoration: line-through;
+  font-size: 0.875rem;
+  margin-top: 3px;
+}
+
+/* Address Form Styles */
+.address-section {
+  padding: 15px 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Order Summary Styles */
+.order-summary {
+  margin-bottom: 25px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.total-row {
+  margin-top: 15px;
+  border-top: 2px solid #e2e8f0;
+  border-bottom: none;
+  padding-top: 15px;
+}
+
+.summary-label,
+.total-label {
+  color: #4a5568;
+}
+
+.summary-value,
+.total-value {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.total-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.total-value {
+  font-size: 1.25rem;
+  color: #e53e3e;
+}
+
+/* Payment Methods Styles */
+.payment-methods {
+  margin-top: 20px;
+}
+
+.method-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.method-card:hover {
+  border-color: #3498db;
+  background-color: #f8fafc;
+}
+
+.method-card.active {
+  border-color: #3498db;
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+.method-icon {
+  font-size: 1.25rem;
+  margin-right: 12px;
+  color: #4a5568;
+  width: 24px;
+  text-align: center;
+}
+
+.method-card.active .method-icon {
+  color: #3498db;
+}
+
+/* Button Styles */
+.checkout-button {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkout-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+}
+
+.checkout-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .container {
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .order-container {
+    padding: 15px;
+  }
+
+  .product-cell {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-image {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+
+  .order-table th:not(:first-child),
+  .order-table td:not(:first-child) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .order-table th {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .order-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .checkout-button {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+  }
+}

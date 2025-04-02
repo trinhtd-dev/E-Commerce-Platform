@@ -1,0 +1,200 @@
+extends ../../layouts/default.pug
+
+block css
+  link(rel="stylesheet", href="/css/components/order.css")
+  link(rel="stylesheet", href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css")
+
+block content
+  .container.py-5
+    h1.mb-4.text-center.d-lg-none Order
+    
+    .row
+      .col-lg-8
+        .order-container
+          h2.order-heading Selected Products
+          
+          if selectedProducts && selectedProducts.length > 0
+            table.table.order-table
+              thead
+                tr
+                  th(width="50%") Product
+                  th.text-center Quantity
+                  th.text-center Unit Price
+                  th.text-right Total Price
+              tbody
+                each product in selectedProducts
+                  tr
+                    td.product-cell
+                      if product.product && product.product.thumbnail
+                        img.product-image(src=product.product.thumbnail alt=product.product.title)
+                      .product-details
+                        h5.product-title #{product.product ? product.product.title : 'Product not available'}
+                        if product.variant && product.variant.name 
+                          .product-variant Variant: #{product.variant.name}
+                    
+                    td.quantity-cell.text-center #{product.quantity}
+                    
+                    td.price-cell.text-center
+                      if product.variant
+                        if product.variant.discountPercentage && product.variant.discountPercentage > 0
+                          .discount-price $#{(product.variant.price * (1 - product.variant.discountPercentage/100)).toFixed(2)}
+                          .original-price $#{product.variant.price.toFixed(2)}
+                        else
+                          | $#{product.variant.price.toFixed(2)}
+                      else
+                        | -
+                    
+                    td.price-cell.text-right
+                      if product.variant
+                        if product.variant.discountPercentage && product.variant.discountPercentage > 0
+                          | $#{(product.variant.price * (1 - product.variant.discountPercentage/100) * product.quantity).toFixed(2)}
+                        else
+                          | $#{(product.variant.price * product.quantity).toFixed(2)}
+                      else
+                        | -
+          else
+            .alert.alert-warning No products selected
+          
+        .order-container.mt-4
+          h2.order-heading Shipping Information
+          
+          form#shipping-form
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="fullName") Full Name
+                input#fullName.form-control(type="text" name="fullName" required)
+              .col-md-6.mb-3
+                label.form-label(for="phone") Phone Number
+                input#phone.form-control(type="tel" name="phone" required)
+            
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="email") Email
+                input#email.form-control(type="email" name="email")
+              .col-md-6.mb-3
+                label.form-label(for="province") Province/City
+                select#province.form-control(name="province" required)
+                  option(value="") Select Province/City
+                  each province in provinces
+                    option(value=province.code) #{province.name}
+            
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="district") District
+                select#district.form-control(name="district" required)
+                  option(value="") Select District
+              .col-md-6.mb-3
+                label.form-label(for="ward") Ward/Commune
+                select#ward.form-control(name="ward" required)
+                  option(value="") Select Ward/Commune
+            
+            .row
+              .col-md-6.mb-3
+                label.form-label(for="street") Street
+                input#street.form-control(type="text" name="street" required)
+              .col-md-6.mb-3
+                label.form-label(for="houseNumber") House Number
+                input#houseNumber.form-control(type="text" name="houseNumber" required)
+            
+            .mb-3
+              label.form-label(for="addressNote") Additional Address Details
+              textarea#addressNote.form-control(name="addressNote" rows="2" 
+                placeholder="For example: Building name, floor number, etc.")
+            
+            .mb-3
+              label.form-label(for="note") Order Notes (if any)
+              textarea#note.form-control(name="note" rows="2" 
+                placeholder="For example: Delivery time, delivery instructions...")
+            
+            .mb-3
+              label.form-label Shipping Method
+              .shipping-methods
+                .form-check
+                  input#standardShipping.form-check-input(type="radio" name="shippingMethod" value="standard" checked)
+                  label.form-check-label(for="standardShipping")
+                    | Standard Delivery (3-5 days)
+                .form-check
+                  input#expressShipping.form-check-input(type="radio" name="shippingMethod" value="express")
+                  label.form-check-label(for="expressShipping")
+                    | Express Delivery (1-2 days)
+            
+            #map.mb-3(style="height: 200px;")
+      
+      .col-lg-4
+        .order-container
+          h2.order-heading Order Summary
+          
+          .order-summary
+            - let subtotal = 0
+            - let discount = 0
+            
+            each product in selectedProducts || []
+              if product.product
+                - let productPrice = product.product.price
+                - let discountedPrice = productPrice
+                - let productSubtotal = 0
+                
+                if product.product.discountPercentage && product.product.discountPercentage > 0
+                  - discountedPrice = productPrice * (1 - product.product.discountPercentage/100)
+                  - discount += (productPrice - discountedPrice) * product.quantity
+                
+                - productSubtotal = discountedPrice * product.quantity
+                - subtotal += productSubtotal
+            
+            .summary-row
+              .summary-label Subtotal
+              .summary-value $#{(subtotal + discount).toFixed(2)}
+            
+            if discount > 0
+              .summary-row
+                .summary-label Discount
+                .summary-value.text-danger -$#{discount.toFixed(2)}
+            
+            .summary-row
+              .summary-label Shipping Fee
+              .summary-value#shippingFee $0.00
+            
+            .summary-row.total-row
+              .total-label Total
+              .total-value#totalAmount $#{(subtotal + 30000/23000).toFixed(2)}
+          
+          h4.mt-4.mb-3 Payment Method
+          
+          .payment-methods
+            .method-card.active
+              .d-flex.align-items-center
+                input.mr-3(type="radio" name="paymentMethod" value="cod" checked id="payment-cod")
+                label.d-flex.align-items-center.mb-0.w-100(for="payment-cod")
+                  .method-icon
+                    i.fas.fa-money-bill-wave
+                  div
+                    strong Cash on Delivery (COD)
+                    p.mb-0.small.text-muted Pay with cash upon delivery
+            
+            .method-card
+              .d-flex.align-items-center
+                input.mr-3(type="radio" name="paymentMethod" value="banking" id="payment-banking")
+                label.d-flex.align-items-center.mb-0.w-100(for="payment-banking")
+                  .method-icon
+                    i.fas.fa-university
+                  div
+                    strong Bank Transfer
+                    p.mb-0.small.text-muted Pay via bank transfer
+            
+            .method-card
+              .d-flex.align-items-center
+                input.mr-3(type="radio" name="paymentMethod" value="momo" id="payment-momo")
+                label.d-flex.align-items-center.mb-0.w-100(for="payment-momo")
+                  .method-icon
+                    i.fas.fa-wallet
+                  div
+                    strong MoMo Wallet
+                    p.mb-0.small.text-muted Pay via MoMo e-wallet
+          
+          button.checkout-button.mt-4 
+            i.fas.fa-check.mr-2
+            | Place Order
+
+block scripts
+  script(src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js")
+  script(src="/js/order.js")
