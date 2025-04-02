@@ -1,12 +1,16 @@
 module.exports.items = (products) => {
-    products.map(item => {
-        item.newPrice = (item.price * (100 - item.discountPercentage) / 100).toFixed(2);
-        return item;
-    })
-    return products;
+  products.map((item) => {
+    const price = item.price || 0;
+    const discount = item.discountPercentage || 0;
+    item.priceNew = ((price * (100 - discount)) / 100).toFixed(0);
+    return item;
+  });
+  return products;
 };
 
 module.exports.item = (product) => {
-    product.newPrice = (product.price * (100 - product.discountPercentage) / 100).toFixed(2);
-    return product;
+  const price = product.price || 0;
+  const discount = product.discountPercentage || 0;
+  product.priceNew = ((price * (100 - discount)) / 100).toFixed(0);
+  return product;
 };
