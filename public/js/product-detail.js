@@ -483,41 +483,65 @@ function initQuantityControls() {
 // Initialize add to cart button---------------------------------------------------
 function initAddToCartButton() {
   const addToCartButton = document.querySelector(".pd-btn-cart");
-  const buyNowButton = document.querySelector(".pd-btn-buy");
   const quantityInput = document.getElementById("quantity-input");
+
   // Xử lý sự kiện thêm vào giỏ hàng
   addToCartButton.addEventListener("click", function () {
-    if (!currentVariant || currentVariant.stock < quantityInput.value) {
-      showToast("error", "Product is currently out of stock");
-      return;
-    }
+    try {
+      // Kiểm tra biến thể
+      if (!currentVariant) {
+        showToast("error", "Vui lòng chọn biến thể sản phẩm");
+        return;
+      }
 
-    // Gửi AJAX request để thêm vào giỏ hàng
-    fetch("/cart/add", {
-      method: "POST",
-      body: JSON.stringify({
-        productId: productData._id,
-        variantId: currentVariant._id,
-        quantity: quantityInput.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          // Cập nhật UI giỏ hàng (số lượng, hiệu ứng)
-          updateCartCounter(data.cartCount);
-          showToastGoToCart();
-        } else {
-          showToast("error", data.message || "Cannot add to cart");
-        }
+      // Chuyển đổi sang số nguyên
+      const quantity = parseInt(quantityInput.value) || 1;
+
+      // Kiểm tra số lượng tồn kho
+      if (currentVariant.stock < quantity) {
+        showToast("error", "Sản phẩm không đủ số lượng trong kho");
+        return;
+      }
+
+      // Gửi AJAX request với timeout và xử lý lỗi tốt hơn
+      fetch("/cart/add", {
+        method: "POST",
+        body: JSON.stringify({
+          productId: productData._id,
+          variantId: currentVariant._id,
+          quantity: quantity,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Thêm timeout để tránh chờ quá lâu
+        signal: AbortSignal.timeout(10000), // 10 giây timeout
       })
-      .catch((error) => {
-        console.error("Error adding to cart:", error);
-        showToast("error", "Something went wrong, please try again");
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            updateCartCounter(data.cartCount);
+            showToastGoToCart();
+          } else {
+            showToast("error", data.message || "Không thể thêm vào giỏ hàng");
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding to cart:", error);
+          showToast(
+            "error",
+            "Không thể kết nối đến server. Vui lòng thử lại sau."
+          );
+        });
+    } catch (error) {
+      console.error("Error in add to cart handler:", error);
+      showToast("error", "Đã xảy ra lỗi. Vui lòng thử lại.");
+    }
   });
 }
 
