@@ -57,6 +57,9 @@ database.connect();
 //static file
 app.use(express.static(`${__dirname}/public`));
 
+// json parser
+app.use(express.json());
+
 //tinyClound
 app.use(
   "/tinymce",
@@ -71,6 +74,7 @@ clientRoutes(app);
 app.use(logRequest);
 
 // Log unhandled errors
+
 app.use((err, req, res, next) => {
   logger.error("Unhandled error:", {
     error: err.message,
