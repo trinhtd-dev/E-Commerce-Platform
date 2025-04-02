@@ -1,0 +1,175 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block css
+  style.
+    .contact-header {
+      background-color: #f8f9fa;
+      padding: 3rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .contact-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 0.5rem;
+    }
+    .contact-header p {
+      font-size: 1.1rem;
+      color: #6c757d;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .contact-info-card {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      height: 100%;
+      transition: transform 0.3s;
+    }
+    .contact-info-card:hover {
+      transform: translateY(-5px);
+    }
+    .contact-info-card i {
+      font-size: 2.5rem;
+      color: #0d6efd;
+      margin-bottom: 1.5rem;
+    }
+    .contact-info-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .contact-info-card p {
+      color: #6c757d;
+      margin-bottom: 0;
+    }
+    .contact-form {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .contact-form h2 {
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    .form-control {
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+    }
+    .map-container {
+      height: 400px;
+      margin-top: 2rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    .social-media-links {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .social-media-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: #f1f8ff;
+      color: #0d6efd;
+      border-radius: 50%;
+      margin: 0 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .social-media-links a:hover {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+block content
+  .container
+    .contact-header
+      h1 Liên hệ với chúng tôi
+      p Chúng tôi luôn sẵn sàng lắng nghe ý kiến của bạn. Hãy liên hệ với chúng tôi qua các kênh dưới đây hoặc gửi tin nhắn trực tiếp.
+
+    .row.justify-content-center.mb-5
+      .col-md-4.mb-4
+        .contact-info-card.text-center
+          i.fas.fa-map-marker-alt
+          h3 Địa chỉ
+          p= contactInfo.address
+      .col-md-4.mb-4
+        .contact-info-card.text-center
+          i.fas.fa-phone-alt
+          h3 Điện thoại
+          p= contactInfo.phone
+      .col-md-4.mb-4
+        .contact-info-card.text-center
+          i.fas.fa-envelope
+          h3 Email
+          p= contactInfo.email
+
+    .row.justify-content-center
+      .col-lg-6.mb-4.mb-lg-0
+        .contact-form
+          h2 Gửi tin nhắn cho chúng tôi
+          form(action="#", method="POST")
+            .mb-3
+              label.form-label(for="name") Họ và tên
+              input.form-control#name(type="text", name="name", required, placeholder="Nhập họ và tên của bạn")
+            .mb-3
+              label.form-label(for="email") Email
+              input.form-control#email(type="email", name="email", required, placeholder="Nhập địa chỉ email của bạn")
+            .mb-3
+              label.form-label(for="subject") Tiêu đề
+              input.form-control#subject(type="text", name="subject", required, placeholder="Nhập tiêu đề tin nhắn")
+            .mb-3
+              label.form-label(for="message") Nội dung tin nhắn
+              textarea.form-control#message(name="message", rows="5", required, placeholder="Nhập nội dung tin nhắn của bạn")
+            button.btn.btn-primary.w-100(type="submit") Gửi tin nhắn
+      
+      .col-lg-6
+        .contact-info-card
+          h3 Giờ làm việc
+          p.mb-3= contactInfo.workingHours
+          
+          h3.mt-4 Theo dõi chúng tôi
+          .social-media-links
+            a(href=contactInfo.socialMedia.facebook, target="_blank")
+              i.fab.fa-facebook-f
+            a(href=contactInfo.socialMedia.twitter, target="_blank")
+              i.fab.fa-twitter
+            a(href=contactInfo.socialMedia.instagram, target="_blank")
+              i.fab.fa-instagram
+            a(href=contactInfo.socialMedia.linkedin, target="_blank")
+              i.fab.fa-linkedin-in
+          
+          h3.mt-4 Vị trí của chúng tôi
+          .map-container
+            iframe(
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.317058592313!2d105.78524147499854!3d20.980283080650143!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135acc6bdc7f95f%3A0x58ffc66343a45247!2zSG_GoSBM4bqhYywgVGjhu5FuZyBOaOG6pXQsIEjDoCBO4buZaSwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1710493953070!5m2!1svi!2s"
+              width="100%"
+              height="100%"
+              style="border:0;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            )
+
+block scripts
+  script.
+    // Form validation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          // In a real implementation, this would send the form data to the server
+          alert('Cảm ơn bạn đã liên hệ với chúng tôi! Chúng tôi sẽ phản hồi sớm nhất có thể.');
+          form.reset();
+        });
+      }
+    }); 

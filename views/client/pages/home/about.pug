@@ -1,0 +1,246 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block css
+  style.
+    .about-header {
+      background-color: #f8f9fa;
+      padding: 3rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .about-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 0.5rem;
+    }
+    .about-header p {
+      font-size: 1.1rem;
+      color: #6c757d;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .about-section {
+      padding: 4rem 0;
+    }
+    .about-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .about-section h2:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background-color: #0d6efd;
+    }
+    .mission-vision {
+      background-color: #fff;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .mission-vision-content {
+      padding: 2rem;
+    }
+    .mission-vision h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #343a40;
+    }
+    .mission-vision p {
+      color: #6c757d;
+      margin-bottom: 0;
+    }
+    .mission-vision-img {
+      height: 100%;
+      min-height: 300px;
+      background-size: cover;
+      background-position: center;
+    }
+    .team-member {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .team-member-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      object-fit: cover;
+      border: 5px solid #f8f9fa;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .team-member h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .team-member p.position {
+      color: #0d6efd;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .team-member p.bio {
+      color: #6c757d;
+    }
+    .timeline {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      background-color: #f8f9fa;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+    }
+    .timeline-container {
+      padding: 10px 40px;
+      position: relative;
+      background-color: inherit;
+      width: 50%;
+    }
+    .timeline-container::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      right: -13px;
+      background-color: #fff;
+      border: 4px solid #0d6efd;
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .left {
+      left: 0;
+    }
+    .right {
+      left: 50%;
+    }
+    .left::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      right: 30px;
+      border: medium solid #fff;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #fff;
+    }
+    .right::after {
+      left: -13px;
+    }
+    .right::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      left: 30px;
+      border: medium solid #fff;
+      border-width: 10px 10px 10px 0;
+      border-color: transparent #fff transparent transparent;
+    }
+    .timeline-content {
+      padding: 20px 30px;
+      background-color: white;
+      position: relative;
+      border-radius: 6px;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+    .timeline-content h3 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .timeline-year {
+      color: #0d6efd;
+      font-weight: 600;
+    }
+    @media screen and (max-width: 768px) {
+      .timeline::after {
+        left: 31px;
+      }
+      .timeline-container {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+      }
+      .timeline-container::before {
+        left: 60px;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent #fff transparent transparent;
+      }
+      .left::after, .right::after {
+        left: 18px;
+      }
+      .right {
+        left: 0%;
+      }
+    }
+
+block content
+  .container
+    .about-header
+      h1 About Us
+      p Discover our story, our mission, and the people behind the success of #{aboutInfo.companyName}.
+
+    .about-section
+      .container
+        h2 Mission & Vision
+        .row.mission-vision
+          .col-md-6
+            .mission-vision-content
+              h3 Mission
+              p= aboutInfo.mission
+              h3.mt-4 Vision
+              p= aboutInfo.vision
+          .col-md-6
+            .mission-vision-img(style="background-image: url('/images/about/mission-vision.jpg');")
+
+    .about-section.bg-light
+      .container
+        h2 Our Team
+        .row
+          each member in aboutInfo.team
+            .col-md-3
+              .team-member
+                if member.image
+                  img.team-member-img(src=member.image, alt=member.name)
+                else
+                  img.team-member-img(src="/images/team/default-avatar.jpg", alt=member.name)
+                h3= member.name
+                p.position= member.position
+                p.bio= member.bio
+
+    .about-section
+      .container
+        h2 Our Milestones
+        .timeline
+          each milestone, index in aboutInfo.milestones
+            div(class=`timeline-container ${index % 2 === 0 ? 'left' : 'right'}`)
+              .timeline-content
+                span.timeline-year= milestone.year
+                h3= milestone.event
+
+    .about-section.text-center
+      .container
+        h2 Start with Us
+        p.mb-4 Explore our products and services today.
+        a.btn.btn-primary.btn-lg(href="/products") View Products 
