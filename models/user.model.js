@@ -13,7 +13,15 @@ const userSchema = new mongoose.Schema(
         "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1",
     },
     phone: String,
-    address: String,
+    address: [
+      {
+        street: String,
+        ward: String,
+        district: String,
+        city: String,
+        country: String,
+      },
+    ],
     email: {
       type: String,
       required: true,
