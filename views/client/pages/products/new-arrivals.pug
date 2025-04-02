@@ -1,0 +1,43 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/product-list.pug
+
+block css
+  link(rel="stylesheet", href="/css/components/product-list.css")
+  style.
+    .new-arrivals-header {
+      background-color: #f8f9fa;
+      padding: 3rem 0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .new-arrivals-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 0.5rem;
+    }
+    .new-arrivals-header p {
+      font-size: 1.1rem;
+      color: #6c757d;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .new-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff3366;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 10;
+    }
+
+block content
+    +list-grid(title, products)
+
+block scripts
+  script(src="/js/product-list.js")

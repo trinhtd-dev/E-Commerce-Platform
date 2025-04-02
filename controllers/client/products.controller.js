@@ -17,6 +17,36 @@ module.exports.index = async (req, res) => {
   });
 };
 
+// [GET] /products/new-arrivals
+module.exports.newArrivals = async (req, res) => {
+  try {
+    // Lấy 20 sản phẩm mới nhất được tạo theo createdAt
+    const products = await Product.find({
+      deleted: false,
+      status: "active",
+    })
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    // Kiểm tra dữ liệu trước khi đưa vào template
+    const productsWithPrice = products.map((product) => {
+      if (!product.price) {
+        product.price = 0;
+      }
+      return product;
+    });
+
+    res.render("client/pages/products/new-arrivals", {
+      title: "New Arrivals",
+      products: addNewPrice.items(productsWithPrice),
+    });
+  } catch (err) {
+    console.log(err);
+    req.flash("error", "Error loading new arrivals");
+    res.redirect("/products");
+  }
+};
+
 // [GET] /products/detail/:slug
 module.exports.detail = async (req, res) => {
   try {
