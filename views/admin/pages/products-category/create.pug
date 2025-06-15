@@ -1,13 +1,8 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/select-tree.pug
-
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
+  h1 Create New Product Category
   if(role.permissions.includes("product-category-create"))
-    h1.mb-4 Create New Product Category
     form(
       action=`${prefixAdmin}/products-category/create`
       method="POST"

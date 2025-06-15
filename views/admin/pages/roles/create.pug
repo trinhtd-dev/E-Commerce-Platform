@@ -1,11 +1,8 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  if (role.permissions.includes("role-create"))
-    h1.mb-4 Create New Role
+  if(role.permissions.includes("role-create"))
+    h1 Create New Role
     form(
       action=`${prefixAdmin}/roles/create`
       method="POST"

@@ -1,0 +1,8 @@
+mixin render-flash-messages()
+  div#flash-data(style="display: none;")
+    - if (messages.success && messages.success.length > 0)
+      each msg in messages.success
+        div.flash-item(data-type="success", data-message=msg)
+    - if (messages.error && messages.error.length > 0)
+      each msg in messages.error
+        div.flash-item(data-type="error", data-message=msg) 

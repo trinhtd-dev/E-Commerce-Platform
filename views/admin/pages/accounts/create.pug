@@ -1,11 +1,8 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  if (role.permissions.includes("account-create"))
-    h1 Create Account
+  if(role.permissions.includes("account-create"))
+    h1 Create New Account
     form(action=`${prefixAdmin}/accounts/create`
     method="post"
     enctype="multipart/form-data"

@@ -1,12 +1,9 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/select-tree.pug
-
 
 block content
-  +alert-error(5000)
+  h1.mb-4 Edit Product
+
   if(role.permissions.includes("product-edit"))
-    h1.mb-4 Edit New Product
     form(
       action=`${prefixAdmin}/products/edit/${product.id}?_method=PATCH`
       method="POST"

@@ -1,10 +1,9 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  h1.text-center.mb-4 Role Details
+  h1.mb-4 Role Detail
+
+  table.table.table-bordered
   .container
       .card.mb-4
         .row.gutters

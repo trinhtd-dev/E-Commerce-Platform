@@ -1,11 +1,9 @@
-extends  ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/sort.pug
+extends ../../layouts/default.pug
 
-block content 
-    
-    +alert-success(3000)
-    +alert-error(3000) 
+block content
+    .card.mb-3
+        .card-header Filter and Search
+        .card-body
     if(role.permissions.includes("account-view"))
         .card.mb-3
             .card-header.text-muted Account List 

@@ -1,37 +1,36 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  h1.text-center.mb-4 Account Details
-  .container
-    .card.mb-4
-      .row.gutters
-        .col-md-2
-        .col-md-5
-          .card-body
-            h2.card-title= record.fullName
-            ul.list-group.list-group-flush
-              if(record.email)
-                li.list-group-item
-                  strong Email: 
-                  | !{record.email}
-              if(record.phone)
-                li.list-group-item
-                  strong Phone: 
-                  | !{record.phone}
-              if(record.role)
-                li.list-group-item
-                  strong Role: 
-                  each role in roles
-                    if(role.id === record.role)
-                      | !{role.title}
-              if(record.status)
-                li.list-group-item
-                  strong Status: 
-                  | !{record.status}
-    .text-center
-      a.btn.btn-primary(href=`${prefixAdmin}/accounts/edit/${record.id}`) Edit
+  h1.mb-4 Account Detail
+
+  if record
+    .container
+      .card.mb-4
+        .row.gutters
+          .col-md-2
+          .col-md-5
+            .card-body
+              h2.card-title= record.fullName
+              ul.list-group.list-group-flush
+                if(record.email)
+                  li.list-group-item
+                    strong Email: 
+                    | !{record.email}
+                if(record.phone)
+                  li.list-group-item
+                    strong Phone: 
+                    | !{record.phone}
+                if(record.role)
+                  li.list-group-item
+                    strong Role: 
+                    each role in roles
+                      if(role.id === record.role)
+                        | !{role.title}
+                if(record.status)
+                  li.list-group-item
+                    strong Status: 
+                    | !{record.status}
+      .text-center
+        a.btn.btn-primary(href=`${prefixAdmin}/accounts/edit/${record.id}`) Edit
 
   script(src="/admin/js/script.js")

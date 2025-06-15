@@ -1,74 +1,57 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-success(3000)
-  +alert-error(3000)
-  
-  .container
-    .row
-      .col-12
-        h1 General Settings
-
-    .row.mt-4
-      .col-md-8.offset-md-2
-        .card
-          .card-header
-            h5 Settings Form
-          .card-body
-            form(
-                action=`${prefixAdmin}/general-setting?_method=PATCH`
-                method="POST" 
-                enctype="multipart/form-data"
-            )
-              .form-group
-                label(for="logo") Logo
-                div
-                    img(
-                        src=generalSetting.logo ? generalSetting.logo : "https://via.placeholder.com/100" 
-                        alt="Logo" 
-                        style="width: 100px; height: 100px;"
-                    )
-                input.mt-3(
-                    type="file" 
-                    id="logo" 
-                    name="logo"
-                    accept="image/*"
-                )
-              .form-group
-                label(for="email") Email
-                input.form-control(type="email" id="email" name="email" value=generalSetting.email)
-              
-              .form-group
-                label(for="phone") Phone
-                input.form-control(type="text" id="phone" name="phone" value=generalSetting.phone)
-              
-              .form-group
-                label(for="address") Address
-                input.form-control(type="text" id="address" name="address" value=generalSetting.address)
-              
-              .form-group
-                label(for="facebook") Facebook URL
-                input.form-control(type="text" id="facebook" name="facebook" value=generalSetting.facebook)
-              
-              .form-group
-                label(for="twitter") Twitter URL
-                input.form-control(type="text" id="twitter" name="twitter" value=generalSetting.twitter)
-              
-              .form-group
-                label(for="instagram") Instagram URL
-                input.form-control(type="text" id="instagram" name="instagram" value=generalSetting.instagram)
-              
-              .form-group
-                label(for="linkedin") LinkedIn URL
-                input.form-control(type="text" id="linkedin" name="linkedin" value=generalSetting.linkedin)
-              
-              .form-group
-                label(for="googleAnalytics") Google Analytics ID
-                input.form-control(type="text" id="googleAnalytics" name="googleAnalytics" value=generalSetting.googleAnalytics)
-              
-              .form-group
-                label(for="footerText") Footer Text
-                textarea.form-control(id="footerText" name="footerText" rows="3")= generalSetting.footerText
-              
-              button.btn.btn-primary(type="submit") Save Changes
+  if(role.permissions.includes("general-setting-view"))
+    h1 General Settings
+    form(action="/admin/general-setting/edit?_method=PATCH" method="POST" enctype="multipart/form-data")
+      .form-group
+        label(for="logo") Logo
+        div
+          img(
+            src=generalSetting.logo ? generalSetting.logo : "https://via.placeholder.com/100" 
+            alt="Logo" 
+            style="width: 100px; height: 100px;"
+          )
+        input.mt-3(
+          type="file" 
+          id="logo" 
+          name="logo"
+          accept="image/*"
+        )
+      .form-group
+        label(for="email") Email
+        input.form-control(type="email" id="email" name="email" value=generalSetting.email)
+      
+      .form-group
+        label(for="phone") Phone
+        input.form-control(type="text" id="phone" name="phone" value=generalSetting.phone)
+      
+      .form-group
+        label(for="address") Address
+        input.form-control(type="text" id="address" name="address" value=generalSetting.address)
+      
+      .form-group
+        label(for="facebook") Facebook URL
+        input.form-control(type="text" id="facebook" name="facebook" value=generalSetting.facebook)
+      
+      .form-group
+        label(for="twitter") Twitter URL
+        input.form-control(type="text" id="twitter" name="twitter" value=generalSetting.twitter)
+      
+      .form-group
+        label(for="instagram") Instagram URL
+        input.form-control(type="text" id="instagram" name="instagram" value=generalSetting.instagram)
+      
+      .form-group
+        label(for="linkedin") LinkedIn URL
+        input.form-control(type="text" id="linkedin" name="linkedin" value=generalSetting.linkedin)
+      
+      .form-group
+        label(for="googleAnalytics") Google Analytics ID
+        input.form-control(type="text" id="googleAnalytics" name="googleAnalytics" value=generalSetting.googleAnalytics)
+      
+      .form-group
+        label(for="footerText") Footer Text
+        textarea.form-control(id="footerText" name="footerText" rows="3")= generalSetting.footerText
+      
+      button.btn.btn-primary(type="submit") Save Changes

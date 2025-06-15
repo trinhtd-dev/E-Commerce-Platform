@@ -1,11 +1,8 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/select-tree.pug
 
 block content
-  +alert-error(5000)
+  h1 Edit Product Category
   if(role.permissions.includes("product-category-edit"))
-    h1.mb-4 Edit Product Category
     form(
       action=`${prefixAdmin}/products-category/edit/${record.id}?_method=PATCH`
       method="POST"

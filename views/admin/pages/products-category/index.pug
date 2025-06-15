@@ -1,4 +1,4 @@
-extends  ../../layouts/default.pug
+extends ../../layouts/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/form-search.pug
 include ../../mixins/pagination.pug
@@ -9,58 +9,54 @@ include ../../mixins/table-tree.pug
 
 block content 
     
-    +alert-success(3000)
-    +alert-error(3000) 
-
-    if(role.permissions.includes("product-category-view"))
-        .card.mb-3
-            .card-header Filter and Search
-            .card-body
+    .card.mb-3
+        .card-header Filter and Search
+        .card-body
+        .row 
+                .col-6
+                    +filter-status(filterStatus) 
+                .col-6 
+                    +form-search(keyword)
+    +sort(sortOptions) 
+                                
+    .card.mb-3
+        .card-header.text-muted Product Category List 
+        .card-body
             .row 
-                    .col-6
-                        +filter-status(filterStatus) 
-                    .col-6 
-                        +form-search(keyword)
-        +sort(sortOptions) 
+                .col-6
+                    if(role.permissions.includes("product-category-edit"))  
+                        +form-change-multi(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
+                .col-3 
+                    if(role.permissions.includes("product-category-create"))
+                        a(href=`${prefixAdmin}/products-category/create` 
+                            class="btn btn-primary float-right"
+                            ) + Create New
                                 
-        .card.mb-3
-            .card-header.text-muted Product Category List 
-            .card-body
-                .row 
-                    .col-6
-                        if(role.permissions.includes("product-category-edit"))  
-                            +form-change-multi(`${prefixAdmin}/products-category/change-multi?_method=PATCH`)
-                    .col-3 
-                        if(role.permissions.includes("product-category-create"))
-                            a(href=`${prefixAdmin}/products-category/create` 
-                                class="btn btn-primary float-right"
-                                ) + Create New
-                                
-                table(class= "table table-hover table-sm"
-                    checkbox-multi
-                ) 
-                    thead 
-                        tr
-                            th 
-                                input(type="checkbox", name="checkAll")
-                            th STT 
-                            th Images
-                            th Title
-                            th Position 
-                            th Status 
-                            th Action
-                    tbody 
-                        +table-tree(records)
-            +pagination(pagination)
-        form(action=""
-            method="POST"
-            form-change-status
-            data-path= `${prefixAdmin}/products-category/change-status`
-        ) 
-        form(action=""
-            method="POST"
-            form-delete-product 
-            data-path= `${prefixAdmin}/products-category/delete-product-category`
-        )
-        script(src=`/admin/js/product.js`) 
-        script(src="/admin/js/script.js") 
+            table(class= "table table-hover table-sm"
+                checkbox-multi
+            ) 
+                thead 
+                    tr
+                        th 
+                            input(type="checkbox", name="checkAll")
+                        th STT 
+                        th Images
+                        th Title
+                        th Position 
+                        th Status 
+                        th Action
+                tbody 
+                    +table-tree(records)
+        +pagination(pagination)
+    form(action=""
+        method="POST"
+        form-change-status
+        data-path= `${prefixAdmin}/products-category/change-status`
+    ) 
+    form(action=""
+        method="POST"
+        form-delete-product 
+        data-path= `${prefixAdmin}/products-category/delete-product-category`
+    )
+    script(src=`/admin/js/product.js`) 
+    script(src="/admin/js/script.js") 

@@ -1,11 +1,10 @@
-extends  ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/sort.pug
+extends ../../layouts/default.pug
 
-block content 
+block content
+    h1 Roles Management
     
-    +alert-success(3000)
-    +alert-error(3000) 
+    .card.mb-3
+        .card-header Create New Role
     if (role.permissions.includes("role-view"))
         .card.mb-3
             .card-header.text-muted Role List 

@@ -6,6 +6,8 @@ html
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css')
         script(src="https://cdn.jsdelivr.net/npm/chart.js")
     body 
+        include ../../mixins/alert.pug
+        +render-flash-messages()
         header 
             include ../partials/header
         

@@ -1,12 +1,10 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
-include ../../mixins/select-tree.pug
 
 block content
-  +alert-error(5000)
+  h1.mb-4 Edit Role
+
   if (role.permissions.includes("role-edit"))
 
-    h1.mb-4 Edit Role
     form(
       action=`${prefixAdmin}/roles/edit/${record.id}?_method=PATCH`
       method="POST"
