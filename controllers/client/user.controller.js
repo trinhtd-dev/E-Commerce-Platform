@@ -130,104 +130,82 @@ module.exports.logout = async (req, res, next) => {
 // [GET] /user/password/forgot
 module.exports.passwordForgot = (req, res) => {
   res.render("client/pages/user/password-forgot", {
-    title: "Forgot Password",
+    title: "Quên Mật khẩu",
   });
 };
 
 // [POST] /user/password/forgot
-module.exports.passwordForgotPost = async (req, res) => {
-  const email = req.body.email;
-  if (!email) {
-    req.flash("error", "Please enter your email");
-    return res.redirect("back");
-  }
+module.exports.passwordForgotPost = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      req.flash("error", "Email is not registered");
+    const user = await AuthService.handleForgotPassword(req.body.email);
+    req.flash("success", "Mã OTP đã được gửi đến email của bạn.");
+    res.redirect(`/user/password/otp?email=${user.email}`);
+  } catch (error) {
+    if (error.statusCode) {
+      req.flash("error", error.message);
       return res.redirect("back");
     }
-
-    const forgotPassword = new ForgotPassword({ email });
-    await forgotPassword.save();
-
-    // Send OTP to user's email
-    const subject = "OTP Verification";
-    const html = `<h1>Your OTP code is ${forgotPassword.otp}. Your OTP code is expired after 3 minutes.</h1>`;
-    sendMailHelper.sendMail(email, subject, html);
-    //...
-
-    req.flash("success", "OTP sent to your email");
-    res.redirect(`/user/password/otp/${user.email}`);
-  } catch (error) {
-    console.error(error);
-    req.flash("error", "An error occurred, please try again");
-    res.redirect("/user/login");
+    next(error);
   }
 };
 
 // [GET] /user/password/otp
 module.exports.passwordOtp = (req, res) => {
   res.render("client/pages/user/password-otp", {
-    title: "OTP",
-    email: req.params.email,
+    title: "Nhập mã OTP",
+    email: req.query.email,
   });
 };
 
 // [POST] /user/password/otp
-module.exports.passwordOtpPost = async (req, res) => {
-  const { email, otp } = req.body;
-  const forgotPassword = new ForgotPassword({ email: email });
+module.exports.passwordOtpPost = async (req, res, next) => {
   try {
-    if (!forgotPassword) {
-      req.flash("error", "Email is incorrect");
+    const { email, otp } = req.body;
+    await AuthService.verifyOtp(email, otp);
+    res.redirect(`/user/password/reset?email=${email}&otp=${otp}`);
+  } catch (error) {
+    if (error.statusCode) {
+      req.flash("error", error.message);
       return res.redirect("back");
     }
-
-    if (otp !== forgotPassword.otp) {
-      req.flash("error", "OTP is incorrect");
-      return res.redirect(`/user/password/otp/${email}`);
-    }
-
-    const user = await User.findOne({ email: email });
-    const expires = 1000 * 60 * 60 * 24 * 365; // 1 year
-    res.cookie("userToken", user.token, {
-      expires: new Date(Date.now() + expires),
-    });
-    await ForgotPassword.deleteOne({ email });
-
-    res.redirect("/user/password/reset");
-  } catch (error) {
-    console.error(error);
-    req.flash("error", "An error occurred, please try again");
-    res.redirect("/user/login");
+    next(error);
   }
 };
 
 // [GET] /user/password/reset
 module.exports.passwordReset = (req, res) => {
   res.render("client/pages/user/password-reset", {
-    title: "Reset Password",
+    title: "Đặt lại mật khẩu",
+    email: req.query.email,
+    otp: req.query.otp,
   });
 };
 
 // [POST] /user/password/reset
-module.exports.passwordResetPost = async (req, res) => {
-  const { newPassword, confirmPassword } = req.body;
-
+module.exports.passwordResetPost = async (req, res, next) => {
   try {
-    const userToken = req.cookies.userToken;
-    await User.updateOne(
-      { token: userToken },
-      { password: bcrypt.hashSync(newPassword, saltRounds) }
+    const { email, otp, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      req.flash("error", "Mật khẩu xác nhận không khớp.");
+      return res.redirect("back");
+    }
+
+    // Xác thực lại OTP trước khi reset để tăng bảo mật
+    await AuthService.verifyOtp(email, otp);
+    await AuthService.resetPassword(email, password);
+
+    req.flash(
+      "success",
+      "Đặt lại mật khẩu thành công. Bạn có thể đăng nhập ngay bây giờ."
     );
-    req.flash("success", "Password reset successful");
-    res.redirect("/");
+    res.redirect("/user/login");
   } catch (error) {
-    console.log(error);
-    req.flash("error", "Please try again");
-    return res.redirect("user/login");
+    if (error.statusCode) {
+      req.flash("error", error.message);
+      return res.redirect("back");
+    }
+    next(error);
   }
 };
 
