@@ -1,40 +1,32 @@
-extends ../../layouts/auth.pug
+extends ../../layouts/login.pug
 
 block content
-  .container
-    .row.justify-content-center
-      .col-md-6.col-lg-4
-        .card.my-5
-          .card-header.text-center
-            h3 Login
-          .card-body
-            form(action=`${prefixAdmin}/auths/login`, method="post")
-              .form-group
-                  label(for="email") Email
-                  input.form-control(
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      placeholder="Enter your email"
-                  )
-              
-              .form-group
-                  label(for="password") Password
-                  input.form-control(
-                      type="password"
-                      name="password"
-                      id="password"
-                      required
-                      placeholder="Enter your password"
-                  )
-              
-              .form-group.form-check
-                input.form-check-input(type="checkbox", name="remember", id="remember")
-                label.form-check-label(for="remember") Remember Me
-             
-              button.btn.btn-primary.btn-block(type="submit") Login
-          .card-footer.text-center
-            a(href="/forgot-password") Forgot Password?
-            |  | 
-            a(href="/register") Register
+  .d-flex.justify-content-center.align-items-center
+    .col-11.col-md-8.col-lg-6.col-xl-4
+      .card.shadow-lg
+        .card-header.text-center.bg-primary.text-white
+          h3.mb-0 Admin Login
+        .card-body.p-4
+          form(
+            action=`${prefixAdmin}/auth/login`
+            method="post"
+          )
+            .mb-3
+              label.form-label(for="email") Email
+              input#email.form-control(
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              )
+            .mb-3
+              label.form-label(for="password") Password
+              input#password.form-control(
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              )
+            button.btn.btn-primary.w-100.mt-3(type="submit") Login
+        .card-footer.text-center.py-3
+          a(href=`${prefixAdmin}/auth/password/forgot`) Forgot Password?

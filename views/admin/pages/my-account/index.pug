@@ -1,35 +1,30 @@
 extends ../../layouts/default.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  h1.text-center.mb-4 My Account
   .container
-    .card.mb-4
-      .row.gutters
-        .col-md-2
-        .col-md-5
-          .card-body
-            ul.list-group.list-group-flush
-              if(user.fullName)
-                li.list-group-item
-                  strong Full Name: 
-                  | !{user.fullName}
-              if(user.email)
-                li.list-group-item
-                  strong Email: 
-                  | !{user.email}
-              if(user.phone)
-                li.list-group-item
-                  strong Phone: 
-                  | !{user.phone}
-              if(user.role)
-                li.list-group-item
-                  strong Role: 
-                  each role in roles
-                    if(role.id === user.role)
-                      | !{role.title}
+    .row
+      .col-md-2
+      .col-md-5
+        .card-body
+          ul.list-group.list-group-flush
+            if(user.fullName)
+              li.list-group-item
+                strong Full Name: 
+                | !{user.fullName}
+            if(user.email)
+              li.list-group-item
+                strong Email: 
+                | !{user.email}
+            if(user.phone)
+              li.list-group-item
+                strong Phone: 
+                | !{user.phone}
+            if(user.role)
+              li.list-group-item
+                strong Role: 
+                each role in roles
+                  if(role.id === user.role)
+                    | !{role.title}
     .row.text-center
       .col-10
         a.btn.btn-primary.mr-3(href=`${prefixAdmin}/my-account/change-password`) Change Password
