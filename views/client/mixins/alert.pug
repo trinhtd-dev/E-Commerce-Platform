@@ -1,15 +1,8 @@
-mixin alert-success(time)
-    - if (messages.success)
-        div(class= "alert-message alert-success"
-            data-time=time
-            alert-message 
-        ) #{messages.success} 
-            button(class= "close-alert" close-alert) x 
-
-mixin alert-error(time)
-    - if (messages.error)
-        div(class= "alert-message alert-danger" 
-            data-time=time
-            alert-message
-        ) #{messages.error} 
-            button(class= "close-alert" close-alert) x 
+mixin render-flash-messages()
+  div#flash-data(style="display: none;")
+    - if (messages.success && messages.success.length > 0)
+      each msg in messages.success
+        div.flash-item(data-type="success", data-message=msg)
+    - if (messages.error && messages.error.length > 0)
+      each msg in messages.error
+        div.flash-item(data-type="error", data-message=msg)

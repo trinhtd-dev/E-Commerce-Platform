@@ -1,27 +1,27 @@
 extends ../../layouts/normal.pug
-include ../../mixins/alert.pug
 
 block content 
-    +alert-success(3000)
-    +alert-error(3000)
-    .container.mt-5
-        .row.justify-content-center
-            .col-md-6
-                .card.shadow
-                    .card-header.bg-primary.text-white
-                        h2 Register Account
-                    .card-body
-                        form(method='post' action="/user/register")
-                            .form-group
-                                label(for='fullName') Full Name
-                                input.form-control(type='text', name='fullName', id='fullName', placeholder='Enter your full name')
-                            .form-group
-                                label(for='email') Email
-                                input.form-control(type='email', name='email', id='email', placeholder='Enter your email')
-                            .form-group
-                                label(for='password') Password
-                                input.form-control(type='password', name='password', id='password', placeholder='Enter your password')
-                            .form-group
-                                label(for='confirmPassword') Confirm Password
-                                input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm your password')
-                            button.btn.btn-primary.btn-block(type='submit') Register
+    .container-fluid.d-flex.justify-content-center.align-items-center.min-vh-100
+        .col-11.col-md-8.col-lg-6.col-xl-5
+            .card.shadow
+                .card-header.text-center
+                    h3 Register Account
+                .card-body
+                    form(method='post' action="/user/register")
+                        .mb-3
+                            label(for='fullName') Full Name
+                            input.form-control(type='text', name='fullName', id='fullName', placeholder='Enter your full name', required)
+                        .mb-3
+                            label(for='email') Email
+                            input.form-control(type='email', name='email', id='email', placeholder='Enter your email', required)
+                        .mb-3
+                            label(for='password') Password
+                            input.form-control(type='password', name='password', id='password', placeholder='Enter your password', required)
+                        .mb-3
+                            label(for='confirmPassword') Confirm Password
+                            input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm your password', required)
+                        button.btn.btn-primary.w-100(type='submit') Register
+                .card-footer.text-center
+                    p.mb-0 
+                        | Already have an account? 
+                        a(href="/user/login") Login now

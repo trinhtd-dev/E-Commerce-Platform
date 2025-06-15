@@ -47,13 +47,17 @@ function showToast(type, message) {
 
 // Handle server-side flash messages
 document.addEventListener("DOMContentLoaded", function () {
-  const alertMessage = document.querySelector("[alert-message]");
-  if (alertMessage) {
-    const type = alertMessage.getAttribute("data-type");
-    const message = alertMessage.getAttribute("data-message");
+  const flashItems = document.querySelectorAll("#flash-data .flash-item");
+  flashItems.forEach((item) => {
+    const type = item.dataset.type;
+    const message = item.dataset.message;
     if (type && message) {
       showToast(type, message);
-      alertMessage.remove();
     }
+  });
+
+  const flashDataContainer = document.querySelector("#flash-data");
+  if (flashDataContainer) {
+    flashDataContainer.remove();
   }
 });

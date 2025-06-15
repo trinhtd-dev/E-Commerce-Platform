@@ -22,6 +22,8 @@ html(lang="en")
         )
 
     body.d-flex.flex-column.min-vh-100
+        include ../mixins/alert.pug
+        +render-flash-messages()
         // Header
         include ../partials/header
             

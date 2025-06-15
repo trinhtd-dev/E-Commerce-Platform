@@ -1,18 +1,14 @@
 extends ../../layouts/normal.pug
-include ../../mixins/alert.pug
 
 block content
-  +alert-error(5000)
-  +alert-success(5000)
-  
-  .d-flex.justify-content-center.align-items-center.min-vh-100
-    .col-md-6
-      .card
+  .container-fluid.d-flex.justify-content-center.align-items-center.min-vh-100
+    .col-11.col-md-8.col-lg-6.col-xl-5
+      .card.shadow
         .card-header.text-center
           h3 Login
         .card-body
           form(action=`/user/login`, method="post")
-            .form-group
+            .mb-3
                 label(for="email") Email
                 input.form-control(
                     type="email"
@@ -20,9 +16,10 @@ block content
                     id="email"
                     required
                     placeholder="Enter your email"
+                    value=email
                 )
             
-            .form-group
+            .mb-3
                 label(for="password") Password
                 input.form-control(
                     type="password"
@@ -32,12 +29,14 @@ block content
                     placeholder="Enter your password"
                 )
             
-            .form-group.form-check
+            .mb-3.form-check
               input.form-check-input(type="checkbox", name="remember", id="remember")
-              label.form-check-label(for="remember") Remember Me
+              label.form-check-label(for="remember") Remember me
            
-            button.btn.btn-primary.btn-block(type="submit") Login
+            button.btn.btn-primary.w-100(type="submit") Login
         .card-footer.text-center
-          a(href="/user/password/forgot") Forgot Password?
-          |  | 
-          a(href="/user/register") Register
+          p.mb-0
+            a(href="/user/password/forgot") Forgot password?
+          p.mb-0
+            | Don't have an account? 
+            a(href="/user/register") Register now
