@@ -73,18 +73,28 @@ clientRoutes(app);
 // Add request logging middleware
 app.use(logRequest);
 
-// Log unhandled errors
-
+// Centralized Error Handling
 app.use((err, req, res, next) => {
-  logger.error("Unhandled error:", {
-    error: err.message,
+  // Log the error internally
+  logger.error({
+    message: err.message,
     stack: err.stack,
-    path: req.path,
     method: req.method,
+    url: req.originalUrl,
+    ip: req.ip,
   });
 
-  res.status(500).render("client/pages/error/500", {
-    message: "Internal Server Error",
+  // Respond with a user-friendly error page
+  // Avoid leaking stack trace to the client in production
+  const statusCode = err.statusCode || 500;
+  const message =
+    process.env.NODE_ENV === "production" && statusCode === 500
+      ? "An unexpected error occurred. Please try again later."
+      : err.message;
+
+  res.status(statusCode).render("client/pages/error/500", {
+    pageTitle: "Error",
+    message: message,
   });
 });
 

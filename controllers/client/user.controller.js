@@ -7,6 +7,8 @@ const sendMailHelper = require("../../helpers/send-mail");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
 const JWTService = require("../../services/jwt.service");
+const UserService = require("../../services/user.service");
+const AuthService = require("../../services/auth.service");
 
 const saltRounds = 10;
 
@@ -16,27 +18,22 @@ module.exports.register = (req, res) => {
 };
 
 // [POST] /user/register
-module.exports.registerPost = async (req, res) => {
+module.exports.registerPost = async (req, res, next) => {
   try {
-    const { email, password, confirmPassword } = req.body;
-
-    const emailExist = await User.findOne({ email: email });
-    if (emailExist) {
-      req.flash("error", "Email already exists");
-      return res.redirect("back");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    req.body.password = hashedPassword;
-    const user = new User(req.body);
-
-    await user.save();
-    req.flash("success", "Registration successful. You can now log in");
+    await UserService.register(req.body);
+    req.flash(
+      "success",
+      "Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ."
+    );
     return res.redirect("/user/login");
   } catch (error) {
-    console.log(error);
-    req.flash("error", "Please try again");
-    return res.redirect("back");
+    // Nếu lỗi có statusCode (ví dụ: 409 cho email tồn tại), hiển thị thông báo cụ thể
+    if (error.statusCode) {
+      req.flash("error", error.message);
+      return res.redirect("back");
+    }
+    // Chuyển các lỗi không mong muốn khác cho middleware xử lý lỗi trung tâm
+    next(error);
   }
 };
 
@@ -48,36 +45,13 @@ module.exports.login = (req, res) => {
 };
 
 // [POST] /user/login
-module.exports.loginPost = async (req, res) => {
+module.exports.loginPost = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    // Tìm user theo email
-    const user = await User.findOne({ email });
-    if (!user) {
-      req.flash("error", "Email or password is incorrect");
-      return res.redirect("back");
-    }
-
-    // Kiểm tra password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-      req.flash("error", "Email or password is incorrect");
-      return res.redirect("back");
-    }
-
-    // Tạo payload cho JWT
-    const payload = {
-      userId: user._id,
-      email: user.email,
-    };
-
-    // Tạo access token và refresh token
-    const { accessToken, refreshToken } = JWTService.generateTokens(payload);
-
-    // Lưu refresh token vào database
-    user.refreshToken = refreshToken;
-    await user.save();
+    const { accessToken, refreshToken } = await AuthService.login(
+      email,
+      password
+    );
 
     // Lưu tokens vào cookie
     res.cookie("accessToken", accessToken, {
@@ -92,17 +66,14 @@ module.exports.loginPost = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // Update user status online
-    await User.updateOne({ _id: user._id }, { status_online: "online" });
-    _io.sockets.emit("SERVER_LOGIN", user._id);
-
-    // Flash message và redirect
-    req.flash("success", "Login successful");
-    res.redirect("/"); // hoặc dashboard tùy theo flow của bạn
+    req.flash("success", "Đăng nhập thành công");
+    res.redirect("/");
   } catch (error) {
-    console.error(error);
-    req.flash("error", "Login failed. Please try again.");
-    res.redirect("back");
+    if (error.statusCode) {
+      req.flash("error", error.message);
+      return res.redirect("back");
+    }
+    next(error);
   }
 };
 
@@ -144,43 +115,15 @@ module.exports.refreshToken = async (req, res) => {
 };
 
 // [POST] /user/logout
-module.exports.logout = async (req, res) => {
+module.exports.logout = async (req, res, next) => {
   try {
-    // Kiểm tra user có tồn tại không trước khi truy cập
-    const user = res.locals.user;
-    if (!user) {
-      logger.warn("Logout attempted with no user in session");
-      res.clearCookie("accessToken");
-      res.clearCookie("refreshToken");
-      return res.redirect("/user/login");
-    }
-
-    // Update user status và xóa refresh token
-    await User.updateOne(
-      { _id: user._id },
-      {
-        status_online: "offline",
-        refreshToken: null,
-      }
-    );
-
-    // Emit socket event
-    _io.sockets.emit("SERVER_LOGOUT", user._id);
-
-    // Xóa cookies
+    await AuthService.logout(res.locals.user);
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
-
-    logger.info("User logged out successfully", { userId: user._id });
-    req.flash("success", "Logged out successfully");
+    req.flash("success", "Đăng xuất thành công");
     res.redirect("/user/login");
   } catch (error) {
-    logger.error("Logout error:", {
-      error: error.message,
-      stack: error.stack,
-    });
-    req.flash("error", "Logout failed");
-    res.redirect("back");
+    next(error);
   }
 };
 
