@@ -8,221 +8,75 @@ const systemConfig = require("../../config/system");
 const buildCategoryTree = require("../../helpers/buildCategoryTree");
 const moment = require("moment");
 const Account = require("../../models/account.model");
+const ProductService = require("../../services/product.service");
 
 // [GET] /admin/products
-module.exports.index = async (req, res) => {
-  // Filter data
-  let find = {
-    deleted: false,
-  };
-  // Filter products
+module.exports.index = async (req, res, next) => {
+  try {
+    const { products, pagination, filterStatus, keyword } =
+      await ProductService.getProducts(req.query);
 
-  if (req.query.status) find.status = req.query.status;
-  const filterStatus = filterStatusHelpers(req.query);
+    const sortOptions = [
+      { value: "position-asc", text: "Increasing position" },
+      { value: "position-desc", text: "Decreasing position" },
+      { value: "title-asc", text: "A-Z" },
+      { value: "title-desc", text: "Z-A" },
+      { value: "price-asc", text: "Increasing price" },
+      { value: "price-desc", text: "Decreasing price" },
+    ];
 
-  // Search for products
-  const searchHelpers = require("../../helpers/search");
-  const objectSearch = searchHelpers(req.query);
-  if (req.query.keyword) {
-    find.title = objectSearch.regex;
+    res.render("admin/pages/products/index", {
+      title: "Products List",
+      products,
+      filterStatus,
+      keyword,
+      pagination,
+      sortOptions,
+      moment,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  // Pagination
-  const totalProducts = await Product.countDocuments(find);
-  const objectPagination = paginationHelpers(
-    {
-      currentPage: 1,
-      limit: 5,
-    },
-    req.query,
-    totalProducts
-  );
-
-  //
-  // Sorting
-  let sorting = {};
-  if (req.query.sorting) {
-    [criterial, direction] = req.query.sorting.split("-");
-    sorting[criterial] = direction;
-  } else sorting.position = "asc";
-  const sortOptions = [
-    { value: "position-asc", text: "Increasing position" },
-    { value: "position-desc", text: "Decreasing position" },
-    { value: "title-asc", text: "A-Z" },
-    { value: "title-desc", text: "Z-A" },
-    { value: "price-asc", text: "Increasing price" },
-    { value: "price-desc", text: "Decreasing price" },
-  ];
-  //Render to view
-  const products = await Product.find(find)
-    .sort(sorting)
-    .limit(objectPagination.limit)
-    .skip(objectPagination.skip);
-
-  //createdBy
-  const accounts = await Account.find({});
-  for (let product of products) {
-    for (let account of accounts)
-      if (product.createdBy.accountId == account.id)
-        product.createdBy.accountName = account.fullName;
-  }
-  //updatedBY
-  for (let product of products) {
-    for (let account of accounts)
-      for (let updatedBy of product.updatedBy)
-        if (updatedBy.accountId == account.id)
-          updatedBy.accountName = account.fullName;
-  }
-
-  res.render(`admin/pages/products/index`, {
-    title: "Products List",
-    products: products,
-    filterStatus: filterStatus,
-    keyword: objectSearch.keyword,
-    pagination: objectPagination,
-    sortOptions: sortOptions,
-    moment: moment,
-  });
 };
 
 // [PATCH] /admin/products/change-status/:data-status/:id
-module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
+module.exports.changeStatus = async (req, res, next) => {
   try {
-    const updatedBy = {
-      accountId: res.locals.user.id,
-      updatedAt: new Date(),
-    };
-    await Product.updateOne(
-      { _id: id },
-      {
-        $push: { updatedBy: updatedBy },
-        status: status,
-      }
-    );
-    req.flash("success", "Change status successfully");
+    const { status, id } = req.params;
+    const userId = res.locals.user.id;
+    await ProductService.changeStatus(id, status, userId);
+    req.flash("success", "Thay đổi trạng thái thành công!");
   } catch (error) {
-    req.flash("error", "Change status failed");
+    req.flash("error", "Thay đổi trạng thái thất bại!");
+    // (Optional) Log the full error for debugging
+    // logger.error(error);
   }
   res.redirect("back");
 };
 
 // [PATCH] /admin/products/change-status/?_method=PATCH
-module.exports.changeMulti = async (req, res) => {
-  const ids = req.body.ids.split(",");
-  switch (req.body.type) {
-    case "active":
-      try {
-        await Product.updateMany(
-          { _id: { $in: ids } },
-          {
-            $push: {
-              updatedBy: {
-                accountId: res.locals.user.id,
-                updatedAt: new Date(),
-              },
-            },
-            status: "active",
-          }
-        );
-
-        req.flash(
-          "success",
-          `Change status for ${ids.length} products successfully`
-        );
-      } catch (error) {
-        req.flash("error", `Change status for ${ids.length} products failed`);
-      }
-      break;
-
-    case "inactive":
-      try {
-        await Product.updateMany(
-          { _id: { $in: ids } },
-          {
-            $push: {
-              updatedBy: {
-                accountId: res.locals.user.id,
-                updatedAt: new Date(),
-              },
-            },
-            status: "inactive",
-          }
-        );
-        req.flash(
-          "success",
-          `Change status for ${ids.length} products successfully`
-        );
-      } catch (error) {
-        req.flash("error", `Change status for ${ids.length} products failed`);
-      }
-      break;
-    case "delete":
-      try {
-        await Product.updateMany(
-          { _id: { $in: ids } },
-          {
-            deleted: true,
-            deletedBy: {
-              accountId: res.locals.user.id,
-              deletedAt: new Date(),
-            },
-          }
-        );
-        req.flash("success", `Deleted ${ids.length} products successfully`);
-      } catch (error) {
-        req.flash("error", `Delete ${ids.length} products failed`);
-      }
-      break;
-
-    case "change-position":
-      try {
-        for (const item of ids) {
-          [id, position] = item.split("-");
-          await Product.updateOne(
-            { _id: id },
-            {
-              $push: {
-                updatedBy: {
-                  accountId: res.locals.user.id,
-                  updatedAt: new Date(),
-                },
-              },
-              position: parseInt(position),
-            }
-          );
-        }
-        req.flash(
-          "success",
-          `Change position for ${ids.length} products successfully`
-        );
-      } catch (error) {
-        req.flash("error", `Change position for ${ids.length} products failed`);
-      }
-      break;
+module.exports.changeMulti = async (req, res, next) => {
+  try {
+    const { type, ids } = req.body;
+    const idsArray = ids.split(",");
+    const userId = res.locals.user.id;
+    await ProductService.changeMulti(type, idsArray, userId);
+    req.flash("success", `Đã cập nhật ${idsArray.length} sản phẩm thành công!`);
+  } catch (error) {
+    req.flash("error", "Cập nhật sản phẩm thất bại!");
   }
-
   res.redirect("back");
 };
 
 // [DETELE] /admin/products/delete-product/:id/?_method=DETELE
-module.exports.deleteProduct = async (req, res) => {
-  const id = req.params.id;
+module.exports.deleteProduct = async (req, res, next) => {
   try {
-    await Product.updateOne(
-      { _id: id },
-      {
-        deleted: true,
-        deletedBy: {
-          accountId: res.locals.user.id,
-          deletedAt: new Date(),
-        },
-      }
-    );
-    req.flash("success", `Deleted product successfully`);
+    const productId = req.params.id;
+    const userId = res.locals.user.id;
+    await ProductService.deleteProduct(productId, userId);
+    req.flash("success", "Xóa sản phẩm thành công!");
   } catch (error) {
-    req.flash("error", `Deleted product failed`);
+    req.flash("error", "Xóa sản phẩm thất bại!");
   }
   res.redirect("back");
 };
@@ -237,76 +91,45 @@ module.exports.create = async (req, res) => {
 };
 
 // [POST] /admin/products/create
-module.exports.createPost = async (req, res) => {
-  // change to correct data type
-  if (req.body.price) req.body.price = parseFloat(req.body.price);
-  if (req.body.stock) req.body.stock = parseInt(req.body.stock);
-  if (req.body.discountPercentage)
-    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
-  if (req.body.position) req.body.position = parseInt(req.body.position);
-  if (!req.body.position) {
-    req.body.position = (await Product.countDocuments({})) + 1;
-  } else req.body.position = parseInt(req.body.position);
-  req.body.createdBy = {
-    accountId: res.locals.user.id,
-  };
-  const product = new Product(req.body);
-
+module.exports.createPost = async (req, res, next) => {
   try {
-    await product.save();
-    req.flash("success", "Create product successfully");
+    const userId = res.locals.user.id;
+    await ProductService.createProduct(req.body, userId);
+    req.flash("success", "Tạo sản phẩm thành công!");
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
   } catch (error) {
-    console.log(error);
-    req.flash("error", "Create product failed");
+    req.flash("error", "Tạo sản phẩm thất bại!");
+    res.redirect("back");
   }
-  res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
 
-// [GET] /admin/products/fix/:id
-module.exports.edit = async (req, res) => {
+// [GET] /admin/products/edit/:id
+module.exports.edit = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const product = await Product.findById(id);
+    const product = await Product.findById(req.params.id);
     const categories = await productCategory.find({});
     res.render("admin/pages/products/edit", {
       title: "Edit Product",
-      product: product,
+      product,
       categories: buildCategoryTree(categories),
     });
-  } catch (err) {
-    console.log(err);
-    req.flash("error", "Product not found");
+  } catch (error) {
     res.redirect(`${systemConfig.prefixAdmin}/products`);
   }
 };
 
-//[PATCH] /admin/products/fix/:id
-module.exports.editPost = async (req, res) => {
-  if (req.body.price) req.body.price = parseFloat(req.body.price);
-  if (req.body.stock) req.body.stock = parseInt(req.body.stock);
-  if (req.body.discountPercentage)
-    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
-  if (!req.body.position) {
-    req.body.position = (await Product.countDocuments({})) + 1;
-  } else req.body.position = parseInt(req.body.position);
-
-  const id = req.params.id;
+// [PATCH] /admin/products/edit/:id
+module.exports.editPatch = async (req, res, next) => {
   try {
-    await Product.updateOne(
-      { _id: id },
-      {
-        ...req.body,
-        updatedBy: {
-          accountId: res.locals.user.id,
-          updatedAt: new Date(),
-        },
-      }
-    );
-    req.flash("success", "Update product successfully");
+    const productId = req.params.id;
+    const userId = res.locals.user.id;
+    await ProductService.updateProduct(productId, req.body, userId);
+    req.flash("success", "Cập nhật sản phẩm thành công!");
+    res.redirect("back");
   } catch (error) {
-    req.flash("error", "Update product failed");
+    req.flash("error", "Cập nhật sản phẩm thất bại!");
+    res.redirect("back");
   }
-  res.redirect(`${systemConfig.prefixAdmin}/products`);
 };
 
 // [GET] /products/detail/:slug
